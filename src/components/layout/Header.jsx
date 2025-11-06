@@ -7,10 +7,12 @@ import {
 } from 'lucide-react';
 import LoginDropdown from '../auth/LoginDropdown';
 import NewsletterDropdown from '../ui/NewsletterDropdown';
+import NotificationDropdown from '../ui/NotificationDropdown';
 import GoogleTranslateSelector from '../ui/GoogleTranslateSelector';
 import { useAuth } from '../../context/AuthContext';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import MobileMenu from './MobileMenu';
+import * as notificationService from '../../services/notification';
 
 // ============================================================================
 // SUBCOMPONENTES
@@ -87,6 +89,8 @@ const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
     const [newsletterOpen, setNewsletterOpen] = useState(false);
+    const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(0);
     const [mounted, setMounted] = useState(false);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
@@ -96,6 +100,7 @@ const Header = () => {
     const navigate = useNavigate();
     const headerRef = useRef(null);
     const dropdownRefs = useRef({});
+    const notificationRef = useRef(null);
     const { isAuthenticated, user } = useAuth();
     const { shouldShowInstallButton, handleInstall, isIOS } = usePWAInstall();
 
@@ -147,7 +152,36 @@ const Header = () => {
         setIsMenuOpen(false);
         setLoginOpen(false);
         setNewsletterOpen(false);
+        setNotificationsOpen(false);
     }, [location.pathname]);
+
+    // Cargar contador de notificaciones cuando el usuario esté autenticado
+    useEffect(() => {
+        const loadUnreadCount = async () => {
+            if (isAuthenticated) {
+                try {
+                    const data = await notificationService.getUnreadCount();
+                    setUnreadCount(data.count);
+                } catch (error) {
+                    console.error('Error cargando contador de notificaciones:', error);
+                }
+            } else {
+                setUnreadCount(0);
+            }
+        };
+
+        loadUnreadCount();
+        
+        // Cargar contador cada 30 segundos si está autenticado
+        let interval;
+        if (isAuthenticated) {
+            interval = setInterval(loadUnreadCount, 30000);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isAuthenticated]);
 
     useEffect(() => {
         document.body.style.overflow = isMenuOpen ? 'hidden' : '';
@@ -185,12 +219,21 @@ const handleNavigation = useCallback((path) => {
         event?.stopPropagation();
         setLoginOpen(prev => !prev);
         setNewsletterOpen(false);
+        setNotificationsOpen(false);
     }, []);
 
     const toggleNewsletter = useCallback((event) => {
         event?.stopPropagation();
         setNewsletterOpen(prev => !prev);
         setLoginOpen(false);
+        setNotificationsOpen(false);
+    }, []);
+
+    const toggleNotifications = useCallback((event) => {
+        event?.stopPropagation();
+        setNotificationsOpen(prev => !prev);
+        setLoginOpen(false);
+        setNewsletterOpen(false);
     }, []);
 
     const toggleMenu = useCallback(() => {
@@ -272,15 +315,35 @@ const handleNavigation = useCallback((path) => {
 
                             {/* Notificaciones - solo si está autenticado */}
                             {isAuthenticated && !isMobile && (
-                                <motion.button
-                                    whileHover={{ scale: 1.08 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="relative p-2 lg:p-2.5 rounded-lg lg:rounded-xl hover:bg-[#333333] transition-all duration-200 group"
-                                    title="Notificaciones"
-                                >
-                                    <Bell className="w-4 lg:w-5 h-4 lg:h-5 text-gray-400 group-hover:text-[#a1db87] transition-colors" />
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-[#a1db87] rounded-full"></span>
-                                </motion.button>
+                                <div className="relative" ref={notificationRef}>
+                                    <motion.button
+                                        whileHover={{ scale: 1.08 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={toggleNotifications}
+                                        className={`relative p-2 lg:p-2.5 rounded-lg lg:rounded-xl transition-all duration-200 group ${
+                                            notificationsOpen 
+                                                ? 'bg-[#a1db87]/15 text-[#a1db87]' 
+                                                : 'hover:bg-[#333333] text-gray-400 group-hover:text-[#a1db87]'
+                                        }`}
+                                        title="Notificaciones"
+                                    >
+                                        <Bell className="w-4 lg:w-5 h-4 lg:h-5 transition-colors" />
+                                        {unreadCount > 0 && (
+                                            <motion.span
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#a1db87] text-[#333333] rounded-full flex items-center justify-center text-xs font-bold"
+                                            >
+                                                {unreadCount > 99 ? '99+' : unreadCount}
+                                            </motion.span>
+                                        )}
+                                    </motion.button>
+                                    <NotificationDropdown
+                                        isOpen={notificationsOpen}
+                                        onClose={() => setNotificationsOpen(false)}
+                                        anchorRef={notificationRef}
+                                    />
+                                </div>
                             )}
 
                             {/* PWA Install */}
