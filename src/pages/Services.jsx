@@ -51,7 +51,7 @@ const Services = () => {
       isPremium: false,
       features: [
         { text: 'Búsqueda básica de proyectos', included: true },
-        { text: 'Vista de título y ubicación', included: true },
+        { text: 'Vista limitada del título', included: true },
         { text: 'Información limitada', included: true },
         { text: 'Acceso a documentación', included: false },
         { text: 'Alertas personalizadas', included: false },
