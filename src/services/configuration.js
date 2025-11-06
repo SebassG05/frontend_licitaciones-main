@@ -127,14 +127,31 @@ export const updateSearchPreferences = async (searchData) => {
       throw new Error('No está autenticado. Por favor inicie sesión');
     }
 
-    const response = await fetch(`${API_URL}/users/config/search-preferences`, {
+    // Formatear los datos para que coincidan con el esquema del backend
+    const formattedData = {
+      searchPreferences: {
+        sectors: searchData.sectores || [],
+        keywords: searchData.palabrasClave || [],
+        budgetRange: {
+          min: searchData.presupuestoMinimo ? parseInt(searchData.presupuestoMinimo) : 0,
+          max: searchData.presupuestoMaximo ? parseInt(searchData.presupuestoMaximo) : null
+        },
+        locations: {
+          countries: ['España'], // Por defecto España
+          regions: [],
+          cities: searchData.ubicaciones || []
+        }
+      }
+    };
+
+    const response = await fetch(`${API_URL}/users/config`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
       credentials: 'include',
-      body: JSON.stringify(searchData),
+      body: JSON.stringify(formattedData),
     });
 
     const data = await response.json();

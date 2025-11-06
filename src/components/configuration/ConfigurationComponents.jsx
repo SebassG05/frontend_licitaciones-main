@@ -149,14 +149,12 @@ export const NotificationSettings = ({ config, onUpdate, saving }) => {
 // Componente de preferencias de búsqueda
 export const SearchPreferences = ({ config, onUpdate, saving }) => {
   const [formData, setFormData] = useState({
-    palabrasClave: config?.preferenciasBusqueda?.palabrasClave || [],
-    sectores: config?.preferenciasBusqueda?.sectores || [],
-    ubicaciones: config?.preferenciasBusqueda?.ubicaciones || [],
-    presupuestoMinimo: config?.preferenciasBusqueda?.presupuestoMinimo || '',
-    presupuestoMaximo: config?.preferenciasBusqueda?.presupuestoMaximo || '',
-    fuentes: config?.preferenciasBusqueda?.fuentes || [],
-    tiposContrato: config?.preferenciasBusqueda?.tiposContrato || [],
-    idioma: config?.preferenciasBusqueda?.idioma || 'es'
+    palabrasClave: config?.searchPreferences?.keywords || [],
+    sectores: config?.searchPreferences?.sectors || [],
+    ubicaciones: config?.searchPreferences?.locations?.cities || [],
+    presupuestoMinimo: config?.searchPreferences?.budgetRange?.min ? config.searchPreferences.budgetRange.min.toString() : '',
+    presupuestoMaximo: config?.searchPreferences?.budgetRange?.max ? config.searchPreferences.budgetRange.max.toString() : '',
+    fuentes: config?.searchPreferences?.sources || []
   });
 
   const [newKeyword, setNewKeyword] = useState('');
@@ -164,8 +162,8 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
   const [newLocation, setNewLocation] = useState('');
 
   const sectoresDisponibles = [
-    'Tecnología', 'Construcción', 'Consultoría', 'Servicios', 'Infraestructura',
-    'Sanidad', 'Educación', 'Medio Ambiente', 'Transporte', 'Energía'
+    'Tecnología', 'Software', 'Programación', 'Desarrollo Web', 'Inteligencia Artificial',
+    'Medioambiental', 'Biológico', 'Biotecnología', 'Sistemas Informáticos', 'Big Data'
   ];
 
   const fuentesDisponibles = [
@@ -175,22 +173,15 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
     'Naciones Unidas'
   ];
 
-  const tiposContratoDisponibles = [
-    'Servicios', 'Suministros', 'Obras', 'Concesión de servicios',
-    'Concesión de obras públicas', 'Colaboración público-privada'
-  ];
-
   useEffect(() => {
-    if (config?.preferenciasBusqueda) {
+    if (config?.searchPreferences) {
       setFormData({
-        palabrasClave: config.preferenciasBusqueda.palabrasClave || [],
-        sectores: config.preferenciasBusqueda.sectores || [],
-        ubicaciones: config.preferenciasBusqueda.ubicaciones || [],
-        presupuestoMinimo: config.preferenciasBusqueda.presupuestoMinimo || '',
-        presupuestoMaximo: config.preferenciasBusqueda.presupuestoMaximo || '',
-        fuentes: config.preferenciasBusqueda.fuentes || [],
-        tiposContrato: config.preferenciasBusqueda.tiposContrato || [],
-        idioma: config.preferenciasBusqueda.idioma || 'es'
+        palabrasClave: config.searchPreferences.keywords || [],
+        sectores: config.searchPreferences.sectors || [],
+        ubicaciones: config.searchPreferences.locations?.cities || [],
+        presupuestoMinimo: config.searchPreferences.budgetRange?.min ? config.searchPreferences.budgetRange.min.toString() : '',
+        presupuestoMaximo: config.searchPreferences.budgetRange?.max ? config.searchPreferences.budgetRange.max.toString() : '',
+        fuentes: config.searchPreferences.sources || []
       });
     }
   }, [config]);
@@ -406,44 +397,6 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
               </label>
             ))}
           </div>
-        </div>
-
-        {/* Tipos de contrato */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-3">
-            Tipos de contrato
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {tiposContratoDisponibles.map((tipo) => (
-              <label key={tipo} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.tiposContrato.includes(tipo)}
-                  onChange={() => handleArrayToggle(formData.tiposContrato, tipo, 'tiposContrato')}
-                  className="w-4 h-4 text-[#a1db87] bg-gray-600 border-gray-500 rounded focus:ring-[#a1db87]"
-                />
-                <span className="ml-2 text-gray-300 text-sm">{tipo}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Idioma */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Idioma preferido
-          </label>
-          <select
-            value={formData.idioma}
-            onChange={(e) => setFormData({ ...formData, idioma: e.target.value })}
-            className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
-          >
-            <option value="es">Español</option>
-            <option value="en">Inglés</option>
-            <option value="fr">Francés</option>
-            <option value="de">Alemán</option>
-            <option value="pt">Portugués</option>
-          </select>
         </div>
 
         <div className="flex justify-end">

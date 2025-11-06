@@ -35,10 +35,10 @@ const HeroSection = () => {
   const featuredTenders = [
     {
       id: 1,
-      title: 'Servicios de consultoría para proyectos de infraestructura sostenible',
+      title: 'Desarrollo de plataforma de inteligencia artificial para análisis medioambiental',
       entity: 'Ministerio de Transición Ecológica',
       location: 'Madrid',
-      sector: 'Consultoría',
+      sector: 'Inteligencia Artificial',
       budget: '2.500.000',
       deadline: '2025-02-15',
       code: 'LIC-2025-001',
@@ -51,10 +51,10 @@ const HeroSection = () => {
     },
     {
       id: 2,
-      title: 'Suministro e instalación de sistemas de energía renovable',
+      title: 'Sistema de monitorización biológica mediante sensores IoT',
       entity: 'Junta de Andalucía',
       location: 'Sevilla',
-      sector: 'Energía',
+      sector: 'Biológico',
       budget: '5.800.000',
       deadline: '2025-02-20',
       code: 'LIC-2025-002',
@@ -67,10 +67,10 @@ const HeroSection = () => {
     },
     {
       id: 3,
-      title: 'Construcción de centro educativo con criterios de eficiencia energética',
+      title: 'Desarrollo de software para gestión de datos ambientales',
       entity: 'Generalitat de Catalunya',
       location: 'Barcelona',
-      sector: 'Construcción',
+      sector: 'Software',
       budget: '8.200.000',
       deadline: '2025-03-01',
       code: 'LIC-2025-003',
@@ -91,9 +91,9 @@ const HeroSection = () => {
   ];
 
   const sectors = [
-    'Todos los sectores', 'Construcción', 'Servicios', 'Suministros',
-    'Consultoría', 'Tecnología', 'Salud', 'Educación', 'Medio Ambiente',
-    'Transporte', 'Energía'
+    'Todos los sectores', 'Tecnología', 'Software', 'Programación', 'Desarrollo Web',
+    'Inteligencia Artificial', 'Medioambiental', 'Biológico', 'Biotecnología', 'Sistemas de Información',
+    'Big Data'
   ];
 
   // Carga de imágenes lazy
