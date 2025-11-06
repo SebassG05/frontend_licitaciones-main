@@ -5,6 +5,7 @@ import {
   AlertCircle, Loader, ArrowRight, X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
   const { login, logout, user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,6 +56,16 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
 
   const preventClickPropagation = (e) => {
     e.stopPropagation();
+  };
+
+  const handleNavigateToProfile = () => {
+    navigate('/perfil');
+    onClose();
+  };
+
+  const handleNavigateToSettings = () => {
+    navigate('/configuracion');
+    onClose();
   };
 
   const handleLogout = async () => {
@@ -135,6 +147,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
                 <div className="space-y-2">
                   <motion.button
                     whileHover={{ x: 4 }}
+                    onClick={handleNavigateToProfile}
                     className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
                   >
                     <div className="flex items-center space-x-3">
@@ -146,6 +159,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
 
                   <motion.button
                     whileHover={{ x: 4 }}
+                    onClick={handleNavigateToSettings}
                     className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
                   >
                     <div className="flex items-center space-x-3">

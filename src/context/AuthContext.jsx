@@ -17,8 +17,9 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         setLoading(true);
-        // Verificar si hay cookie antes de hacer la solicitud
-        if (!document.cookie.includes('jwt=')) {
+        // Verificar si hay token en localStorage antes de hacer la solicitud
+        const token = localStorage.getItem('token');
+        if (!token) {
           setUser(null);
           setLoading(false);
           setInitialized(true);
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await authService.login(email, password);
-  setUser(response.data.user);
+      setUser(response.data.user);
       return { success: true };
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -60,9 +61,14 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       await authService.logout();
       setUser(null);
+      // Asegurar que localStorage se limpia
+      localStorage.removeItem('token');
       return { success: true };
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+      // Aún así limpiar estado local
+      setUser(null);
+      localStorage.removeItem('token');
       return { success: false, message: error.message };
     } finally {
       setLoading(false);
@@ -72,6 +78,7 @@ export const AuthProvider = ({ children }) => {
   // Valor del contexto
   const value = {
     user,
+    setUser,
     loading,
     isAuthenticated: !!user,
     login,

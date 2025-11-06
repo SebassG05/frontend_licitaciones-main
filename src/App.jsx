@@ -7,6 +7,8 @@ import { AuthProvider } from './context/AuthContext';
 const Home = lazy(() => import('./pages/Home'));
 const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Configuration = lazy(() => import('./pages/Configuration'));
 const NotFound = lazy(() => import('./pages/NotFound')); // Nueva importación
 
 // Componente de carga
@@ -26,6 +28,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/servicios" element={<Services />} />
               <Route path="/contacto" element={<Contact />} />
+              <Route path="/perfil" element={<Profile />} />
+              <Route path="/configuracion" element={<Configuration />} />
               {/* Ruta catch-all para 404 - debe ir al final */}
               <Route path="*" element={<NotFound />} />
             </Routes>

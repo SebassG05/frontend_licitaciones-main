@@ -18,7 +18,7 @@ export const login = async (email, password) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
-      credentials: 'include', // Importante para manejar cookies
+      credentials: 'include',
     });
 
     const data = await response.json();
@@ -27,8 +27,11 @@ export const login = async (email, password) => {
       throw new Error(data.message || 'Error al iniciar sesión');
     }
 
-    // La cookie JWT se establece automáticamente por el navegador
-    // Solo necesitamos devolver los datos del usuario
+    // Guardar token en localStorage para uso con headers
+    if (data.data && data.data.token) {
+      localStorage.setItem('token', data.data.token);
+    }
+
     return data;
   } catch (error) {
     console.error('Error en servicio auth:', error);
@@ -53,9 +56,14 @@ export const logout = async () => {
       throw new Error(data.message || 'Error al cerrar sesión');
     }
 
+    // Limpiar token del localStorage
+    localStorage.removeItem('token');
+
     return data;
   } catch (error) {
     console.error('Error en servicio auth:', error);
+    // Siempre limpiar localStorage aunque falle la llamada
+    localStorage.removeItem('token');
     throw error;
   }
 };
@@ -66,18 +74,24 @@ export const logout = async () => {
  */
 export const getProfile = async () => {
   try {
-    // Verificar primero si hay una cookie JWT (evita hacer peticiones innecesarias)
-    if (!document.cookie.includes('jwt=')) {
+    // Obtener token del localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
       return null;
     }
 
     const response = await fetch(`${API_URL}/auth/profile`, {
       method: 'GET',
-      credentials: 'include', // Importante para manejar cookies
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      credentials: 'include',
     });
 
     // Si no hay autorización, simplemente devolvemos null sin mostrar error
     if (response.status === 401) {
+      // Limpiar token inválido
+      localStorage.removeItem('token');
       return null;
     }
 
@@ -87,7 +101,7 @@ export const getProfile = async () => {
       throw new Error(data.message || 'Error al obtener perfil');
     }
 
-    return data.data.employee;
+    return data.data;
   } catch (error) {
     // Solo mostramos errores que no sean de autorización
     if (error.message !== 'Error al obtener perfil') {
