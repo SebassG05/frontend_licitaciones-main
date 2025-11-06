@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await authService.login(email, password);
-      setUser(response.data.employee);
+  setUser(response.data.user);
       return { success: true };
     } catch (error) {
       console.error('Error al iniciar sesión:', error);

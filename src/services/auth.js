@@ -1,4 +1,4 @@
-const API_URL = 'https://evenor-tech.com/api';
+const API_URL = 'http://localhost:3000/api';
 
 /**
  * Servicio para manejar la autenticación con el backend
