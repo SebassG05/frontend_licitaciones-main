@@ -10,6 +10,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Configuration = lazy(() => import('./pages/Configuration'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Licitaciones = lazy(() => import('./pages/Licitaciones'));
 const NotFound = lazy(() => import('./pages/NotFound')); // Nueva importación
 
 // Componente de carga
@@ -28,6 +29,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/servicios" element={<Services />} />
+              <Route path="/licitaciones" element={<Licitaciones />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/configuracion" element={<Configuration />} />
