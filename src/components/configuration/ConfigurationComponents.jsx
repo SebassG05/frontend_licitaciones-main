@@ -8,32 +8,42 @@ import {
 // Componente de configuración de notificaciones
 export const NotificationSettings = ({ config, onUpdate, saving }) => {
   const [formData, setFormData] = useState({
-    email: config?.notificaciones?.email || false,
-    nuevasLicitaciones: config?.notificaciones?.nuevasLicitaciones || false,
-    actualizacionesLicitaciones: config?.notificaciones?.actualizacionesLicitaciones || false,
-    vencimientos: config?.notificaciones?.vencimientos || false,
-    diasAnticipacion: config?.notificaciones?.diasAnticipacion || 7,
-    horarioNotificaciones: config?.notificaciones?.horarioNotificaciones || '09:00',
-    frecuenciaEmail: config?.notificaciones?.frecuenciaEmail || 'diaria'
+    email: config?.notifications?.email?.enabled || false,
+    nuevasLicitaciones: config?.notifications?.email?.newLicitaciones || false,
+    actualizacionesLicitaciones: config?.notifications?.email?.newsletter || false,
+    vencimientos: config?.notifications?.email?.deadlineReminders || false,
+    frecuenciaEmail: config?.notifications?.email?.frequency || 'daily'
   });
 
   useEffect(() => {
-    if (config?.notificaciones) {
+    if (config?.notifications) {
       setFormData({
-        email: config.notificaciones.email || false,
-        nuevasLicitaciones: config.notificaciones.nuevasLicitaciones || false,
-        actualizacionesLicitaciones: config.notificaciones.actualizacionesLicitaciones || false,
-        vencimientos: config.notificaciones.vencimientos || false,
-        diasAnticipacion: config.notificaciones.diasAnticipacion || 7,
-        horarioNotificaciones: config.notificaciones.horarioNotificaciones || '09:00',
-        frecuenciaEmail: config.notificaciones.frecuenciaEmail || 'diaria'
+        email: config.notifications.email?.enabled || false,
+        nuevasLicitaciones: config.notifications.email?.newLicitaciones || false,
+        actualizacionesLicitaciones: config.notifications.email?.newsletter || false,
+        vencimientos: config.notifications.email?.deadlineReminders || false,
+        frecuenciaEmail: config.notifications.email?.frequency || 'daily'
       });
     }
   }, [config]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData);
+    
+    // Mapear los datos del frontend al formato del backend
+    const backendData = {
+      notifications: {
+        email: {
+          enabled: formData.email,
+          newLicitaciones: formData.nuevasLicitaciones,
+          newsletter: formData.actualizacionesLicitaciones,
+          deadlineReminders: formData.vencimientos,
+          frequency: formData.frecuenciaEmail
+        }
+      }
+    };
+    
+    onUpdate(backendData);
   };
 
   return (
@@ -103,38 +113,6 @@ export const NotificationSettings = ({ config, onUpdate, saving }) => {
           </div>
         </div>
 
-        {/* Configuración de vencimientos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Días de anticipación para vencimientos
-            </label>
-            <select
-              value={formData.diasAnticipacion}
-              onChange={(e) => setFormData({ ...formData, diasAnticipacion: parseInt(e.target.value) })}
-              className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
-            >
-              <option value={1}>1 día</option>
-              <option value={3}>3 días</option>
-              <option value={7}>7 días</option>
-              <option value={15}>15 días</option>
-              <option value={30}>30 días</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Horario preferido para notificaciones
-            </label>
-            <input
-              type="time"
-              value={formData.horarioNotificaciones}
-              onChange={(e) => setFormData({ ...formData, horarioNotificaciones: e.target.value })}
-              className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
-            />
-          </div>
-        </div>
-
         {/* Frecuencia de email */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -145,10 +123,9 @@ export const NotificationSettings = ({ config, onUpdate, saving }) => {
             onChange={(e) => setFormData({ ...formData, frecuenciaEmail: e.target.value })}
             className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
           >
-            <option value="inmediata">Inmediata</option>
-            <option value="diaria">Diaria</option>
-            <option value="semanal">Semanal</option>
-            <option value="mensual">Mensual</option>
+            <option value="instant">Inmediata</option>
+            <option value="daily">Diaria</option>
+            <option value="weekly">Semanal</option>
           </select>
         </div>
 
