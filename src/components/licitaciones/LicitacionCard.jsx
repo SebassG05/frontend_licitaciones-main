@@ -77,200 +77,154 @@ const LicitacionCard = ({ licitacion }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, scale: 1.02 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       transition={{ duration: 0.3 }}
       className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl shadow-2xl hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] backdrop-blur-sm overflow-hidden group"
     >
-      {/* Header de la tarjeta */}
-      <div className="p-6 border-b border-gray-800">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <div className="flex-1">
-            <motion.h3
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-lg font-bold text-white leading-tight mb-3 group-hover:text-[#a1db87] transition-colors duration-300"
+      {/* Layout horizontal en pantallas grandes, vertical en móviles */}
+      <div className="flex flex-col lg:flex-row lg:items-center">
+        {/* Sección principal con título y badges */}
+        <div className="p-6 lg:flex-1">
+          <motion.h3
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-lg lg:text-xl font-bold text-white leading-tight mb-3 group-hover:text-[#a1db87] transition-colors duration-300"
+          >
+            {licitacion.title || 'Título no disponible'}
+          </motion.h3>
+          
+          <div className="flex flex-wrap gap-3 mb-4">
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getSourceColor(licitacion.source)}`}
             >
-              {licitacion.title || 'Título no disponible'}
-            </motion.h3>
+              {getSourceLabel(licitacion.source)}
+            </motion.span>
             
-            <div className="flex flex-wrap gap-3 mb-4">
+            {licitacion.status && (
               <motion.span
                 whileHover={{ scale: 1.05 }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getSourceColor(licitacion.source)}`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getStatusColor(licitacion.status)}`}
               >
-                {getSourceLabel(licitacion.source)}
+                {getStatusLabel(licitacion.status)}
               </motion.span>
-              
-              {licitacion.status && (
-                <motion.span
-                  whileHover={{ scale: 1.05 }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getStatusColor(licitacion.status)}`}
+            )}
+          </div>
+
+          {/* Descripción */}
+          <div className="mb-4 lg:mb-0">
+            <p className="text-gray-300 text-sm leading-relaxed">
+              {isExpanded 
+                ? (licitacion.description || 'Sin descripción disponible')
+                : truncateText(licitacion.description, 200)
+              }
+            </p>
+            
+            {licitacion.description && licitacion.description.length > 200 && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-2 text-[#a1db87] hover:text-white text-xs font-semibold mt-2 transition-colors duration-300"
+              >
+                {isExpanded ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {isExpanded ? 'Ver menos' : 'Ver más'}
+              </motion.button>
+            )}
+          </div>
+        </div>
+
+        {/* Sección de información compacta - en fila horizontal para pantallas grandes */}
+        <div className="px-6 pb-6 lg:p-6 lg:w-auto lg:flex-shrink-0">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 lg:space-y-3 gap-4 lg:gap-0 text-sm">
+            {/* Presupuesto */}
+            {(licitacion.budget || licitacion.estimatedValue) && (
+              <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 group/item hover:border-[#a1db87]/30 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-1">
+                  <Euro className="w-4 h-4 text-[#a1db87]" />
+                  <span className="font-semibold text-gray-400 text-xs">Presupuesto</span>
+                </div>
+                <span className="text-[#a1db87] font-bold text-sm lg:text-base">
+                  {formatCurrency(licitacion.budget || licitacion.estimatedValue, licitacion.currency)}
+                </span>
+              </div>
+            )}
+
+            {/* Ubicación */}
+            {licitacion.location && (
+              <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 hover:border-blue-400/30 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin className="w-4 h-4 text-blue-400" />
+                  <span className="font-semibold text-gray-400 text-xs">Ubicación</span>
+                </div>
+                <span className="text-white font-medium text-sm">
+                  {licitacion.location}
+                </span>
+              </div>
+            )}
+
+            {/* Fecha límite */}
+            {licitacion.deadline && (
+              <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 hover:border-emerald-400/30 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-1">
+                  <Clock className="w-4 h-4 text-emerald-400" />
+                  <span className="font-semibold text-gray-400 text-xs">Fecha límite</span>
+                </div>
+                <span className="text-emerald-400 font-bold text-sm">
+                  {formatDate(licitacion.deadline)}
+                </span>
+              </div>
+            )}
+
+            {/* Fecha de publicación */}
+            {licitacion.publishDate && (
+              <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 hover:border-purple-400/30 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-4 h-4 text-purple-400" />
+                  <span className="font-semibold text-gray-400 text-xs">Publicado</span>
+                </div>
+                <span className="text-white font-medium text-sm">
+                  {formatDate(licitacion.publishDate)}
+                </span>
+              </div>
+            )}
+
+            {/* Referencia */}
+            {licitacion.referenceId && (
+              <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 hover:border-amber-400/30 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-1">
+                  <Tag className="w-4 h-4 text-amber-400" />
+                  <span className="font-semibold text-gray-400 text-xs">Referencia</span>
+                </div>
+                <span className="text-white font-mono text-xs">
+                  {licitacion.referenceId}
+                </span>
+              </div>
+            )}
+
+            {/* Enlace */}
+            {licitacion.url && (
+              <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+                <motion.a
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  href={licitacion.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    inline-flex items-center gap-2 px-4 py-2 lg:px-6 lg:py-3 bg-[#a1db87] text-[#1a1a1a] 
+                    text-xs lg:text-sm font-bold rounded-xl hover:bg-white
+                    transition-all duration-300 shadow-lg hover:shadow-xl
+                    hover:shadow-[#a1db87]/25 w-full justify-center
+                  "
                 >
-                  {getStatusLabel(licitacion.status)}
-                </motion.span>
-              )}
-            </div>
+                  <ExternalLink className="w-4 h-4" />
+                  Ver detalles
+                </motion.a>
+              </div>
+            )}
           </div>
-
-          {/* Información de fechas */}
-          {licitacion.deadline && (
-            <div className="text-right flex-shrink-0 bg-[#2a2a2a] p-4 rounded-xl border border-gray-700">
-              <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
-                <Clock className="w-4 h-4" />
-                <span className="font-medium">Fecha límite:</span>
-              </div>
-              <span className="text-[#a1db87] font-bold text-lg">
-                {formatDate(licitacion.deadline)}
-              </span>
-            </div>
-          )}
         </div>
-      </div>
-
-      {/* Contenido principal */}
-      <div className="p-6">
-        {/* Descripción */}
-        <div className="mb-6">
-          <p className="text-gray-300 text-sm leading-relaxed">
-            {isExpanded 
-              ? (licitacion.description || 'Sin descripción disponible')
-              : truncateText(licitacion.description)
-            }
-          </p>
-          
-          {licitacion.description && licitacion.description.length > 150 && (
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-2 text-[#a1db87] hover:text-white text-xs font-semibold mt-3 transition-colors duration-300"
-            >
-              {isExpanded ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              {isExpanded ? 'Ver menos' : 'Ver más'}
-            </motion.button>
-          )}
-        </div>
-
-        {/* Información adicional */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-6">
-          {/* Presupuesto */}
-          {(licitacion.budget || licitacion.estimatedValue) && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 group/item hover:border-[#a1db87]/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Euro className="w-4 h-4 text-[#a1db87]" />
-                <span className="font-semibold text-gray-400">Presupuesto</span>
-              </div>
-              <span className="text-[#a1db87] font-bold text-lg">
-                {formatCurrency(licitacion.budget || licitacion.estimatedValue, licitacion.currency)}
-              </span>
-            </motion.div>
-          )}
-
-          {/* Ubicación */}
-          {licitacion.location && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 hover:border-blue-400/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="w-4 h-4 text-blue-400" />
-                <span className="font-semibold text-gray-400">Ubicación</span>
-              </div>
-              <span className="text-white font-medium">
-                {licitacion.location}
-              </span>
-            </motion.div>
-          )}
-
-          {/* Fecha de publicación */}
-          {licitacion.publishDate && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 hover:border-emerald-400/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="w-4 h-4 text-emerald-400" />
-                <span className="font-semibold text-gray-400">Publicado</span>
-              </div>
-              <span className="text-white font-medium">
-                {formatDate(licitacion.publishDate)}
-              </span>
-            </motion.div>
-          )}
-
-          {/* ID de referencia */}
-          {licitacion.referenceId && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 hover:border-purple-400/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Tag className="w-4 h-4 text-purple-400" />
-                <span className="font-semibold text-gray-400">Referencia</span>
-              </div>
-              <span className="text-white font-mono text-xs">
-                {licitacion.referenceId}
-              </span>
-            </motion.div>
-          )}
-
-          {/* Categoría */}
-          {licitacion.category && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 hover:border-amber-400/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Building2 className="w-4 h-4 text-amber-400" />
-                <span className="font-semibold text-gray-400">Categoría</span>
-              </div>
-              <span className="text-white font-medium">
-                {licitacion.category}
-              </span>
-            </motion.div>
-          )}
-
-          {/* Tipo de contrato */}
-          {licitacion.contractType && (
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-[#2a2a2a] p-4 rounded-xl border border-gray-700 hover:border-cyan-400/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Building2 className="w-4 h-4 text-cyan-400" />
-                <span className="font-semibold text-gray-400">Tipo</span>
-              </div>
-              <span className="text-white font-medium">
-                {licitacion.contractType}
-              </span>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Enlaces */}
-        {licitacion.url && (
-          <div className="pt-4 border-t border-gray-800">
-            <motion.a
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              href={licitacion.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center gap-3 px-6 py-3 bg-[#a1db87] text-[#1a1a1a] 
-                text-sm font-bold rounded-xl hover:bg-white
-                transition-all duration-300 shadow-lg hover:shadow-xl
-                hover:shadow-[#a1db87]/25
-              "
-            >
-              <ExternalLink className="w-4 h-4" />
-              Ver detalles completos
-            </motion.a>
-          </div>
-        )}
       </div>
     </motion.div>
   );

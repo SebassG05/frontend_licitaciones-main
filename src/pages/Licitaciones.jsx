@@ -414,12 +414,12 @@ const Licitaciones = () => {
               </motion.div>
             ) : (
               <>
-                {/* Grid de licitaciones */}
+                {/* Grid de licitaciones - una sola columna para diseño rectangular */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
+                  className="space-y-6 lg:space-y-8"
                 >
                   {licitaciones.map((licitacion, index) => (
                     <motion.div
