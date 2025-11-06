@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Search, Smartphone, Shield, Save, Loader, Key, 
-  Eye, EyeOff, Moon, Sun, Palette, Bell
+  Eye, EyeOff, Calendar, Euro, Clock, Filter, Bell
 } from 'lucide-react';
 
 // Componente de configuración de notificaciones
@@ -489,25 +489,33 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
 // Componente de configuración de aplicación
 export const AppSettings = ({ config, onUpdate, saving }) => {
   const [formData, setFormData] = useState({
-    tema: config?.aplicacion?.tema || 'dark',
     idioma: config?.aplicacion?.idioma || 'es',
     timezone: config?.aplicacion?.timezone || 'Europe/Madrid',
     itemsPorPagina: config?.aplicacion?.itemsPorPagina || 20,
     autoGuardado: config?.aplicacion?.autoGuardado || true,
     mostrarAyuda: config?.aplicacion?.mostrarAyuda || true,
-    compactoMode: config?.aplicacion?.compactoMode || false
+    compactoMode: config?.aplicacion?.compactoMode || false,
+    mostrarMonedas: config?.aplicacion?.mostrarMonedas || 'EUR',
+    formatoFecha: config?.aplicacion?.formatoFecha || 'DD/MM/YYYY',
+    mostrarVencimientosProximos: config?.aplicacion?.mostrarVencimientosProximos || true,
+    diasAlertaVencimiento: config?.aplicacion?.diasAlertaVencimiento || 7,
+    ocultarLicitacionesVencidas: config?.aplicacion?.ocultarLicitacionesVencidas || false
   });
 
   useEffect(() => {
     if (config?.aplicacion) {
       setFormData({
-        tema: config.aplicacion.tema || 'dark',
         idioma: config.aplicacion.idioma || 'es',
         timezone: config.aplicacion.timezone || 'Europe/Madrid',
         itemsPorPagina: config.aplicacion.itemsPorPagina || 20,
         autoGuardado: config.aplicacion.autoGuardado || true,
         mostrarAyuda: config.aplicacion.mostrarAyuda || true,
-        compactoMode: config.aplicacion.compactoMode || false
+        compactoMode: config.aplicacion.compactoMode || false,
+        mostrarMonedas: config.aplicacion.mostrarMonedas || 'EUR',
+        formatoFecha: config.aplicacion.formatoFecha || 'DD/MM/YYYY',
+        mostrarVencimientosProximos: config.aplicacion.mostrarVencimientosProximos || true,
+        diasAlertaVencimiento: config.aplicacion.diasAlertaVencimiento || 7,
+        ocultarLicitacionesVencidas: config.aplicacion.ocultarLicitacionesVencidas || false
       });
     }
   }, [config]);
@@ -530,64 +538,97 @@ export const AppSettings = ({ config, onUpdate, saving }) => {
       exit={{ opacity: 0, y: -20 }}
     >
       <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-        <Smartphone className="w-6 h-6 mr-3 text-[#a1db87]" />
-        Configuración de Aplicación
+        <Filter className="w-6 h-6 mr-3 text-[#a1db87]" />
+        Preferencias de Visualización
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Tema */}
+        {/* Configuraciones de Visualización */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-3">
-            Tema de la aplicación
+            Configuración de Visualización de Licitaciones
           </label>
-          <div className="grid grid-cols-3 gap-4">
-            <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-700/50 ${formData.tema === 'dark' ? 'border-[#a1db87] bg-[#a1db87]/10' : 'border-gray-600'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Moneda preferida
+              </label>
+              <select
+                value={formData.mostrarMonedas}
+                onChange={(e) => setFormData({ ...formData, mostrarMonedas: e.target.value })}
+                className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
+              >
+                <option value="EUR">Euro (€)</option>
+                <option value="USD">Dólar ($)</option>
+                <option value="GBP">Libra (£)</option>
+                <option value="JPY">Yen (¥)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Formato de fecha
+              </label>
+              <select
+                value={formData.formatoFecha}
+                onChange={(e) => setFormData({ ...formData, formatoFecha: e.target.value })}
+                className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
+              >
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                <option value="DD MMM YYYY">DD MMM YYYY</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Alertas y Vencimientos */}
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-3">
+            Gestión de Vencimientos
+          </label>
+          <div className="space-y-4">
+            <label className="flex items-center">
               <input
-                type="radio"
-                name="tema"
-                value="dark"
-                checked={formData.tema === 'dark'}
-                onChange={(e) => setFormData({ ...formData, tema: e.target.value })}
-                className="sr-only"
+                type="checkbox"
+                checked={formData.mostrarVencimientosProximos}
+                onChange={(e) => setFormData({ ...formData, mostrarVencimientosProximos: e.target.checked })}
+                className="w-4 h-4 text-[#a1db87] bg-gray-600 border-gray-500 rounded focus:ring-[#a1db87]"
               />
-              <div className="flex flex-col items-center text-center">
-                <Moon className="w-8 h-8 mb-2 text-gray-300" />
-                <span className="text-white font-medium">Oscuro</span>
-                <span className="text-gray-400 text-xs">Actual</span>
-              </div>
+              <span className="ml-3 text-gray-300">Mostrar alertas de vencimientos próximos</span>
             </label>
 
-            <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-700/50 ${formData.tema === 'light' ? 'border-[#a1db87] bg-[#a1db87]/10' : 'border-gray-600'}`}>
-              <input
-                type="radio"
-                name="tema"
-                value="light"
-                checked={formData.tema === 'light'}
-                onChange={(e) => setFormData({ ...formData, tema: e.target.value })}
-                className="sr-only"
-              />
-              <div className="flex flex-col items-center text-center">
-                <Sun className="w-8 h-8 mb-2 text-gray-300" />
-                <span className="text-white font-medium">Claro</span>
-                <span className="text-gray-400 text-xs">Próximamente</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Días de anticipación para alertas
+                </label>
+                <select
+                  value={formData.diasAlertaVencimiento}
+                  onChange={(e) => setFormData({ ...formData, diasAlertaVencimiento: parseInt(e.target.value) })}
+                  className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
+                >
+                  <option value={1}>1 día</option>
+                  <option value={3}>3 días</option>
+                  <option value={7}>7 días</option>
+                  <option value={15}>15 días</option>
+                  <option value={30}>30 días</option>
+                </select>
               </div>
-            </label>
 
-            <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-700/50 ${formData.tema === 'auto' ? 'border-[#a1db87] bg-[#a1db87]/10' : 'border-gray-600'}`}>
-              <input
-                type="radio"
-                name="tema"
-                value="auto"
-                checked={formData.tema === 'auto'}
-                onChange={(e) => setFormData({ ...formData, tema: e.target.value })}
-                className="sr-only"
-              />
-              <div className="flex flex-col items-center text-center">
-                <Palette className="w-8 h-8 mb-2 text-gray-300" />
-                <span className="text-white font-medium">Auto</span>
-                <span className="text-gray-400 text-xs">Sistema</span>
+              <div className="flex items-end">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.ocultarLicitacionesVencidas}
+                    onChange={(e) => setFormData({ ...formData, ocultarLicitacionesVencidas: e.target.checked })}
+                    className="w-4 h-4 text-[#a1db87] bg-gray-600 border-gray-500 rounded focus:ring-[#a1db87]"
+                  />
+                  <span className="ml-3 text-gray-300">Ocultar licitaciones vencidas</span>
+                </label>
               </div>
-            </label>
+            </div>
           </div>
         </div>
 

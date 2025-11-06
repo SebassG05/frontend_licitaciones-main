@@ -10,7 +10,6 @@ import * as configService from '../services/configuration';
 import { 
   NotificationSettings,
   SearchPreferences, 
-  AppSettings, 
   SecuritySettings, 
   PasswordChangeModal 
 } from '../components/configuration/ConfigurationComponents';
@@ -88,9 +87,6 @@ const Configuration = () => {
         case 'search':
           updatedConfig = await configService.updateSearchPreferences(data);
           break;
-        case 'app':
-          updatedConfig = await configService.updateAppSettings(data);
-          break;
         case 'security':
           updatedConfig = await configService.updateSecurityConfig(data);
           break;
@@ -162,7 +158,6 @@ const Configuration = () => {
   const tabs = [
     { id: 'notifications', label: 'Notificaciones', icon: Bell },
     { id: 'search', label: 'Búsquedas', icon: Search },
-    { id: 'app', label: 'Aplicación', icon: Smartphone },
     { id: 'security', label: 'Seguridad', icon: Shield }
   ];
 
@@ -299,15 +294,6 @@ const Configuration = () => {
                     key="search"
                     config={config}
                     onUpdate={(data) => handleConfigUpdate('search', data)}
-                    saving={saving}
-                  />
-                )}
-                
-                {activeTab === 'app' && (
-                  <AppSettings
-                    key="app"
-                    config={config}
-                    onUpdate={(data) => handleConfigUpdate('app', data)}
                     saving={saving}
                   />
                 )}
