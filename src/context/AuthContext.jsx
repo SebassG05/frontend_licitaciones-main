@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as authService from '../services/auth';
 
 // Crear contexto
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const navigate = useNavigate();
 
   // Verificar si el usuario está autenticado al cargar la aplicación
   useEffect(() => {
@@ -63,12 +65,16 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       // Asegurar que localStorage se limpia
       localStorage.removeItem('token');
+      // Redirigir al inicio
+      navigate('/');
       return { success: true };
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       // Aún así limpiar estado local
       setUser(null);
       localStorage.removeItem('token');
+      // Redirigir al inicio incluso si hay error
+      navigate('/');
       return { success: false, message: error.message };
     } finally {
       setLoading(false);

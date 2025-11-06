@@ -9,6 +9,7 @@ const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Configuration = lazy(() => import('./pages/Configuration'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const NotFound = lazy(() => import('./pages/NotFound')); // Nueva importación
 
 // Componente de carga
@@ -20,8 +21,8 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Layout>
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -30,13 +31,14 @@ function App() {
               <Route path="/contacto" element={<Contact />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/configuracion" element={<Configuration />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               {/* Ruta catch-all para 404 - debe ir al final */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </Layout>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

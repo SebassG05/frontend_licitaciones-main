@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Smartphone, Shield, Save, Loader, Key, 
-  Eye, EyeOff, Calendar, Euro, Clock, Filter, Bell
+  Eye, EyeOff, Calendar, Euro, Clock, Filter, Bell, CheckCircle
 } from 'lucide-react';
+import * as authService from '../../services/auth';
 
 // Componente de configuración de notificaciones
 export const NotificationSettings = ({ config, onUpdate, saving }) => {
@@ -671,22 +672,21 @@ export const AppSettings = ({ config, onUpdate, saving }) => {
 // Componente de configuración de seguridad
 export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving }) => {
   const [formData, setFormData] = useState({
-    autenticacionDosPasos: config?.seguridad?.autenticacionDosPasos || false,
     sessionTimeout: config?.seguridad?.sessionTimeout || 60,
     loginAlerts: config?.seguridad?.loginAlerts || true,
-    ipWhitelist: config?.seguridad?.ipWhitelist || [],
     logoutOnClose: config?.seguridad?.logoutOnClose || false
   });
 
-  const [newIP, setNewIP] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [sendingReset, setSendingReset] = useState(false);
 
   useEffect(() => {
     if (config?.seguridad) {
       setFormData({
-        autenticacionDosPasos: config.seguridad.autenticacionDosPasos || false,
         sessionTimeout: config.seguridad.sessionTimeout || 60,
         loginAlerts: config.seguridad.loginAlerts || true,
-        ipWhitelist: config.seguridad.ipWhitelist || [],
         logoutOnClose: config.seguridad.logoutOnClose || false
       });
     }
@@ -697,22 +697,25 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
     onUpdate(formData);
   };
 
-  const addIP = () => {
-    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    if (newIP.trim() && ipRegex.test(newIP.trim()) && !formData.ipWhitelist.includes(newIP.trim())) {
-      setFormData({
-        ...formData,
-        ipWhitelist: [...formData.ipWhitelist, newIP.trim()]
-      });
-      setNewIP('');
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setSendingReset(true);
+    
+    try {
+      await authService.requestPasswordReset(forgotPasswordEmail);
+      
+      setResetEmailSent(true);
+      setTimeout(() => {
+        setResetEmailSent(false);
+        setShowForgotPassword(false);
+        setForgotPasswordEmail('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error al enviar email de recuperación:', error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    } finally {
+      setSendingReset(false);
     }
-  };
-
-  const removeIP = (ip) => {
-    setFormData({
-      ...formData,
-      ipWhitelist: formData.ipWhitelist.filter(i => i !== ip)
-    });
   };
 
   return (
@@ -751,25 +754,108 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
           </div>
         </div>
 
-        {/* Autenticación de dos pasos */}
+        {/* ¿Has olvidado tu contraseña? */}
         <div className="bg-gray-700/50 rounded-lg p-4">
-          <label className="flex items-start">
-            <input
-              type="checkbox"
-              checked={formData.autenticacionDosPasos}
-              onChange={(e) => setFormData({ ...formData, autenticacionDosPasos: e.target.checked })}
-              className="w-5 h-5 text-[#a1db87] bg-gray-600 border-gray-500 rounded focus:ring-[#a1db87] focus:ring-2 mt-1"
-            />
-            <div className="ml-3">
-              <span className="text-white font-medium">
-                Autenticación de dos pasos
-              </span>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-white">
+                ¿Has olvidado tu contraseña?
+              </h3>
               <p className="text-gray-400 text-sm mt-1">
-                Añade una capa extra de seguridad requiriendo un código adicional al iniciar sesión
+                Envía un enlace de recuperación a tu email
               </p>
             </div>
-          </label>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+            >
+              Recuperar Contraseña
+            </motion.button>
+          </div>
         </div>
+
+        {/* Modal de recuperación de contraseña */}
+        <AnimatePresence>
+          {showForgotPassword && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+              onClick={() => setShowForgotPassword(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="bg-[#333333] border border-[#a1db87]/30 rounded-xl p-6 w-full max-w-md"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="text-xl font-bold text-white mb-4">
+                  Recuperar Contraseña
+                </h3>
+
+                {resetEmailSent ? (
+                  <div className="text-center">
+                    <div className="mb-4 p-3 bg-green-900/50 border border-green-500/50 rounded-lg">
+                      <p className="text-green-200 text-sm">
+                        Se ha enviado un enlace de recuperación a tu email
+                      </p>
+                    </div>
+                    <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                    <p className="text-gray-300">
+                      Revisa tu bandeja de entrada y sigue las instrucciones
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleForgotPassword}>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Email de tu cuenta
+                      </label>
+                      <input
+                        type="email"
+                        value={forgotPasswordEmail}
+                        onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                        placeholder="ejemplo@correo.com"
+                        className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex gap-3">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        type="button"
+                        onClick={() => setShowForgotPassword(false)}
+                        className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium"
+                      >
+                        Cancelar
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        type="submit"
+                        disabled={sendingReset}
+                        className="flex-1 px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium inline-flex items-center justify-center"
+                      >
+                        {sendingReset ? (
+                          <Loader className="w-4 h-4 animate-spin" />
+                        ) : (
+                          'Enviar'
+                        )}
+                      </motion.button>
+                    </div>
+                  </form>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Configuración de sesión */}
         <div>
@@ -814,52 +900,6 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
               />
               <span className="ml-3 text-gray-300">Cerrar sesión al cerrar el navegador</span>
             </label>
-          </div>
-        </div>
-
-        {/* Lista blanca de IPs */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Lista blanca de IPs (opcional)
-          </label>
-          <p className="text-gray-400 text-sm mb-3">
-            Restringir acceso solo a las direcciones IP especificadas
-          </p>
-          <div className="flex gap-2 mb-3">
-            <input
-              type="text"
-              value={newIP}
-              onChange={(e) => setNewIP(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addIP())}
-              placeholder="Ej: 192.168.1.100"
-              className="flex-1 bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
-            />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              onClick={addIP}
-              className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
-            >
-              Agregar
-            </motion.button>
-          </div>
-          <div className="space-y-2">
-            {formData.ipWhitelist.map((ip, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-gray-700/50 rounded-lg px-3 py-2"
-              >
-                <span className="text-gray-300">{ip}</span>
-                <button
-                  type="button"
-                  onClick={() => removeIP(ip)}
-                  className="text-red-400 hover:text-red-300"
-                >
-                  Eliminar
-                </button>
-              </div>
-            ))}
           </div>
         </div>
 

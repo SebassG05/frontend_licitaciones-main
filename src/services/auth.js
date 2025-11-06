@@ -110,3 +110,62 @@ export const getProfile = async () => {
     return null;
   }
 };
+
+/**
+ * Solicitar recuperación de contraseña
+ * @param {string} email - Email del usuario
+ * @returns {Promise} - Respuesta del servidor
+ */
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al solicitar recuperación de contraseña');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error en recuperación de contraseña:', error);
+    throw error;
+  }
+};
+
+/**
+ * Restablecer contraseña con token
+ * @param {string} token - Token de recuperación
+ * @param {string} newPassword - Nueva contraseña
+ * @returns {Promise} - Respuesta del servidor
+ */
+export const resetPassword = async (token, newPassword) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token, newPassword }),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al restablecer contraseña');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error en restablecimiento de contraseña:', error);
+    throw error;
+  }
+};
