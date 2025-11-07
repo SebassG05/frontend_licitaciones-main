@@ -81,6 +81,47 @@ const LicitacionCard = ({ licitacion }) => {
     return text.substring(0, maxLength) + '...';
   };
 
+  // Función para verificar si un campo está borroso
+  const isBlurred = (value) => {
+    return typeof value === 'string' && value.includes('••');
+  };
+
+  // Función para renderizar campos con blur
+  const renderBlurredField = (value, defaultText = 'No disponible', className = '') => {
+    if (isBlurred(value)) {
+      return (
+        <span className={`filter blur-sm select-none relative ${className}`}>
+          {defaultText}
+        </span>
+      );
+    }
+    return <span className={className}>{value || defaultText}</span>;
+  };
+
+  // Función para renderizar fechas con blur
+  const renderBlurredDate = (dateValue) => {
+    if (isBlurred(dateValue)) {
+      return (
+        <span className="filter blur-sm select-none">
+          {formatDate(new Date())}
+        </span>
+      );
+    }
+    return formatDate(dateValue);
+  };
+
+  // Función para renderizar moneda con blur
+  const renderBlurredCurrency = (amount, currency = 'EUR') => {
+    if (isBlurred(amount)) {
+      return (
+        <span className="filter blur-sm select-none">
+          {formatCurrency(50000, currency)}
+        </span>
+      );
+    }
+    return formatCurrency(amount, currency);
+  };
+
   const calculateDaysRemaining = (deadline) => {
     if (!deadline) return null;
     const deadlineDate = new Date(deadline);
@@ -152,7 +193,7 @@ const LicitacionCard = ({ licitacion }) => {
                 whileHover={{ scale: 1.05 }}
                 className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30"
               >
-                💰 {formatCurrency(licitacion.budget || licitacion.presupuesto, licitacion.currency)}
+                💰 {renderBlurredCurrency(licitacion.budget || licitacion.presupuesto, licitacion.currency)}
               </motion.span>
             )}
 
@@ -161,7 +202,9 @@ const LicitacionCard = ({ licitacion }) => {
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
-                  new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 7 * 24 * 60 * 60 * 1000
+                  isBlurred(licitacion.deadline || licitacion.fechaLimite)
+                    ? 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                    : new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 7 * 24 * 60 * 60 * 1000
                     ? 'bg-red-500/20 text-red-300 border-red-500/30 animate-pulse'
                     : new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 30 * 24 * 60 * 60 * 1000
                     ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
@@ -169,7 +212,9 @@ const LicitacionCard = ({ licitacion }) => {
                 }`}
               >
                 ⏰ {
-                  new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 7 * 24 * 60 * 60 * 1000
+                  isBlurred(licitacion.deadline || licitacion.fechaLimite)
+                    ? renderBlurredField(licitacion.deadline || licitacion.fechaLimite, 'Fecha límite')
+                    : new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 7 * 24 * 60 * 60 * 1000
                     ? 'Urgente'
                     : new Date(licitacion.deadline || licitacion.fechaLimite) - new Date() < 30 * 24 * 60 * 60 * 1000
                     ? 'Próxima'
@@ -179,12 +224,12 @@ const LicitacionCard = ({ licitacion }) => {
             )}
 
             {/* Badge de tipo de licitación */}
-            {(licitacion.tipoLicitacion || licitacion.type) && (
+            {(licitacion.tipoLicitacion || licitacion.type || licitacion.category) && (
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-purple-500/20 text-purple-300 border-purple-500/30"
               >
-                🏷️ {licitacion.tipoLicitacion || licitacion.type}
+                🏷️ {renderBlurredField(licitacion.tipoLicitacion || licitacion.type || licitacion.category, 'Tipo no especificado')}
               </motion.span>
             )}
 
@@ -287,7 +332,10 @@ const LicitacionCard = ({ licitacion }) => {
                     ? 'text-yellow-300'
                     : 'text-green-300'
                 }`}>
-                  {formatDeadlineWithDays(licitacion.deadline || licitacion.fechaLimite)}
+                  {isBlurred(licitacion.deadline || licitacion.fechaLimite) 
+                    ? renderBlurredDate(licitacion.deadline || licitacion.fechaLimite)
+                    : formatDeadlineWithDays(licitacion.deadline || licitacion.fechaLimite)
+                  }
                 </span>
               </div>
             )}
@@ -300,7 +348,7 @@ const LicitacionCard = ({ licitacion }) => {
                   <span className="font-semibold text-gray-400 text-xs">Presupuesto</span>
                 </div>
                 <span className="text-[#a1db87] font-bold text-sm lg:text-base">
-                  {formatCurrency(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto, licitacion.currency)}
+                  {renderBlurredCurrency(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto, licitacion.currency)}
                 </span>
               </div>
             )}
@@ -339,7 +387,7 @@ const LicitacionCard = ({ licitacion }) => {
                   <span className="font-semibold text-gray-400 text-xs">Tipo</span>
                 </div>
                 <span className="text-white font-medium text-sm">
-                  {licitacion.tipoLicitacion || licitacion.type || licitacion.category}
+                  {renderBlurredField(licitacion.tipoLicitacion || licitacion.type || licitacion.category, 'Tipo no especificado')}
                 </span>
               </div>
             )}
@@ -365,7 +413,7 @@ const LicitacionCard = ({ licitacion }) => {
                   <span className="font-semibold text-gray-400 text-xs">Publicado</span>
                 </div>
                 <span className="text-white font-medium text-sm">
-                  {formatDate(licitacion.publishDate || licitacion.fechaPublicacion)}
+                  {renderBlurredDate(licitacion.publishDate || licitacion.fechaPublicacion)}
                 </span>
               </div>
             )}
