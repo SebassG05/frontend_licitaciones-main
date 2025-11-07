@@ -211,6 +211,33 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
                     <option value="desc">Descendente</option>
                   </select>
                 </div>
+
+                {/* Filtro por fecha límite */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-3">
+                    Fecha límite (desde)
+                  </label>
+                  <input
+                    type="date"
+                    value={filters.deadline || ''}
+                    onChange={e => handleFilterChange('deadline', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#2a2a2a] border-2 border-gray-700 rounded-xl text-white font-medium focus:ring-2 focus:ring-[#a1db87] focus:border-[#a1db87] focus:bg-[#1e1e1e] hover:border-gray-600 hover:bg-[#252525] transition-all duration-300"
+                  />
+                </div>
+
+                {/* Filtro por presupuesto mínimo */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-3">
+                    Presupuesto mínimo
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={filters.minBudget || ''}
+                    onChange={e => handleFilterChange('minBudget', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#2a2a2a] border-2 border-gray-700 rounded-xl text-white font-medium focus:ring-2 focus:ring-[#a1db87] focus:border-[#a1db87] focus:bg-[#1e1e1e] hover:border-gray-600 hover:bg-[#252525] transition-all duration-300"
+                  />
+                </div>
               </div>
 
               {/* Botón de reset */}
