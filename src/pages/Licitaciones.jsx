@@ -5,8 +5,12 @@ import { getLicitaciones, getSources, getLicitacionesStats } from '../services/l
 import LicitacionCard from '../components/licitaciones/LicitacionCard';
 import LicitacionFilters from '../components/licitaciones/LicitacionFilters';
 import Container from '../components/ui/Container';
+import LicitacionSkeleton from '../components/ui/LicitacionSkeleton';
+import PremiumPopup from '../components/ui/PremiumPopup';
+import { useAuth } from '../context/AuthContext';
 
 const Licitaciones = () => {
+  const { isAuthenticated } = useAuth();
   const [licitaciones, setLicitaciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +24,8 @@ const Licitaciones = () => {
   const [sources, setSources] = useState([]);
   const [stats, setStats] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [userInfo, setUserInfo] = useState({ isAuthenticated: false, isPremium: false });
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -30,10 +36,12 @@ const Licitaciones = () => {
     return () => window.removeEventListener('resize', checkDevice);
   }, []);
 
-  // Función para obtener licitaciones
-  const fetchLicitaciones = useCallback(async (currentFilters = {}, page = 1) => {
+  // Función para obtener licitaciones con debouncing
+  const fetchLicitaciones = useCallback(async (currentFilters = {}, page = 1, skipLoading = false) => {
     try {
-      setLoading(true);
+      if (!skipLoading) {
+        setLoading(true);
+      }
       setError(null);
 
       const params = {
@@ -42,7 +50,15 @@ const Licitaciones = () => {
         limit: pagination.itemsPerPage
       };
 
+      // Agregar timestamp para evitar cache si es necesario
+      const startTime = Date.now();
       const response = await getLicitaciones(params);
+      const endTime = Date.now();
+      
+      // Solo mostrar si la respuesta es reciente (evita race conditions)
+      if (endTime - startTime > 50) {
+        console.log(`Consulta de licitaciones tardó: ${endTime - startTime}ms`);
+      }
       
       if (response.success) {
         setLicitaciones(response.data.licitaciones || []);
@@ -52,6 +68,11 @@ const Licitaciones = () => {
           totalItems: response.data.pagination?.totalItems || 0,
           itemsPerPage: response.data.pagination?.itemsPerPage || 20
         });
+        
+        // Capturar información del usuario del backend
+        if (response.data.user) {
+          setUserInfo(response.data.user);
+        }
       } else {
         throw new Error(response.message || 'Error al cargar las licitaciones');
       }
@@ -383,20 +404,12 @@ const Licitaciones = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-16 lg:py-24"
+                className="space-y-6 lg:space-y-8"
               >
-                <div className="relative">
-                  <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#a1db87]"></div>
-                  <div className="absolute inset-0 rounded-full border-4 border-[#a1db87]/20"></div>
-                </div>
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-gray-400 mt-6 text-lg font-medium"
-                >
-                  Cargando licitaciones...
-                </motion.p>
+                {/* Mostrar skeletons mientras carga */}
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <LicitacionSkeleton key={i} />
+                ))}
               </motion.div>
             ) : licitaciones.length === 0 ? (
               <motion.div
@@ -433,11 +446,18 @@ const Licitaciones = () => {
                     return licitacionesToShow.map((licitacion, index) => (
                       <motion.div
                         key={licitacion._id || licitacion.id}
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: Math.min(0.05 * index, 0.3) // Límite máximo de delay
+                        }}
                       >
-                        <LicitacionCard licitacion={licitacion} />
+                        <LicitacionCard 
+                          licitacion={licitacion}
+                          isUserAuthenticated={isAuthenticated || userInfo.isAuthenticated}
+                          onShowPremiumPopup={() => setShowPremiumPopup(true)}
+                        />
                       </motion.div>
                     ));
                   })()}
@@ -450,6 +470,12 @@ const Licitaciones = () => {
           </motion.div>
         </div>
       </Container>
+
+      {/* Premium Popup fuera del contenedor */}
+      <PremiumPopup 
+        isOpen={showPremiumPopup} 
+        onClose={() => setShowPremiumPopup(false)} 
+      />
     </motion.div>
   );
 };

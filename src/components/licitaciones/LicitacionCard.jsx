@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Euro, ExternalLink, Eye, EyeOff, Building2, Tag, Clock, Briefcase, FileText } from 'lucide-react';
 
@@ -154,9 +154,9 @@ const LicitacionCard = ({ licitacion }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ duration: 0.3 }}
-      className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl shadow-2xl hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] backdrop-blur-sm overflow-hidden group"
+      whileHover={{ y: -2, scale: 1.005 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl shadow-2xl hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] backdrop-blur-sm overflow-hidden group will-change-transform"
     >
       {/* Layout vertical - todo abajo */}
       <div className="flex flex-col">
@@ -171,12 +171,11 @@ const LicitacionCard = ({ licitacion }) => {
           </motion.h3>
           
           <div className="flex flex-wrap gap-2 mb-4">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getSourceColor(licitacion.source)}`}
+            <span
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${getSourceColor(licitacion.source)} hover:scale-105 transition-transform duration-150`}
             >
               {getSourceLabel(licitacion.source)}
-            </motion.span>
+            </span>
             
             {(licitacion.status || licitacion.estado) && (
               <motion.span
@@ -475,4 +474,5 @@ const LicitacionCard = ({ licitacion }) => {
   );
 };
 
-export default LicitacionCard;
+// Memoizar el componente para evitar re-renders innecesarios
+export default memo(LicitacionCard);

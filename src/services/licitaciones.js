@@ -1,6 +1,34 @@
 const API_URL = 'http://localhost:3000/api';
 
 /**
+ * Cache simple para evitar llamadas repetitivas
+ */
+const cache = new Map();
+const CACHE_DURATION = 30000; // 30 segundos
+
+const getCacheKey = (params) => {
+  return JSON.stringify(params);
+};
+
+const getCachedData = (key) => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
+};
+
+const setCachedData = (key, data) => {
+  cache.set(key, { data, timestamp: Date.now() });
+  
+  // Limpiar cache viejo cada cierto tiempo
+  if (cache.size > 50) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+};
+
+/**
  * Servicio para manejar las licitaciones
  */
 
@@ -18,6 +46,14 @@ const API_URL = 'http://localhost:3000/api';
  */
 export const getLicitaciones = async (params = {}) => {
   try {
+    // Verificar cache primero
+    const cacheKey = getCacheKey(params);
+    const cachedData = getCachedData(cacheKey);
+    if (cachedData) {
+      console.log('Datos obtenidos del cache');
+      return cachedData;
+    }
+    
     const token = localStorage.getItem('token');
     
     // Construir URL con parámetros de consulta
@@ -48,6 +84,9 @@ export const getLicitaciones = async (params = {}) => {
     if (!response.ok) {
       throw new Error(data.message || 'Error al obtener las licitaciones');
     }
+
+    // Guardar en cache
+    setCachedData(cacheKey, data);
 
     return data;
   } catch (error) {
