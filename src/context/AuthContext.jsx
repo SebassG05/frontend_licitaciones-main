@@ -48,6 +48,12 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await authService.login(email, password);
       setUser(response.data.user);
+      
+      // Hacer una mini recarga para mostrar los datos sin parsear
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      
       return { success: true };
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -65,16 +71,24 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       // Asegurar que localStorage se limpia
       localStorage.removeItem('token');
-      // Redirigir al inicio
-      navigate('/');
+      
+      // Hacer una mini recarga para mostrar los datos parseados (modo free)
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      
       return { success: true };
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       // Aún así limpiar estado local
       setUser(null);
       localStorage.removeItem('token');
-      // Redirigir al inicio incluso si hay error
-      navigate('/');
+      
+      // Hacer recarga incluso si hay error para asegurar que se muestren datos parseados
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      
       return { success: false, message: error.message };
     } finally {
       setLoading(false);
