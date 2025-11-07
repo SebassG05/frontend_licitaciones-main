@@ -2,7 +2,7 @@ import { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Euro, ExternalLink, Eye, EyeOff, Building2, Tag, Clock, Briefcase, FileText } from 'lucide-react';
 
-const LicitacionCard = ({ licitacion }) => {
+const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formatDate = (dateString) => {
@@ -450,22 +450,39 @@ const LicitacionCard = ({ licitacion }) => {
           {/* Botón Ver detalles - ahora abajo y separado más pequeño */}
           {(licitacion.url || licitacion.enlace) && (
             <div className="mt-4 pt-4 border-t border-gray-700 flex justify-center">
-              <motion.a
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                href={licitacion.url || licitacion.enlace}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
-                  text-sm font-bold rounded-xl hover:bg-white
-                  transition-all duration-300 shadow-lg hover:shadow-xl
-                  hover:shadow-[#a1db87]/25 max-w-xs
-                "
-              >
-                <ExternalLink className="w-4 h-4" />
-                Ver detalles completos
-              </motion.a>
+              {isUserAuthenticated ? (
+                <motion.a
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  href={licitacion.url || licitacion.enlace}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
+                    text-sm font-bold rounded-xl hover:bg-white
+                    transition-all duration-300 shadow-lg hover:shadow-xl
+                    hover:shadow-[#a1db87]/25 max-w-xs
+                  "
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Ver detalles completos
+                </motion.a>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={onShowPremiumPopup}
+                  className="
+                    inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
+                    text-sm font-bold rounded-xl hover:bg-white
+                    transition-all duration-300 shadow-lg hover:shadow-xl
+                    hover:shadow-[#a1db87]/25 max-w-xs
+                  "
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Ver detalles completos
+                </motion.button>
+              )}
             </div>
           )}
         </div>

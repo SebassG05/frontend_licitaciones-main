@@ -1,8 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, X, CheckCircle } from 'lucide-react';
 
-const PremiumPopup = ({ isOpen, onClose }) => {
+const PremiumPopup = ({ isOpen, onClose, onLoginClick }) => {
   if (!isOpen) return null;
+
+  const handleLoginClick = () => {
+    onClose(); // Cerrar el popup premium
+    if (onLoginClick) {
+      onLoginClick(); // Ejecutar callback para abrir login
+    } else {
+      // Fallback: disparar evento personalizado para que el header lo capture
+      window.dispatchEvent(new CustomEvent('openLogin'));
+    }
+  };
 
   const premiumFeatures = [
     'Acceso completo a todas las licitaciones',
@@ -29,81 +39,84 @@ const PremiumPopup = ({ isOpen, onClose }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden"
+          className="relative bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] border border-[#a1db87]/20 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with gradient */}
-          <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 p-4 relative">
+          <div className="bg-gradient-to-r from-[#a1db87] to-[#8ac573] p-5 relative">
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors duration-200"
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors duration-200 z-20"
             >
-              <X className="w-4 h-4 text-white" />
+              <X className="w-5 h-5 text-white" />
             </button>
             
             <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-1">
-                <Crown className="w-6 h-6 text-white" />
-                <h2 className="text-xl font-bold text-white">Acceso Premium</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <Crown className="w-7 h-7 text-white" />
+                <h2 className="text-2xl font-bold text-white">Acceso Premium</h2>
               </div>
-              <p className="text-amber-100 text-xs">
+              <p className="text-white/90 text-sm">
                 Desbloquea el potencial completo de nuestra plataforma
               </p>
             </div>
           </div>
 
           {/* Content */}
-          <div className="p-4">
-            <div className="text-center mb-4">
-              <h3 className="text-base font-semibold text-white mb-1">
+          <div className="p-6">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Esta funcionalidad requiere una cuenta Premium
               </h3>
-              <p className="text-gray-400 text-xs">
+              <p className="text-gray-400 text-sm">
                 Accede a información completa y detalles exclusivos de las licitaciones
               </p>
             </div>
 
             {/* Features */}
-            <div className="space-y-2 mb-4">
+            <div className="space-y-3 mb-6">
               {premiumFeatures.map((feature, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-center gap-2"
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center gap-3"
                 >
-                  <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                  <span className="text-gray-300 text-xs">{feature}</span>
+                  <CheckCircle className="w-5 h-5 text-[#a1db87] flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">{feature}</span>
                 </motion.div>
               ))}
             </div>
 
             {/* Buttons */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <motion.a
                 href="/contacto"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-2.5 rounded-xl transition-all duration-200 shadow-lg hover:shadow-amber-500/25 text-center text-sm inline-block"
+                className="w-full bg-gradient-to-r from-[#a1db87] to-[#8ac573] hover:from-[#8ac573] hover:to-[#6dc042] text-[#1a1a1a] font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-[#a1db87]/25 text-center text-sm inline-block"
               >
                 Contáctanos
               </motion.a>
               
               <button
                 onClick={onClose}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2.5 rounded-xl transition-colors duration-200 text-sm"
+                className="w-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 font-medium py-3 rounded-xl transition-colors duration-200 text-sm border border-gray-600 hover:border-gray-500"
               >
                 Continuar con versión gratuita
               </button>
             </div>
 
-            <div className="text-center mt-3">
-              <p className="text-gray-500 text-xs">
+            <div className="text-center mt-4">
+              <p className="text-gray-500 text-sm">
                 ¿Ya tienes una cuenta Premium?{' '}
-                <span className="text-amber-400 cursor-pointer hover:underline">
+                <button 
+                  onClick={handleLoginClick}
+                  className="text-[#a1db87] cursor-pointer hover:underline font-medium hover:text-[#90c977] transition-colors"
+                >
                   Inicia sesión aquí
-                </span>
+                </button>
               </p>
             </div>
           </div>

@@ -208,6 +208,18 @@ const Header = () => {
         }
     }, [mounted, loginOpen, newsletterOpen]);
 
+    // Escuchar evento personalizado para abrir login desde PremiumPopup
+    useEffect(() => {
+        const handleOpenLogin = () => {
+            setLoginOpen(true);
+            setNewsletterOpen(false);
+            setNotificationsOpen(false);
+        };
+
+        window.addEventListener('openLogin', handleOpenLogin);
+        return () => window.removeEventListener('openLogin', handleOpenLogin);
+    }, []);
+
 const handleNavigation = useCallback((path) => {
     if (location.pathname === path) return;
     setLoginOpen(false);

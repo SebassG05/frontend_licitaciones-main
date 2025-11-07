@@ -474,7 +474,11 @@ const Licitaciones = () => {
       {/* Premium Popup fuera del contenedor */}
       <PremiumPopup 
         isOpen={showPremiumPopup} 
-        onClose={() => setShowPremiumPopup(false)} 
+        onClose={() => setShowPremiumPopup(false)}
+        onLoginClick={() => {
+          // Disparar evento para que el header abra el dropdown de login
+          window.dispatchEvent(new CustomEvent('openLogin'));
+        }}
       />
     </motion.div>
   );
