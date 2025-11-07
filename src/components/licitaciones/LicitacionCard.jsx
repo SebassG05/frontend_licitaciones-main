@@ -76,7 +76,7 @@ const LicitacionCard = ({ licitacion }) => {
   };
 
   const truncateText = (text, maxLength = 150) => {
-    if (!text) return 'Sin descripción disponible';
+    if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
