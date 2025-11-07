@@ -422,16 +422,25 @@ const Licitaciones = () => {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="space-y-6 lg:space-y-8"
                 >
-                  {licitaciones.map((licitacion, index) => (
-                    <motion.div
-                      key={licitacion._id || licitacion.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.1 * index }}
-                    >
-                      <LicitacionCard licitacion={licitacion} />
-                    </motion.div>
-                  ))}
+                  {(() => {
+                    // Si no hay ningún filtro activo, mezclar las tarjetas
+                    const noFilters = !filters.search && !filters.source && !filters.status && !filters.deadline && !filters.minBudget;
+                    let licitacionesToShow = licitaciones;
+                    if (noFilters) {
+                      // Mezclar aleatoriamente las tarjetas
+                      licitacionesToShow = [...licitaciones].sort(() => Math.random() - 0.5);
+                    }
+                    return licitacionesToShow.map((licitacion, index) => (
+                      <motion.div
+                        key={licitacion._id || licitacion.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                      >
+                        <LicitacionCard licitacion={licitacion} />
+                      </motion.div>
+                    ));
+                  })()}
                 </motion.div>
 
                 {/* Paginación modernizada */}
