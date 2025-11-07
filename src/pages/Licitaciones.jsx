@@ -134,25 +134,9 @@ const Licitaciones = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="flex flex-col sm:flex-row items-center justify-between mt-12 lg:mt-16 gap-6"
+        className="flex flex-col items-center justify-center mt-12 lg:mt-16 gap-4"
       >
-        <div className="text-sm text-gray-400 order-2 sm:order-1">
-          Mostrando{' '}
-          <span className="text-[#a1db87] font-semibold">
-            {((pagination.currentPage - 1) * pagination.itemsPerPage) + 1}
-          </span>
-          {' '}-{' '}
-          <span className="text-[#a1db87] font-semibold">
-            {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)}
-          </span>
-          {' '}de{' '}
-          <span className="text-[#a1db87] font-semibold">
-            {pagination.totalItems}
-          </span>
-          {' '}licitaciones
-        </div>
-        
-        <div className="flex items-center gap-2 order-1 sm:order-2">
+        <div className="flex items-center gap-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -204,6 +188,23 @@ const Licitaciones = () => {
           >
             Siguiente
           </motion.button>
+        </div>
+        
+        {/* Información de resultados centrada debajo */}
+        <div className="text-sm text-gray-400 text-center">
+          Mostrando{' '}
+          <span className="text-[#a1db87] font-semibold">
+            {((pagination.currentPage - 1) * pagination.itemsPerPage) + 1}
+          </span>
+          {' '}-{' '}
+          <span className="text-[#a1db87] font-semibold">
+            {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)}
+          </span>
+          {' '}de{' '}
+          <span className="text-[#a1db87] font-semibold">
+            {pagination.totalItems}
+          </span>
+          {' '}licitaciones
         </div>
       </motion.div>
     );
