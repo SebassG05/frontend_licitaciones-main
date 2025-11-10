@@ -8,7 +8,8 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
     source: '',
     status: '',
     sortBy: 'deadline',
-    sortOrder: 'asc'
+    sortOrder: 'asc',
+    keywords: ''
   });
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -30,7 +31,8 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
       source: '',
       status: '',
       sortBy: 'deadline',
-      sortOrder: 'asc'
+      sortOrder: 'asc',
+      keywords: ''
     });
   };
 
@@ -240,6 +242,29 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
                 </div>
               </div>
 
+              {/* Filtro por Keywords */}
+              <div className="mt-6">
+                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                  Palabras clave
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej: tecnología, salud, construcción..."
+                  value={filters.keywords || ''}
+                  onChange={e => handleFilterChange('keywords', e.target.value)}
+                  className="
+                    w-full px-4 py-3 bg-[#2a2a2a] border-2 border-gray-700 rounded-xl
+                    text-white font-medium placeholder-gray-500
+                    focus:ring-2 focus:ring-[#a1db87] focus:border-[#a1db87] focus:bg-[#1e1e1e]
+                    hover:border-gray-600 hover:bg-[#252525]
+                    transition-all duration-300
+                  "
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Separa múltiples palabras con comas para buscar cualquiera de ellas
+                </p>
+              </div>
+
               {/* Botón de reset */}
               <div className="flex justify-end">
                 <motion.button
@@ -261,7 +286,7 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
         </AnimatePresence>
 
         {/* Indicadores de filtros activos */}
-        {(filters.search || filters.source || filters.status) && (
+        {(filters.search || filters.source || filters.status || filters.keywords) && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -309,6 +334,22 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
                 <button
                   onClick={() => handleFilterChange('status', '')}
                   className="ml-2 text-emerald-400 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </motion.span>
+            )}
+
+            {filters.keywords && (
+              <motion.span
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                className="inline-flex items-center px-4 py-2 rounded-xl text-sm font-medium bg-purple-400/10 text-purple-400 border border-purple-400/20"
+              >
+                Keywords: {filters.keywords}
+                <button
+                  onClick={() => handleFilterChange('keywords', '')}
+                  className="ml-2 text-purple-400 hover:text-white transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>

@@ -442,7 +442,7 @@ const Licitaciones = () => {
                 >
                   {(() => {
                     // Si no hay ningún filtro activo, mezclar las tarjetas
-                    const noFilters = !filters.search && !filters.source && !filters.status && !filters.deadline && !filters.minBudget;
+                    const noFilters = !filters.search && !filters.source && !filters.status && !filters.deadline && !filters.minBudget && !filters.keywords;
                     let licitacionesToShow = licitaciones;
                     if (noFilters) {
                       // Mezclar aleatoriamente las tarjetas

@@ -43,6 +43,9 @@ const setCachedData = (key, data) => {
  * @param {string} params.status - Estado de la licitación
  * @param {string} params.sortBy - Campo para ordenar
  * @param {string} params.sortOrder - Orden ascendente o descendente
+ * @param {string} params.keywords - Palabras clave separadas por comas
+ * @param {string} params.deadline - Fecha límite mínima
+ * @param {number} params.minBudget - Presupuesto mínimo
  * @returns {Promise} - Respuesta con las licitaciones
  */
 export const getLicitaciones = async (params = {}) => {
@@ -74,6 +77,9 @@ export const getLicitaciones = async (params = {}) => {
     if (params.status) queryParams.append('status', params.status);
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+    if (params.keywords) queryParams.append('keywords', params.keywords);
+    if (params.deadline) queryParams.append('deadline', params.deadline);
+    if (params.minBudget) queryParams.append('minBudget', params.minBudget);
     
     // Crear y almacenar la promesa de la request
     const requestPromise = fetch(`${API_URL}/licitaciones?${queryParams}`, {
