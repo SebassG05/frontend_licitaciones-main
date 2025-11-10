@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Search, Map, FileBarChart, Bell, Lock, Crown, Sparkles } from 'lucide-react';
+import { Search, Map, FileBarChart, Bell, Lock, Crown, Sparkles, Target } from 'lucide-react';
 import Container from '../ui/Container';
 
 const FeaturesSection = () => {
@@ -28,9 +28,9 @@ const FeaturesSection = () => {
     },
     {
       id: 2,
-      icon: <Map className="w-8 h-8 sm:w-10 sm:h-10" />,
-      title: 'Visor Territorial',
-      description: 'Mapa interactivo con datos geoespaciales en tiempo real',
+      icon: <Target className="w-8 h-8 sm:w-10 sm:h-10" />,
+      title: 'Seguimiento Inteligente',
+      description: 'Monitorea el estado y progreso de licitaciones',
       isPremium: true,
       color: '#8bc96a'
     },
