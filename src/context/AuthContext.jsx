@@ -11,6 +11,9 @@ export const AuthProvider = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
   const navigate = useNavigate();
 
+  // Verificar token inmediatamente al inicializar
+  const hasToken = localStorage.getItem('token');
+
   // Verificar si el usuario está autenticado al cargar la aplicación
   useEffect(() => {
     // Evitar verificaciones repetidas
@@ -18,7 +21,6 @@ export const AuthProvider = ({ children }) => {
     
     const checkAuth = async () => {
       try {
-        setLoading(true);
         // Verificar si hay token en localStorage antes de hacer la solicitud
         const token = localStorage.getItem('token');
         if (!token) {
@@ -28,10 +30,12 @@ export const AuthProvider = ({ children }) => {
           return;
         }
         
+        // Si hay token, verificar su validez
         const userData = await authService.getProfile();
         setUser(userData);
       } catch (error) {
-        // No mostramos el error en consola, solo establecemos user a null
+        // Si hay error, limpiar el token inválido
+        localStorage.removeItem('token');
         setUser(null);
       } finally {
         setLoading(false);
@@ -39,8 +43,15 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    checkAuth();
-  }, [initialized]);
+    // Si no hay token, resolver inmediatamente
+    if (!hasToken) {
+      setUser(null);
+      setLoading(false);
+      setInitialized(true);
+    } else {
+      checkAuth();
+    }
+  }, [initialized, hasToken]);
 
   // Función para iniciar sesión
   const login = async (email, password) => {

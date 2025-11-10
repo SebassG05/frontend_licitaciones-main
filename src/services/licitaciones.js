@@ -4,7 +4,8 @@ const API_URL = 'http://localhost:3000/api';
  * Cache simple para evitar llamadas repetitivas
  */
 const cache = new Map();
-const CACHE_DURATION = 30000; // 30 segundos
+const CACHE_DURATION = 5000; // 5 segundos para reducir parpadeo
+let pendingRequests = new Map(); // Para evitar llamadas duplicadas
 
 const getCacheKey = (params) => {
   return JSON.stringify(params);
@@ -50,8 +51,12 @@ export const getLicitaciones = async (params = {}) => {
     const cacheKey = getCacheKey(params);
     const cachedData = getCachedData(cacheKey);
     if (cachedData) {
-      console.log('Datos obtenidos del cache');
       return cachedData;
+    }
+
+    // Verificar si ya hay una request pendiente para evitar duplicados
+    if (pendingRequests.has(cacheKey)) {
+      return await pendingRequests.get(cacheKey);
     }
     
     const token = localStorage.getItem('token');
@@ -70,26 +75,38 @@ export const getLicitaciones = async (params = {}) => {
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
     
-    const response = await fetch(`${API_URL}/licitaciones?${queryParams}`, {
+    // Crear y almacenar la promesa de la request
+    const requestPromise = fetch(`${API_URL}/licitaciones?${queryParams}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { 'Authorization': `Bearer ${token}` }),
       },
       credentials: 'include',
+    }).then(async (response) => {
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Error al obtener las licitaciones');
+      }
+
+      // Guardar en cache
+      setCachedData(cacheKey, data);
+      
+      // Limpiar request pendiente
+      pendingRequests.delete(cacheKey);
+      
+      return data;
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al obtener las licitaciones');
-    }
-
-    // Guardar en cache
-    setCachedData(cacheKey, data);
-
-    return data;
+    // Almacenar la promesa para evitar requests duplicadas
+    pendingRequests.set(cacheKey, requestPromise);
+    
+    return await requestPromise;
   } catch (error) {
+    // Limpiar request pendiente en caso de error
+    const cacheKey = getCacheKey(params);
+    pendingRequests.delete(cacheKey);
     console.error('Error en servicio de licitaciones:', error);
     throw error;
   }

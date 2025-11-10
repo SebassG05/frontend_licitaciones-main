@@ -10,9 +10,10 @@ import PremiumPopup from '../components/ui/PremiumPopup';
 import { useAuth } from '../context/AuthContext';
 
 const Licitaciones = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [licitaciones, setLicitaciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
   const [pagination, setPagination] = useState({
@@ -39,7 +40,7 @@ const Licitaciones = () => {
   // Función para obtener licitaciones con debouncing
   const fetchLicitaciones = useCallback(async (currentFilters = {}, page = 1, skipLoading = false) => {
     try {
-      if (!skipLoading) {
+      if (!skipLoading && !authLoading) {
         setLoading(true);
       }
       setError(null);
@@ -50,15 +51,7 @@ const Licitaciones = () => {
         limit: pagination.itemsPerPage
       };
 
-      // Agregar timestamp para evitar cache si es necesario
-      const startTime = Date.now();
       const response = await getLicitaciones(params);
-      const endTime = Date.now();
-      
-      // Solo mostrar si la respuesta es reciente (evita race conditions)
-      if (endTime - startTime > 50) {
-        console.log(`Consulta de licitaciones tardó: ${endTime - startTime}ms`);
-      }
       
       if (response.success) {
         setLicitaciones(response.data.licitaciones || []);
@@ -81,9 +74,14 @@ const Licitaciones = () => {
       setError(err.message || 'Error al cargar las licitaciones');
       setLicitaciones([]);
     } finally {
-      setLoading(false);
+      if (!authLoading) {
+        setLoading(false);
+        if (initialLoad) {
+          setInitialLoad(false);
+        }
+      }
     }
-  }, [pagination.itemsPerPage]);
+  }, [pagination.itemsPerPage, authLoading, initialLoad]);
 
   // Función para obtener fuentes disponibles
   const fetchSources = useCallback(async () => {
@@ -109,12 +107,19 @@ const Licitaciones = () => {
     }
   }, []);
 
-  // Efecto para cargar datos iniciales
+  // Efecto para cargar datos iniciales - esperar a que el auth esté listo
   useEffect(() => {
-    fetchLicitaciones();
-    fetchSources();
-    fetchStats();
-  }, [fetchLicitaciones, fetchSources, fetchStats]);
+    if (!authLoading) {
+      const loadInitialData = async () => {
+        await Promise.all([
+          fetchLicitaciones(),
+          fetchSources(),
+          fetchStats()
+        ]);
+      };
+      loadInitialData();
+    }
+  }, [authLoading, fetchLicitaciones, fetchSources, fetchStats]);
 
   // Manejar cambios en filtros
   const handleFiltersChange = useCallback((newFilters) => {
@@ -400,7 +405,7 @@ const Licitaciones = () => {
               </motion.div>
             )}
 
-            {loading ? (
+            {(loading || authLoading) && initialLoad ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
