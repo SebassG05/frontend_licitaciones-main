@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { EnvelopeIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../../context/AuthContext';
+import PremiumPopup from '../ui/PremiumPopup';
 
 const NewsletterSubscription = () => {
+  const { isAuthenticated, user } = useAuth();
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [loadingStatus, setLoadingStatus] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     frequency: 'weekly',
@@ -33,19 +39,79 @@ const NewsletterSubscription = () => {
     { value: 'monthly', label: 'Mensual', description: 'Resumen mensual completo' }
   ];
 
+  // Configurar email del usuario y verificar estado de suscripción cuando esté logueado
+  useEffect(() => {
+    if (isAuthenticated && user?.email) {
+      setFormData(prev => ({ ...prev, email: user.email }));
+      checkSubscriptionStatus();
+    } else {
+      setSubscriptionStatus(null);
+    }
+  }, [isAuthenticated, user]);
+
+  const checkSubscriptionStatus = async () => {
+    setLoadingStatus(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/newsletter/my-subscription', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      
+      if (data.success && data.data && data.data.subscribed && data.data.subscription) {
+        setSubscriptionStatus(data.data.subscription);
+        // Si está suscrito, llenar el formulario con sus preferencias
+        if (data.data.subscription.status === 'active') {
+          const interests = data.data.subscription.interests || prev.interests;
+          setFormData(prev => ({
+            ...prev,
+            frequency: data.data.subscription.frequency || 'weekly',
+            interests: {
+              ...interests,
+              budgetRange: {
+                min: interests.budgetRange?.min || '',
+                max: interests.budgetRange?.max || ''
+              }
+            }
+          }));
+        }
+      } else {
+        setSubscriptionStatus(null);
+      }
+    } catch (error) {
+      // Si no está suscrito, no pasa nada
+      setSubscriptionStatus(null);
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Verificar si el usuario está autenticado
+    if (!isAuthenticated) {
+      // Mostrar popup premium en lugar de abrir directamente el login
+      setShowPremiumPopup(true);
+      return;
+    }
+    
     setLoading(true);
     setMessage({ type: '', text: '' });
 
     try {
-      const response = await fetch('/api/newsletter/subscribe', {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          email: formData.email,
           frequency: formData.frequency,
           interests: {
             ...formData.interests,
@@ -65,10 +131,15 @@ const NewsletterSubscription = () => {
           text: data.message || '¡Te has suscrito correctamente al newsletter!' 
         });
         
+        // Hacer una mini recarga para actualizar el estado
+        setTimeout(() => {
+          checkSubscriptionStatus(); // Re-verificar el estado de suscripción
+        }, 1000);
+        
         if (data.data.isNew) {
           // Limpiar formulario solo si es una nueva suscripción
           setFormData({
-            email: '',
+            email: user?.email || '', // Mantener el email del usuario logueado
             frequency: 'weekly',
             interests: {
               keywords: [],
@@ -147,6 +218,56 @@ const NewsletterSubscription = () => {
     }));
   };
 
+  const handleUnsubscribe = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres cancelar tu suscripción al newsletter?')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/newsletter/my-subscription', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage({ 
+          type: 'success', 
+          text: 'Te has desuscrito correctamente del newsletter' 
+        });
+        
+        // Hacer una mini recarga para actualizar el estado
+        setTimeout(() => {
+          checkSubscriptionStatus(); // Re-verificar el estado de suscripción
+        }, 1000);
+        
+        setSubscriptionStatus(null);
+        // Resetear formulario
+        setFormData({
+          email: user?.email || '',
+          frequency: 'weekly',
+          interests: {
+            keywords: [],
+            sectors: [],
+            sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana'],
+            budgetRange: { min: '', max: '' }
+          }
+        });
+      } else {
+        setMessage({ type: 'error', text: data.message || 'Error al cancelar suscripción' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Error de conexión. Por favor, inténtalo de nuevo.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -167,6 +288,8 @@ const NewsletterSubscription = () => {
         <p className="text-gray-300">
           Recibe licitaciones filtradas según tus intereses y preferencias
         </p>
+
+
       </div>
 
       {message.text && (
@@ -195,6 +318,9 @@ const NewsletterSubscription = () => {
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
             Email *
+            {isAuthenticated && (
+              <span className="ml-2 text-xs text-[#a1db87]">(usando email de tu cuenta)</span>
+            )}
           </label>
           <input
             type="email"
@@ -202,8 +328,13 @@ const NewsletterSubscription = () => {
             required
             value={formData.email}
             onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-            className="w-full px-4 py-3 bg-[#333333] border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#a1db87] focus:border-[#a1db87] transition-all"
-            placeholder="tu@email.com"
+            disabled={isAuthenticated}
+            className={`w-full px-4 py-3 border rounded-lg text-white placeholder-gray-400 transition-all ${
+              isAuthenticated
+                ? 'bg-[#2a2a2a] border-gray-700 text-gray-400 cursor-not-allowed'
+                : 'bg-[#333333] border-gray-600 focus:ring-2 focus:ring-[#a1db87] focus:border-[#a1db87]'
+            }`}
+            placeholder={isAuthenticated ? user?.email || 'Email de la cuenta' : 'tu@email.com'}
           />
         </div>
 
@@ -383,7 +514,7 @@ const NewsletterSubscription = () => {
                 <input
                   type="number"
                   placeholder="Mínimo"
-                  value={formData.interests.budgetRange.min}
+                  value={formData.interests.budgetRange.min || ''}
                   onChange={(e) => setFormData(prev => ({
                     ...prev,
                     interests: {
@@ -396,7 +527,7 @@ const NewsletterSubscription = () => {
                 <input
                   type="number"
                   placeholder="Máximo"
-                  value={formData.interests.budgetRange.max}
+                  value={formData.interests.budgetRange.max || ''}
                   onChange={(e) => setFormData(prev => ({
                     ...prev,
                     interests: {
@@ -411,26 +542,67 @@ const NewsletterSubscription = () => {
           </div>
         </motion.div>
 
-        {/* Submit Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          type="submit"
-          disabled={loading}
-          className={`w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
-            loading
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-gradient-to-r from-[#a1db87] to-[#8bc96a] hover:from-[#8bc96a] hover:to-[#a1db87] shadow-lg hover:shadow-xl shadow-[#a1db87]/20'
-          }`}
-        >
-          {loading ? 'Suscribiendo...' : 'Suscribirse al Newsletter'}
-        </motion.button>
+        {/* Submit Buttons */}
+        {isAuthenticated && subscriptionStatus?.status === 'active' ? (
+          // Usuario ya suscrito - mostrar opciones de gestión
+          <div className="space-y-3">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading}
+              className={`w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
+                loading
+                  ? 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-[#8bc96a] to-[#a1db87] hover:from-[#a1db87] hover:to-[#8bc96a] shadow-lg hover:shadow-xl shadow-[#a1db87]/20'
+              }`}
+            >
+              {loading ? 'Actualizando...' : 'Actualizar Preferencias'}
+            </motion.button>
+            
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={handleUnsubscribe}
+              disabled={loading}
+              className="w-full py-3 px-6 rounded-lg font-medium text-red-400 border-2 border-red-500/30 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all"
+            >
+              Cancelar Suscripción
+            </motion.button>
+          </div>
+        ) : (
+          // Usuario no suscrito - botón de suscripción normal
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading || loadingStatus}
+            className={`w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
+              loading || loadingStatus
+                ? 'bg-gray-600 cursor-not-allowed'
+                : 'bg-gradient-to-r from-[#a1db87] to-[#8bc96a] hover:from-[#8bc96a] hover:to-[#a1db87] shadow-lg hover:shadow-xl shadow-[#a1db87]/20'
+            }`}
+          >
+            {loading ? 'Suscribiendo...' : loadingStatus ? 'Verificando...' : 'Suscribirse al Newsletter'}
+          </motion.button>
+        )}
       </form>
 
       <p className="text-xs text-gray-400 text-center mt-6">
         Al suscribirte, aceptas recibir emails con información sobre licitaciones. 
         Puedes darte de baja en cualquier momento.
       </p>
+
+      {/* Premium Popup */}
+      <PremiumPopup 
+        isOpen={showPremiumPopup} 
+        onClose={() => setShowPremiumPopup(false)}
+        onLoginClick={() => {
+          // Disparar evento para que el header abra el dropdown de login
+          window.dispatchEvent(new CustomEvent('openLogin'));
+        }}
+      />
     </motion.div>
   );
 };
