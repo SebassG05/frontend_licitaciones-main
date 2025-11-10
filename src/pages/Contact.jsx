@@ -121,10 +121,10 @@ const Contact = () => {
       id: 2,
       icon: <Mail className="w-5 h-5" />,
       title: "Email",
-      details: "info@evenor-tech.com",
+      details: "licitanor@gmail.com",
       action: {
         label: "Enviar",
-        url: "mailto:info@evenor-tech.com",
+        url: "mailto:licitanor@gmail.com",
         icon: <Send className="w-3 h-3" />
       },
       color: '#8bc96a'
