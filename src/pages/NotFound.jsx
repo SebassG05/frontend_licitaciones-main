@@ -11,6 +11,9 @@ const NotFound = () => {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Verificar si estamos en la ruta de agente-vigilancia
+  const isAgenteVigilancia = location.pathname.includes('agente-vigilancia');
 
   useEffect(() => {
     const checkDevice = () => {
@@ -75,7 +78,7 @@ const NotFound = () => {
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Columna izquierda: Error y mensaje */}
             <div className="text-center lg:text-left">
-              {/* Icono de alerta */}
+              {/* Icono */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={isInView ? { scale: 1 } : {}}
@@ -86,17 +89,25 @@ const NotFound = () => {
                 }}
                 className="inline-flex items-center justify-center w-20 h-20 bg-[#2a2a2a] border-2 border-[#a1db87] rounded-full mb-6"
               >
-                <AlertTriangle className="w-10 h-10 text-[#a1db87]" />
+                {isAgenteVigilancia ? (
+                  <Compass className="w-10 h-10 text-[#a1db87]" />
+                ) : (
+                  <AlertTriangle className="w-10 h-10 text-[#a1db87]" />
+                )}
               </motion.div>
 
-              {/* Código 404 */}
+              {/* Código o mensaje principal */}
               <motion.h1
                 initial={{ opacity: 0, x: -30 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: 0.3 }}
-                className="text-8xl md:text-9xl font-black text-[#a1db87] mb-4 leading-none"
+                className={`font-black text-[#a1db87] mb-4 leading-tight ${
+                  isAgenteVigilancia 
+                    ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl' 
+                    : 'text-6xl md:text-7xl lg:text-8xl'
+                }`}
               >
-                404
+                {isAgenteVigilancia ? 'Próximamente' : '404'}
               </motion.h1>
 
               {/* Título */}
@@ -106,7 +117,7 @@ const NotFound = () => {
                 transition={{ delay: 0.4 }}
                 className="text-2xl md:text-3xl font-bold text-white mb-4"
               >
-                Página no encontrada
+                {isAgenteVigilancia ? 'Estamos trabajando en ello' : 'Página no encontrada'}
               </motion.h2>
 
               {/* Descripción */}
@@ -116,7 +127,10 @@ const NotFound = () => {
                 transition={{ delay: 0.5 }}
                 className="text-base text-gray-300 mb-6"
               >
-                La página que buscas no existe o ha sido movida
+                {isAgenteVigilancia 
+                  ? 'Nuestro equipo está desarrollando esta funcionalidad. ¡Mantente atento para las novedades!'
+                  : 'La página que buscas no existe o ha sido movida'
+                }
               </motion.p>
 
               {/* Ruta actual */}
@@ -169,7 +183,7 @@ const NotFound = () => {
             >
               <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <Compass className="w-5 h-5 text-[#a1db87] mr-2" />
-                ¿Qué estás buscando?
+                {isAgenteVigilancia ? '¡Mientras tanto, explora!' : '¿Qué estás buscando?'}
               </h3>
 
               <div className="space-y-3">
@@ -206,9 +220,21 @@ const NotFound = () => {
               </div>
 
               <div className="mt-6 pt-6 border-t border-[#444444]">
-                <p className="text-xs text-gray-400 text-center">
-                  ¿No encuentras lo que buscas? <a href="/contacto" className="text-[#a1db87] hover:underline">Contáctanos</a>
-                </p>
+                {isAgenteVigilancia ? (
+                  <div className="text-center">
+                    <p className="text-sm text-[#a1db87] font-medium mb-2">
+                      🚀 Agente de Vigilancia
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      Esta funcionalidad estará disponible muy pronto. <br/>
+                      <a href="/contacto" className="text-[#a1db87] hover:underline">Contáctanos</a> si tienes alguna consulta
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 text-center">
+                    ¿No encuentras lo que buscas? <a href="/contacto" className="text-[#a1db87] hover:underline">Contáctanos</a>
+                  </p>
+                )}
               </div>
             </motion.div>
           </div>
