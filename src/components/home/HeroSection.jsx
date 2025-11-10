@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { getLicitacionesStats } from '../../services/licitaciones';
 import { 
-  Search, MapPin, Briefcase, ChevronDown, 
-  Calendar, Euro, TrendingUp, Building2, Clock, ArrowRight, Sparkles, 
-  Award, FileText
+  TrendingUp, Building2, Clock, ArrowRight, Sparkles, 
+  Award, FileText, Euro
 } from 'lucide-react';
 import Container from '../ui/Container';
 
 const HeroSection = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTerritory, setSelectedTerritory] = useState('Toda España');
-  const [selectedSector, setSelectedSector] = useState('Todos los sectores');
-  const [showTerritoryDropdown, setShowTerritoryDropdown] = useState(false);
-  const [showSectorDropdown, setShowSectorDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [stats, setStats] = useState(null);
 
@@ -52,24 +46,6 @@ const HeroSection = () => {
     fetchStats();
   }, []);
 
-  const territories = [
-    'Toda España', 'Andalucía', 'Aragón', 'Asturias', 'Baleares', 'Canarias',
-    'Cantabria', 'Castilla y León', 'Castilla-La Mancha', 'Cataluña',
-    'Comunidad Valenciana', 'Extremadura', 'Galicia', 'Madrid', 'Murcia',
-    'Navarra', 'País Vasco', 'La Rioja'
-  ];
-
-  const sectors = [
-    'Todos los sectores', 'Tecnología', 'Software', 'Programación', 'Desarrollo Web',
-    'Inteligencia Artificial', 'Medioambiental', 'Biológico', 'Biotecnología', 'Sistemas de Información',
-    'Big Data'
-  ];
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log('Búsqueda:', { searchTerm, selectedTerritory, selectedSector });
-  };
-
   return (
     <section className="relative pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-hidden">
       <Container>
@@ -88,11 +64,11 @@ const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* Layout de 2 columnas: Showcase de Fuentes + Buscador */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Showcase de Fuentes Institucionales - Ancho completo */}
+        <div className="w-full">
           
-          {/* COLUMNA IZQUIERDA - SHOWCASE DE FUENTES DE DATOS (8 columnas) */}
-          <div className="lg:col-span-8 relative">
+          {/* SHOWCASE DE FUENTES DE DATOS */}
+          <div className="relative max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -142,7 +118,8 @@ const HeroSection = () => {
                     <span className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">Activa</span>
                   </div>
                   <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Proyectos de desarrollo e infraestructura a nivel internacional
+                    Proyectos de desarrollo, infraestructura y programas sociales a nivel internacional.
+                    Financiación por ejemplo para sostenibilidad ambiental.
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-blue-400 font-semibold text-sm">
@@ -173,7 +150,8 @@ const HeroSection = () => {
                     <span className="px-2 py-1 bg-amber-500/20 text-amber-300 text-xs rounded-full">Activa</span>
                   </div>
                   <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Contratos públicos y programas de la Unión Europea
+                    Contratos públicos, subvenciones y programas de financiación de la Unión Europea.
+                    Oportunidades en sectores estratégicos como innovación.
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-amber-400 font-semibold text-sm">
@@ -204,7 +182,8 @@ const HeroSection = () => {
                     <span className="px-2 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full">Activa</span>
                   </div>
                   <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Oportunidades de cooperación internacional y ayuda humanitaria
+                    Oportunidades de cooperación internacional, ayuda humanitaria y desarrollo sostenible.
+                    Contratos en áreas de salud, medio ambiente...
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-emerald-400 font-semibold text-sm">
@@ -235,7 +214,8 @@ const HeroSection = () => {
                     <span className="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">Activa</span>
                   </div>
                   <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Licitaciones públicas del sector público español
+                    Licitaciones y contratos públicos del Estado español en todos los sectores.
+                    Incluye ministerios, comunidades autónomas y organismos públicos.
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-orange-400 font-semibold text-sm">
@@ -278,149 +258,6 @@ const HeroSection = () => {
               </>
             )}
           </div>
-
-          {/* COLUMNA DERECHA - BUSCADOR (4 columnas) - CON OVERFLOW ARREGLADO */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-4"
-          >
-            <div className="sticky top-24">
-              <form onSubmit={handleSearch} className="bg-[#2a2a2a]/80 backdrop-blur-xl p-6 rounded-2xl border-2 border-[#333333] shadow-2xl space-y-4">
-                {/* Header del buscador */}
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-[#a1db87]" />
-                    <h3 className="text-lg font-bold text-white">Buscar</h3>
-                  </div>
-                  <span className="text-xs text-gray-400">
-                    {stats?.total ? `${stats.total.toLocaleString()}+ proyectos` : '15.000+ proyectos'}
-                  </span>
-                </div>
-
-                {/* Campo de búsqueda */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Palabra clave, título..."
-                    className="w-full pl-10 pr-4 py-3 bg-[#1a1a1a] border-2 border-[#333333] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#a1db87] focus:ring-2 focus:ring-[#a1db87]/20 transition-all"
-                  />
-                </div>
-
-                {/* Selector de territorio */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowTerritoryDropdown(!showTerritoryDropdown);
-                      setShowSectorDropdown(false);
-                    }}
-                    className="w-full flex items-center justify-between px-3 py-3 bg-[#1a1a1a] border-2 border-[#333333] rounded-xl text-white hover:border-[#444444] focus:outline-none focus:border-[#a1db87] transition-all"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium truncate">{selectedTerritory}</span>
-                    </div>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform flex-shrink-0 ${showTerritoryDropdown ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {showTerritoryDropdown && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 right-0 mt-2 bg-[#2a2a2a] border-2 border-[#333333] rounded-xl shadow-2xl max-h-60 overflow-y-auto z-[100] custom-scrollbar"
-                      >
-                        {territories.map((territory) => (
-                          <button
-                            key={territory}
-                            type="button"
-                            onClick={() => {
-                              setSelectedTerritory(territory);
-                              setShowTerritoryDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#333333] transition-colors ${
-                              selectedTerritory === territory ? 'bg-[#a1db87]/10 text-[#a1db87] font-semibold' : 'text-white'
-                            }`}
-                          >
-                            {territory}
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Selector de sector - CON Z-INDEX ARREGLADO */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowSectorDropdown(!showSectorDropdown);
-                      setShowTerritoryDropdown(false);
-                    }}
-                    className="w-full flex items-center justify-between px-3 py-3 bg-[#1a1a1a] border-2 border-[#333333] rounded-xl text-white hover:border-[#444444] focus:outline-none focus:border-[#a1db87] transition-all"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <Briefcase className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium truncate">{selectedSector}</span>
-                    </div>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform flex-shrink-0 ${showSectorDropdown ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {showSectorDropdown && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 right-0 mt-2 bg-[#2a2a2a] border-2 border-[#333333] rounded-xl max-h-60 overflow-y-auto z-[100] custom-scrollbar"
-                      >
-                        {sectors.map((sector) => (
-                          <button
-                            key={sector}
-                            type="button"
-                            onClick={() => {
-                              setSelectedSector(sector);
-                              setShowSectorDropdown(false);
-                            }}
-                            className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#333333] transition-colors ${
-                              selectedSector === sector ? 'bg-[#a1db87]/10 text-[#a1db87] font-semibold' : 'text-white'
-                            }`}
-                          >
-                            {sector}
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Botón de búsqueda */}
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 bg-gradient-to-r from-[#a1db87] to-[#8bc96a] text-[#1a1a1a] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2"
-                >
-                  <Search className="w-4 h-4" />
-                  <span>Buscar</span>
-                </motion.button>
-
-                {/* Info adicional */}
-                <div className="pt-3 border-t border-[#333333]">
-                  <p className="text-xs text-gray-500 text-center">
-                    ✓ Registro gratuito · ✓ Acceso básico sin coste
-                  </p>
-                </div>
-              </form>
-            </div>
-          </motion.div>
         </div>
       </Container>
     </section>
