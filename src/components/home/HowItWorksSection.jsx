@@ -8,7 +8,8 @@ import {
   Sparkles, 
   ArrowDown,
   PlayCircle,
-  ChevronRight
+  ChevronRight,
+  Mail
 } from 'lucide-react';
 import Container from '../ui/Container';
 
@@ -41,10 +42,10 @@ const HowItWorksSection = () => {
     {
       id: 2,
       number: '02',
-      icon: <UserPlus className="w-8 h-8" />,
-      title: 'Regístrate fácilmente',
-      description: 'Crea tu cuenta en menos de 2 minutos y comienza a explorar proyectos avanzados',
-      detail: 'Proceso de registro rápido y seguro',
+      icon: <Mail className="w-8 h-8" />,
+      title: 'Contacta con nosotros',
+      description: 'Ponte en contacto con nuestro equipo para desbloquear toda la información y funcionalidades avanzadas',
+      detail: 'Acceso personalizado a través de nuestro equipo',
       color: '#8bc96a',
       gradient: 'from-[#8bc96a]/20 to-transparent'
     },
