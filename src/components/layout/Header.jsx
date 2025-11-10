@@ -6,7 +6,7 @@ import {
     Bell, Download, Mail
 } from 'lucide-react';
 import LoginDropdown from '../auth/LoginDropdown';
-import NewsletterDropdown from '../ui/NewsletterDropdown';
+// NewsletterDropdown import removed
 import NotificationDropdown from '../ui/NotificationDropdown';
 import GoogleTranslateSelector from '../ui/GoogleTranslateSelector';
 import { useAuth } from '../../context/AuthContext';
@@ -88,7 +88,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
-    const [newsletterOpen, setNewsletterOpen] = useState(false);
+    // Newsletter dropdown/menu removed, state not needed
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const [mounted, setMounted] = useState(false);
@@ -108,6 +108,7 @@ const Header = () => {
         { name: 'Inicio', path: '/' },
         { name: 'Licitaciones', path: '/licitaciones' },
         { name: 'Agente de vigilancia', path: '/agente-vigilancia' },
+        { name: 'Newsletter', path: '/newsletter' },
         { name: 'Servicios', path: '/servicios' },
         { name: 'Contacto', path: '/contacto' }
     ];
@@ -151,7 +152,7 @@ const Header = () => {
     useEffect(() => {
         setIsMenuOpen(false);
         setLoginOpen(false);
-        setNewsletterOpen(false);
+    // Newsletter dropdown/menu removed
         setNotificationsOpen(false);
     }, [location.pathname]);
 
@@ -198,21 +199,21 @@ const Header = () => {
                 !target.closest('.newsletter-btn') &&
                 !target.closest('.mobile-menu-btn')) {
                 setLoginOpen(false);
-                setNewsletterOpen(false);
+                // Newsletter dropdown/menu removed
             }
         };
 
-        if (mounted && (loginOpen || newsletterOpen)) {
+    if (mounted && loginOpen) {
             document.addEventListener('mousedown', handleClickOutside);
             return () => document.removeEventListener('mousedown', handleClickOutside);
         }
-    }, [mounted, loginOpen, newsletterOpen]);
+    }, [mounted, loginOpen]);
 
     // Escuchar evento personalizado para abrir login desde PremiumPopup
     useEffect(() => {
         const handleOpenLogin = () => {
             setLoginOpen(true);
-            setNewsletterOpen(false);
+            // Newsletter dropdown/menu removed
             setNotificationsOpen(false);
         };
 
@@ -223,20 +224,20 @@ const Header = () => {
 const handleNavigation = useCallback((path) => {
     if (location.pathname === path) return;
     setLoginOpen(false);
-    setNewsletterOpen(false);
+    // Newsletter dropdown/menu removed
     navigate(path);
 }, [location.pathname, navigate]);
 
     const toggleLogin = useCallback((event) => {
         event?.stopPropagation();
         setLoginOpen(prev => !prev);
-        setNewsletterOpen(false);
+    // Newsletter dropdown/menu removed
         setNotificationsOpen(false);
     }, []);
 
     const toggleNewsletter = useCallback((event) => {
         event?.stopPropagation();
-        setNewsletterOpen(prev => !prev);
+    // Newsletter dropdown/menu removed
         setLoginOpen(false);
         setNotificationsOpen(false);
     }, []);
@@ -245,7 +246,7 @@ const handleNavigation = useCallback((path) => {
         event?.stopPropagation();
         setNotificationsOpen(prev => !prev);
         setLoginOpen(false);
-        setNewsletterOpen(false);
+    // Newsletter dropdown/menu removed
     }, []);
 
     const toggleMenu = useCallback(() => {
@@ -372,30 +373,7 @@ const handleNavigation = useCallback((path) => {
                             )}
 
                             {/* Newsletter - SOLO DESKTOP */}
-                            {!isMobile && !isTablet && (
-                                <div className="relative" ref={el => dropdownRefs.current['newsletter'] = el}>
-                                    <motion.button
-                                        whileHover={{ scale: 1.03, y: -2 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={toggleNewsletter}
-                                        className={`
-                                            newsletter-btn flex items-center px-3 lg:px-4 py-2 lg:py-2.5 
-                                            rounded-lg lg:rounded-xl font-bold text-xs lg:text-sm
-                                            border-2 transition-all duration-200 shadow-lg
-                                            ${newsletterOpen
-                                                ? 'border-[#a1db87] bg-[#a1db87]/15 text-[#a1db87] shadow-[#a1db87]/30'
-                                                : 'border-gray-700 bg-[#2a2a2a] text-gray-300 hover:text-white hover:border-[#a1db87]/50 hover:bg-[#333333]'
-                                            }
-                                        `}
-                                    >
-                                        <Mail className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
-                                        <span>Newsletter</span>
-                                        <ChevronDown className={`w-3.5 h-3.5 ml-1 transition-transform ${newsletterOpen ? 'rotate-180' : ''}`} />
-                                    </motion.button>
-
-                                    <NewsletterDropdown isOpen={newsletterOpen} onClose={() => setNewsletterOpen(false)} />
-                                </div>
-                            )}
+                            {/* Newsletter dropdown/menu removed as requested */}
 
                             {/* Login - SOLO DESKTOP */}
                             {!isMobile && !isTablet && (
