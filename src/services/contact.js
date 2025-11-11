@@ -1,4 +1,4 @@
-const API_URL = 'https://licitanor.evenor-tech.com/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://licitanor.evenor-tech.com/api';
 
 /**
  * Servicio para manejar mensajes de contacto
