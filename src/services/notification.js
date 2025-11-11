@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://licitanor.evenor-tech.com/api';
 
 /**
  * Servicio para manejar notificaciones del usuario

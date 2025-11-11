@@ -53,7 +53,7 @@ const NewsletterSubscription = () => {
     setLoadingStatus(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/newsletter/my-subscription', {
+      const response = await fetch('https://licitanor.evenor-tech.com/api/newsletter/my-subscription', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -105,7 +105,7 @@ const NewsletterSubscription = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/newsletter/subscribe', {
+      const response = await fetch('https://licitanor.evenor-tech.com/api/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ const NewsletterSubscription = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/newsletter/my-subscription', {
+      const response = await fetch('https://licitanor.evenor-tech.com/api/newsletter/my-subscription', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

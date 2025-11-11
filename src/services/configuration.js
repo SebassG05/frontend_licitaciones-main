@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://licitanor.evenor-tech.com/api';
 
 /**
  * Servicio para manejar la configuración del usuario

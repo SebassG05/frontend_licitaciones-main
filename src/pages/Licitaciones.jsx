@@ -398,7 +398,7 @@ const Licitaciones = () => {
                       {error}
                     </p>
                     <p className="text-red-300/70 text-xs mt-2">
-                      Verifica que el backend esté ejecutándose en http://localhost:3000
+                      Verifica que el backend esté disponible en https://licitanor.evenor-tech.com
                     </p>
                   </div>
                 </div>
