@@ -197,11 +197,25 @@ export default function ReviewsSection({ user }) {
             <>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Nombre</label>
-                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user?.name || ''}</div>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#a1db87]"
+                  placeholder="Tu nombre"
+                  maxLength={32}
+                  required
+                />
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Email</label>
-                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user?.email || ''}</div>
+                <input
+                  type="email"
+                  value={user?.email || email}
+                  className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm"
+                  readOnly
+                  disabled
+                />
               </div>
             </>
           )}
