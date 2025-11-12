@@ -79,7 +79,7 @@ const Footer = () => {
         { name: 'Centro de ayuda', path: '/ayuda', icon: HelpCircle },
         { name: 'Documentación', path: '/documentacion', icon: FileText },
         { name: 'Contacto', path: '/contacto', icon: Mail },
-        { name: 'Estado del servicio', path: '/estado', icon: CheckCircle }
+        { name: 'Reseñas', path: '/reseñas', icon: CheckCircle }
       ]
     },
     legal: {

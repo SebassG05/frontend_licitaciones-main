@@ -16,6 +16,7 @@ const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'));
 const NewsletterPreferences = lazy(() => import('./components/newsletter/NewsletterPreferences'));
 const Ayuda = lazy(() => import('./pages/Ayuda'));
 const Documentacion = lazy(() => import('./pages/Documentacion'));
+const Reseñas = lazy(() => import('./pages/Reseñas'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Componente de carga
@@ -44,6 +45,7 @@ function App() {
               <Route path="/newsletter/preferences" element={<NewsletterPreferences />} />
               <Route path="/ayuda" element={<Ayuda />} />
               <Route path="/documentacion" element={<Documentacion />} />
+              <Route path="/reseñas" element={<Reseñas />} />
               {/* Ruta catch-all para 404 - debe ir al final */}
               <Route path="*" element={<NotFound />} />
             </Routes>
