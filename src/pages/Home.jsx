@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HeroSection from '../components/home/HeroSection';
 import TargetAudienceSection from '../components/home/TargetAudience';
+import ReviewsPromoSection from '../components/home/ReviewsPromoSection';
 
 // Carga lazy de componentes no críticos para optimizar el rendimiento
 const FeaturesSection = lazy(() => import('../components/home/FeaturesSection'));
@@ -96,6 +97,9 @@ const Home = () => {
 
         {/* Sección de audiencia objetivo - carga inmediata */}
         <TargetAudienceSection />
+
+        {/* Sección de reseñas promocional */}
+        <ReviewsPromoSection />
 
         {/* Secciones con carga diferida */}
         <Suspense fallback={<SectionLoader />}>
