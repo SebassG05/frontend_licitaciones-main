@@ -66,7 +66,7 @@ const NavigationMenu = ({ item, location, onNavigate }) => {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className={`
-                flex items-center px-3 lg:px-4 xl:px-5 py-2 lg:py-2.5 xl:py-3 
+                cursor-pointer flex items-center px-3 lg:px-4 xl:px-5 py-2 lg:py-2.5 xl:py-3 
                 rounded-lg lg:rounded-xl font-bold text-xs lg:text-sm
                 transition-all duration-300 whitespace-nowrap border-2
                 ${isActive
@@ -107,7 +107,7 @@ const Header = () => {
     const menuItems = [
         { name: 'Inicio', path: '/' },
         { name: 'Licitaciones', path: '/licitaciones' },
-        { name: 'Agente de vigilancia', path: '/agente-vigilancia' },
+        { name: 'Borrador de propuesta', path: '/borrador-propuesta' },
         { name: 'Newsletter', path: '/newsletter' },
         { name: 'Servicios', path: '/servicios' },
         { name: 'Contacto', path: '/contacto' }
@@ -296,7 +296,7 @@ const handleNavigation = useCallback((path) => {
                             <img
                                 src="/Corporatives/Images/Logo/Logo_white_letters.png"
                                 alt="Plataforma de Licitaciones"
-                                className="h-7 sm:h-8 md:h-9 lg:h-11 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(161,219,135,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(161,219,135,0.8)] transition-all duration-300"
+                                className="cursor-pointer h-7 sm:h-8 md:h-9 lg:h-11 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(161,219,135,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(161,219,135,0.8)] transition-all duration-300"
                                 style={{ filter: 'brightness(1.2) contrast(1.1)' }}
                             />
                         </motion.div>
@@ -383,7 +383,7 @@ const handleNavigation = useCallback((path) => {
                                         whileTap={{ scale: 0.98 }}
                                         onClick={toggleLogin}
                                         className={`
-                                            auth-btn flex items-center px-3 lg:px-4 py-2 lg:py-2.5 
+                                            cursor-pointer auth-btn flex items-center px-3 lg:px-4 py-2 lg:py-2.5 
                                             rounded-lg lg:rounded-xl font-bold text-xs lg:text-sm
                                             border-2 transition-all duration-200 shadow-lg
                                             ${loginOpen

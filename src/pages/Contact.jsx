@@ -420,7 +420,7 @@ const Contact = () => {
                   className={`w-full relative px-6 py-3 font-bold rounded-xl shadow-lg overflow-hidden group transition-all ${
                     formStatus.submitted
                       ? 'bg-green-600 text-white cursor-not-allowed'
-                      : 'bg-[#a1db87] text-[#1a1a1a] hover:shadow-xl'
+                      : 'bg-[#a1db87] text-[#1a1a1a] hover:shadow-xl cursor-pointer'
                   }`}
                 >
                   {!formStatus.submitted && !formStatus.loading && (

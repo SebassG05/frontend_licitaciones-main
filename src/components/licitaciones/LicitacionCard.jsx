@@ -458,7 +458,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                   target="_blank"
                   rel="noopener noreferrer"
                   className="
-                    inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
+                    cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
                     text-sm font-bold rounded-xl hover:bg-white
                     transition-all duration-300 shadow-lg hover:shadow-xl
                     hover:shadow-[#a1db87]/25 max-w-xs
@@ -473,7 +473,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                   whileTap={{ scale: 0.98 }}
                   onClick={onShowPremiumPopup}
                   className="
-                    inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
+                    cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] 
                     text-sm font-bold rounded-xl hover:bg-white
                     transition-all duration-300 shadow-lg hover:shadow-xl
                     hover:shadow-[#a1db87]/25 max-w-xs

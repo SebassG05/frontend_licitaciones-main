@@ -88,7 +88,7 @@ const CTASection = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center space-x-2 px-8 py-4 bg-[#a1db87] text-[#1a1a1a] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="cursor-pointer inline-flex items-center space-x-2 px-8 py-4 bg-[#a1db87] text-[#1a1a1a] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
                 >
                   <span>Comenzar ahora</span>
                   <ArrowRight className="w-5 h-5" />

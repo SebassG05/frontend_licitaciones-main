@@ -578,7 +578,7 @@ const NewsletterSubscription = () => {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading || loadingStatus}
-            className={`w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
+            className={`cursor-pointer w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
               loading || loadingStatus
                 ? 'bg-gray-600 cursor-not-allowed'
                 : 'bg-gradient-to-r from-[#a1db87] to-[#8bc96a] hover:from-[#8bc96a] hover:to-[#a1db87] shadow-lg hover:shadow-xl shadow-[#a1db87]/20'

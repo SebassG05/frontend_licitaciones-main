@@ -312,7 +312,7 @@ const Services = () => {
             onHoverEnd={() => setIsHoveringCTA(false)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-[#a1db87] text-[#1a1a1a] font-bold text-lg rounded-xl shadow-2xl overflow-hidden group"
+            className="cursor-pointer relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-[#a1db87] text-[#1a1a1a] font-bold text-lg rounded-xl shadow-2xl overflow-hidden group"
           >
             {/* Efecto de brillo que se mueve */}
             <motion.div

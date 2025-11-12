@@ -14,7 +14,7 @@ const SocialLink = memo(({ icon, url, name }) => (
     href={url}
     target="_blank"
     rel="noreferrer"
-    className="w-10 h-10 flex items-center justify-center bg-[#1a1a1a] border border-[#333333] rounded-lg hover:bg-[#a1db87] hover:border-[#a1db87] hover:text-[#1a1a1a] text-gray-400 transition-all duration-300 group"
+    className="cursor-pointer w-10 h-10 flex items-center justify-center bg-[#1a1a1a] border border-[#333333] rounded-lg hover:bg-[#a1db87] hover:border-[#a1db87] hover:text-[#1a1a1a] text-gray-400 transition-all duration-300 group"
     aria-label={name}
     whileHover={{ scale: 1.1, y: -3 }}
     whileTap={{ scale: 0.95 }}
@@ -39,7 +39,7 @@ const QuickLink = memo(({ name, path, icon: Icon }) => {
     <li>
       <motion.button
         onClick={() => handleNavigation(path)}
-        className={`w-full text-left flex items-center space-x-2 py-2 transition-colors ${
+        className={`cursor-pointer w-full text-left flex items-center space-x-2 py-2 transition-colors ${
           isActive ? 'text-[#a1db87]' : 'text-gray-400 hover:text-[#a1db87]'
         }`}
         whileHover={{ x: 4 }}
@@ -273,7 +273,7 @@ const Footer = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#a1db87] hover:bg-[#8bc96a] text-[#1a1a1a] px-4 py-2 rounded-lg transition-all duration-300 flex items-center justify-center"
+                  className="cursor-pointer bg-[#a1db87] hover:bg-[#8bc96a] text-[#1a1a1a] px-4 py-2 rounded-lg transition-all duration-300 flex items-center justify-center"
                   aria-label="Suscribirse"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -340,7 +340,7 @@ const Footer = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className="hover:text-[#a1db87] transition-colors"
+                className="cursor-pointer hover:text-[#a1db87] transition-colors"
               >
                 {link.name}
               </Link>

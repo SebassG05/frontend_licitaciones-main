@@ -94,7 +94,7 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
             whileTap={{ scale: 0.98 }}
             onClick={() => setIsExpanded(!isExpanded)}
             className={`
-              px-6 py-4 border-2 rounded-xl font-bold transition-all duration-300 
+              cursor-pointer px-6 py-4 border-2 rounded-xl font-bold transition-all duration-300 
               flex items-center gap-3 whitespace-nowrap min-w-fit
               ${isExpanded 
                 ? 'bg-[#a1db87] text-[#1a1a1a] border-[#a1db87] shadow-lg shadow-[#a1db87]/25' 
