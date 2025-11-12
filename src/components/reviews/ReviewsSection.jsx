@@ -167,7 +167,7 @@ export default function ReviewsSection({ user }) {
           <Send className="w-6 h-6" /> Escribe tu reseña
         </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
-          {!user && (
+          {!user ? (
             <>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Nombre</label>
@@ -191,6 +191,17 @@ export default function ReviewsSection({ user }) {
                   maxLength={64}
                   required
                 />
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Nombre</label>
+                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user.name}</div>
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Email</label>
+                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user.email}</div>
               </div>
             </>
           )}
