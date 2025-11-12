@@ -14,7 +14,9 @@ const Licitaciones = lazy(() => import('./pages/Licitaciones'));
 const NewsletterPage = lazy(() => import('./pages/NewsletterPage'));
 const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'));
 const NewsletterPreferences = lazy(() => import('./components/newsletter/NewsletterPreferences'));
-const NotFound = lazy(() => import('./pages/NotFound')); // Nueva importación
+const Ayuda = lazy(() => import('./pages/Ayuda'));
+const Documentacion = lazy(() => import('./pages/Documentacion'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Componente de carga
 const PageLoader = () => (
@@ -40,6 +42,8 @@ function App() {
               <Route path="/newsletter" element={<NewsletterPage />} />
               <Route path="/newsletter/unsubscribe" element={<UnsubscribePage />} />
               <Route path="/newsletter/preferences" element={<NewsletterPreferences />} />
+              <Route path="/ayuda" element={<Ayuda />} />
+              <Route path="/documentacion" element={<Documentacion />} />
               {/* Ruta catch-all para 404 - debe ir al final */}
               <Route path="*" element={<NotFound />} />
             </Routes>
