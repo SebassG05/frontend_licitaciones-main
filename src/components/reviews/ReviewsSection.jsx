@@ -50,15 +50,15 @@ export default function ReviewsSection({ user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!user && !name.trim()) {
+    if (!name.trim()) {
       setError('Debes poner un nombre');
       return;
     }
-    if (!user && !email.trim()) {
+    if (!email.trim()) {
       setError('Debes poner un email');
       return;
     }
-    if (!user && !/^\S+@\S+\.\S+$/.test(email)) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
       setError('Email no válido');
       return;
     }
