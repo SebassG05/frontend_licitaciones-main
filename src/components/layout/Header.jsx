@@ -292,12 +292,12 @@ const handleNavigation = useCallback((path) => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.97 }}
                         >
-                            <div className="absolute -inset-2 sm:-inset-3 lg:-inset-4 bg-gradient-to-r from-[#a1db87]/30 via-[#a1db87]/40 to-[#a1db87]/30 rounded-xl lg:rounded-2xl blur-lg lg:blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute -inset-1 sm:-inset-2 lg:-inset-2 bg-gradient-to-r from-[#a1db87]/20 via-[#a1db87]/25 to-[#a1db87]/20 rounded-xl lg:rounded-2xl blur-sm lg:blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-500" />
                             <img
                                 src="/Corporatives/Images/Logo/Logo_white_letters.png"
                                 alt="Plataforma de Licitaciones"
-                                className="cursor-pointer h-7 sm:h-8 md:h-9 lg:h-11 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(161,219,135,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(161,219,135,0.8)] transition-all duration-300"
-                                style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+                                className="cursor-pointer h-7 sm:h-8 md:h-9 lg:h-11 w-auto relative z-10 drop-shadow-[0_0_8px_rgba(161,219,135,0.4)] group-hover:drop-shadow-[0_0_14px_rgba(161,219,135,0.5)] transition-all duration-300"
+                                style={{ filter: 'brightness(1.1) contrast(1.05)' }}
                             />
                         </motion.div>
 
