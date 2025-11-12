@@ -17,6 +17,7 @@ const NewsletterPreferences = lazy(() => import('./components/newsletter/Newslet
 const Ayuda = lazy(() => import('./pages/Ayuda'));
 const Documentacion = lazy(() => import('./pages/Documentacion'));
 const Reseñas = lazy(() => import('./pages/Reseñas'));
+const ReseñasConfirmar = lazy(() => import('./pages/ReseñasConfirmar'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Componente de carga
@@ -38,6 +39,7 @@ function App() {
               <Route path="/licitaciones" element={<Licitaciones />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/perfil" element={<Profile />} />
+              <Route path="/reseñas/confirmar/:token" element={<ReseñasConfirmar />} />
               <Route path="/configuracion" element={<Configuration />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/newsletter" element={<NewsletterPage />} />
