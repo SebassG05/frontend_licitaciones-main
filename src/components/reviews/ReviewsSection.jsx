@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Star, User, Send } from 'lucide-react';
 
 // API endpoints
-const API_URL = 'https://api.licitanor.evenor-tech.com/api/reviews';
+const API_URL = 'https://licitanor.evenor-tech.com/api/reviews';
 
 
 export default function ReviewsSection({ user }) {
@@ -22,7 +22,13 @@ export default function ReviewsSection({ user }) {
   useEffect(() => {
     fetch(API_URL)
       .then(res => res.json())
-      .then(data => setReviews(data))
+      .then(data => {
+        if (data && data.success && Array.isArray(data.data)) {
+          setReviews(data.data);
+        } else {
+          setReviews([]);
+        }
+      })
       .catch(() => setReviews([]));
   }, []);
 
