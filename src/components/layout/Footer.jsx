@@ -69,7 +69,7 @@ const Footer = () => {
       links: [
         { name: 'Inicio', path: '/', icon: Home },
         { name: 'Licitaciones', path: '/licitaciones', icon: FileText },
-        { name: 'Alertas', path: '/alertas', icon: Bell },
+        { name: 'Borradores de propuestas', path: '/borrador-propuestas', icon: Bell },
         { name: 'Servicios', path: '/servicios', icon: Award }
       ]
     },
