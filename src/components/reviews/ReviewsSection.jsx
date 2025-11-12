@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+// Clave para almacenamiento local (legacy)
+const LOCAL_STORAGE_KEY = 'licitaciones_reviews';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { Star, User, Send } from 'lucide-react';
@@ -37,13 +39,31 @@ export default function ReviewsSection({ user }) {
   const handleDelete = idx => {
     setConfirmIdx(idx);
   };
-  const confirmDelete = idx => {
-    const newReviews = reviews.filter((_, i) => i !== idx);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newReviews));
-    setReviews(newReviews);
-    setConfirmIdx(null);
-    setDeletedMsg(true);
-    setTimeout(() => setDeletedMsg(false), 1800);
+  const confirmDelete = async idx => {
+    const review = reviews[idx];
+    if (!review || !review._id) {
+      setError('No se pudo encontrar la reseña para eliminar');
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/${review._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        const newReviews = reviews.filter((_, i) => i !== idx);
+        setReviews(newReviews);
+        setConfirmIdx(null);
+        setDeletedMsg(true);
+        setTimeout(() => setDeletedMsg(false), 1800);
+      } else {
+        setError('Error al eliminar la reseña');
+      }
+    } catch (err) {
+      setError('Error de red al eliminar la reseña');
+    }
   };
 
   const [emailSent, setEmailSent] = useState(false);
