@@ -197,11 +197,11 @@ export default function ReviewsSection({ user }) {
             <>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Nombre</label>
-                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user.name}</div>
+                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user?.name || ''}</div>
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Email</label>
-                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user.email}</div>
+                <div className="w-full px-4 py-2 rounded-lg bg-[#181818] border border-[#333333] text-white text-sm">{user?.email || ''}</div>
               </div>
             </>
           )}
