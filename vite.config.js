@@ -32,8 +32,8 @@ export default defineConfig({
       },
       includeAssets: ['Corporatives/Images/Logo/Logo.png', 'Corporatives/Typography/Rondana Regular.otf', 'pwa-icons/*.png'],
       manifest: {
-        name: 'Modelo de Frontend Base',
-        short_name: 'Modelo de Frontend Base',
+        name: 'Licitanor',
+        short_name: 'Licitanor',
         description: 'Soluciones tecnológicas innovadoras para el uso sostenible y la protección de suelos',
         theme_color: '#a1db87',
         background_color: '#222222',
@@ -102,14 +102,14 @@ export default defineConfig({
           {
             name: 'Inicio',
             short_name: 'Inicio',
-            description: 'Modelo de Frontend Base',
+            description: 'Licitanor',
             url: '/',
             icons: [{ src: '/pwa-icons/icon-96x96.png', sizes: '96x96' }]
           },
           {
             name: 'Contacto',
             short_name: 'Contacto',
-            description: 'Contactar con Modelo de Frontend Base',
+            description: 'Contactar con Licitanor',
             url: '/contacto',
             icons: [{ src: '/pwa-icons/icon-96x96.png', sizes: '96x96' }]
           }
