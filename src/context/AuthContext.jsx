@@ -9,49 +9,85 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const [userConfig, setUserConfig] = useState(null);
   const navigate = useNavigate();
 
   // Verificar token inmediatamente al inicializar
   const hasToken = localStorage.getItem('token');
 
-  // Verificar si el usuario está autenticado al cargar la aplicación
+  // Verificar si el usuario está autenticado al cargar la aplicación y obtener configuración
   useEffect(() => {
-    // Evitar verificaciones repetidas
     if (initialized) return;
-    
     const checkAuth = async () => {
       try {
-        // Verificar si hay token en localStorage antes de hacer la solicitud
         const token = localStorage.getItem('token');
         if (!token) {
           setUser(null);
+          setUserConfig(null);
           setLoading(false);
           setInitialized(true);
           return;
         }
-        
         // Si hay token, verificar su validez
         const userData = await authService.getProfile();
         setUser(userData);
+        // Obtener configuración de usuario (incluye sessionTimeout)
+        if (userData) {
+          try {
+            const configModule = await import('../services/configuration');
+            const config = await configModule.getUserConfig();
+            setUserConfig(config);
+          } catch (err) {
+            setUserConfig(null);
+          }
+        }
       } catch (error) {
-        // Si hay error, limpiar el token inválido
         localStorage.removeItem('token');
         setUser(null);
+        setUserConfig(null);
       } finally {
         setLoading(false);
         setInitialized(true);
       }
     };
-
-    // Si no hay token, resolver inmediatamente
     if (!hasToken) {
       setUser(null);
+      setUserConfig(null);
       setLoading(false);
       setInitialized(true);
     } else {
       checkAuth();
     }
   }, [initialized, hasToken]);
+
+  // Cierre automático de sesión por inactividad
+  useEffect(() => {
+    if (!user || !userConfig || !userConfig.seguridad) return;
+    const timeoutMinutes = userConfig.seguridad.sessionTimeout || 60;
+    const timeoutMs = timeoutMinutes * 60 * 1000;
+    let timerId;
+
+    const resetTimer = () => {
+      if (timerId) clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        logout();
+      }, timeoutMs);
+    };
+
+    // Eventos de actividad
+    const activityEvents = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+    activityEvents.forEach((event) => {
+      window.addEventListener(event, resetTimer);
+    });
+    resetTimer();
+
+    return () => {
+      if (timerId) clearTimeout(timerId);
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [user, userConfig]);
 
   // Función para iniciar sesión
   const login = async (email, password) => {
@@ -114,6 +150,8 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     login,
     logout,
+    userConfig,
+    setUserConfig,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
