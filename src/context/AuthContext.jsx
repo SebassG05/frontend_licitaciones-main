@@ -6,6 +6,17 @@ import * as authService from '../services/auth';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+    // Cierre de sesión al cerrar el navegador si está activado en la config
+    useEffect(() => {
+      if (!user || !userConfig || !userConfig.seguridad || !userConfig.seguridad.logoutOnClose) return;
+      const handleLogout = () => {
+        logout();
+      };
+      window.addEventListener('unload', handleLogout);
+      return () => {
+        window.removeEventListener('unload', handleLogout);
+      };
+    }, [user, userConfig]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
