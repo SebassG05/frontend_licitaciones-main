@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { 
   Search, Smartphone, Shield, Save, Loader, Key, 
   Eye, EyeOff, Calendar, Euro, Clock, Filter, Bell, CheckCircle
@@ -159,7 +159,7 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
   });
 
   const [newKeyword, setNewKeyword] = useState('');
-  const [newSector, setNewSector] = useState('');
+  // ...existing code...
   const [newLocation, setNewLocation] = useState('');
 
   const sectoresDisponibles = [
