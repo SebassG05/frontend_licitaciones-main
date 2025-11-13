@@ -777,25 +777,7 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
           </div>
         </div>
 
-        {/* Configuración de sesión */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Tiempo de expiración de sesión (minutos)
-          </label>
-          <select
-            value={formData.sessionTimeout}
-            onChange={(e) => setFormData({ ...formData, sessionTimeout: parseInt(e.target.value) })}
-            className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
-          >
-            <option value={1}>1 minuto (prueba)</option>
-            <option value={15}>15 minutos</option>
-            <option value={30}>30 minutos</option>
-            <option value={60}>1 hora</option>
-            <option value={120}>2 horas</option>
-            <option value={240}>4 horas</option>
-            <option value={480}>8 horas</option>
-          </select>
-        </div>
+        {/* ...eliminado el selector de expiración de sesión... */}
 
         {/* Opciones de seguridad */}
         <div className="space-y-4">
