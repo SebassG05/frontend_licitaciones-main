@@ -787,6 +787,7 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
             onChange={(e) => setFormData({ ...formData, sessionTimeout: parseInt(e.target.value) })}
             className="w-full bg-gray-600 border border-gray-500 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a1db87]"
           >
+            <option value={1}>1 minuto (prueba)</option>
             <option value={15}>15 minutos</option>
             <option value={30}>30 minutos</option>
             <option value={60}>1 hora</option>
