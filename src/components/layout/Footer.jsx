@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Container from '../ui/Container';
 import { subscribeToNewsletter } from '../../services/newsletter';
+import CookiesModal from '../ui/CookiesModal';
 
 const SocialLink = memo(({ icon, url, name }) => (
   <motion.a
@@ -59,6 +60,15 @@ const Footer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showCookies, setShowCookies] = useState(false);
+
+  // Mostrar modal automáticamente si no hay preferencia guardada
+  useEffect(() => {
+    const pref = localStorage.getItem('licitaciones_cookies_pref');
+    if (!pref) {
+      setTimeout(() => setShowCookies(true), 800); // pequeño delay para UX
+    }
+  }, []);
 
   const currentYear = new Date().getFullYear();
   const navigate = useNavigate();
@@ -337,17 +347,30 @@ const Footer = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {footerSections.legal.links.map((link, index) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="cursor-pointer hover:text-[#a1db87] transition-colors"
-              >
-                {link.name}
-              </Link>
+              link.name === 'Cookies' ? (
+                <button
+                  key={link.name}
+                  className="cursor-pointer hover:text-[#a1db87] transition-colors bg-transparent border-none p-0 text-inherit"
+                  onClick={() => setShowCookies(true)}
+                >
+                  {link.name}
+                </button>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className="cursor-pointer hover:text-[#a1db87] transition-colors"
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
           </div>
         </motion.div>
       </Container>
+      {showCookies && (
+        <CookiesModal open={showCookies} onClose={() => setShowCookies(false)} />
+      )}
     </footer>
   );
 };
