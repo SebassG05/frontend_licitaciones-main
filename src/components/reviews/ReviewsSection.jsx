@@ -305,24 +305,24 @@ export default function ReviewsSection({ user }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="bg-[#181818] rounded-xl p-6 border border-[#333333] shadow flex flex-col relative"
+                className="bg-[#181818] rounded-xl p-4 sm:p-6 border border-[#333333] shadow flex flex-col relative w-full max-w-full"
               >
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2 text-xs sm:text-base">
                   <User className="w-5 h-5 text-[#a1db87]" />
-                  <span className="font-bold text-white text-base">{r.name}</span>
-                  <span className="text-xs text-gray-500 ml-2">{r.email}</span>
-                  <span className="text-xs text-gray-500 ml-auto">{new Date(r.date).toLocaleDateString()}</span>
+                  <span className="font-bold text-white break-all">{r.name}</span>
+                  <span className="text-gray-500 ml-2 break-all">{r.email}</span>
+                  <span className="text-gray-500 ml-auto">{new Date(r.date).toLocaleDateString()}</span>
                 </div>
-                <div className="flex gap-1 mb-2">
+                <div className="flex gap-1 mb-2 flex-wrap">
                   {[1,2,3,4,5].map(star => (
                     <Star key={star} className={`w-5 h-5 ${star <= r.rating ? 'text-[#a1db87]' : 'text-gray-600'}`} fill={star <= r.rating ? '#a1db87' : 'none'} />
                   ))}
                 </div>
-                <p className="text-gray-300 text-base leading-relaxed whitespace-pre-line">{r.text}</p>
+                <p className="text-gray-300 text-base leading-relaxed whitespace-pre-line break-words">{r.text}</p>
                 {isAdmin && (
                   <button
                     onClick={() => handleDelete(idx)}
-                    className="absolute top-4 right-4 bg-red-700 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg shadow transition-all"
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-red-700 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg shadow transition-all"
                     title="Eliminar reseña"
                   >
                     Eliminar
@@ -333,7 +333,7 @@ export default function ReviewsSection({ user }) {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute top-12 right-4 bg-[#232323] border border-[#a1db87] rounded-lg shadow-lg p-4 z-10 flex flex-col items-center"
+                    className="absolute top-12 right-2 sm:right-4 bg-[#232323] border border-[#a1db87] rounded-lg shadow-lg p-4 z-10 flex flex-col items-center"
                   >
                     <span className="text-[#a1db87] font-bold mb-2">¿Seguro que quieres eliminar?</span>
                     <div className="flex gap-2">
