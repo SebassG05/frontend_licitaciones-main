@@ -3,6 +3,8 @@ import { lazy, Suspense } from 'react';
 import TermsOfUse from './components/ui/TermsOfUse';
 import PrivacyPolicy from './components/ui/PrivacyPolicy';
 import CookiesPolicy from './components/ui/CookiesPolicy';
+import BorradorPropuestasPage from './pages/BorradorPropuestasPage';
+import BorradorWizard from './pages/BorradorWizard';
 import Layout from './components/layout/Layout';
 import { AuthProvider } from './context/AuthContext';
 
@@ -51,6 +53,9 @@ function App() {
               <Route path="/ayuda" element={<Ayuda />} />
               <Route path="/documentacion" element={<Documentacion />} />
               <Route path="/reseñas" element={<Reseñas />} />
+              <Route path="/borrador-propuestas" element={<BorradorPropuestasPage />} />
+              <Route path="/borrador-propuesta" element={<BorradorPropuestasPage />} />
+              <Route path="/borrador-propuestas/nuevo" element={<BorradorWizard />} />
               <Route path="/terminos" element={<TermsOfUse />} />
               <Route path="/privacidad" element={<PrivacyPolicy />} />
               <Route path="/cookies" element={<CookiesPolicy />} />
