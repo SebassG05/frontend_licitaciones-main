@@ -238,7 +238,10 @@ const NewsletterPreferences = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-12">
+    <div className="min-h-screen bg-transparent py-12 relative overflow-hidden">
+      {/* Decoraciones de fondo dinámico */}
+      <div className="absolute top-20 left-10 w-96 h-96 bg-[#a1db87]/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#a1db87]/5 rounded-full blur-3xl" />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
