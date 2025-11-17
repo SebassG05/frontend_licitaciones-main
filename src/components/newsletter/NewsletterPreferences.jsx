@@ -455,7 +455,7 @@ const NewsletterPreferences = () => {
                     value={keywordInput}
                     onChange={(e) => setKeywordInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-300 bg-[#232323]"
                     placeholder="ej: tecnología, infraestructura, salud..."
                   />
                   <button
@@ -496,7 +496,7 @@ const NewsletterPreferences = () => {
                     value={sectorInput}
                     onChange={(e) => setSectorInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSector())}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-300 bg-[#232323]"
                     placeholder="ej: construcción, servicios, tecnología..."
                   />
                   <button
@@ -575,7 +575,7 @@ const NewsletterPreferences = () => {
                         budgetRange: { ...prev.interests.budgetRange, min: e.target.value }
                       }
                     }))}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-300 bg-[#232323]"
                   />
                   <input
                     type="number"
@@ -588,7 +588,7 @@ const NewsletterPreferences = () => {
                         budgetRange: { ...prev.interests.budgetRange, max: e.target.value }
                       }
                     }))}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-300 bg-[#232323]"
                   />
                 </div>
               </div>
