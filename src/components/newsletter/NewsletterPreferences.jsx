@@ -291,7 +291,7 @@ const NewsletterPreferences = () => {
               <button
                 onClick={checkSubscription}
                 disabled={loading}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-3 bg-[#a1db87] text-[#1a1a1a] rounded-lg hover:bg-[#8bc96a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? 'Verificando...' : 'Verificar'}
               </button>
@@ -420,8 +420,8 @@ const NewsletterPreferences = () => {
                       key={option.value}
                       className={`flex flex-col p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         preferences.frequency === option.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-[#a1db87] bg-[#232323] text-[#a1db87]'
+                          : 'border-[#333] bg-[#232323] text-white hover:border-[#a1db87]'
                       }`}
                     >
                       <input
@@ -465,7 +465,7 @@ const NewsletterPreferences = () => {
                   {preferences.interests.keywords.map((keyword) => (
                     <span
                       key={keyword}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#a1db87]/20 text-[#a1db87]"
                     >
                       {keyword}
                       <button
