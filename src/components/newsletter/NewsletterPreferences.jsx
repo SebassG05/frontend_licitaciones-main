@@ -272,7 +272,7 @@ const NewsletterPreferences = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="bg-white rounded-xl shadow-lg p-8"
+          className="bg-[#232323] rounded-xl shadow-lg p-8 border border-[#333]"
         >
           {/* Email Input */}
           <div className="mb-8">
@@ -595,7 +595,7 @@ const NewsletterPreferences = () => {
                 className={`w-full py-4 px-6 rounded-lg font-medium text-white transition-all ${
                   saving
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                    : 'bg-[#a1db87] hover:bg-[#8bc96a] shadow-lg hover:shadow-xl text-[#1a1a1a]'
                 }`}
               >
                 {saving ? 'Guardando...' : 'Guardar Preferencias'}
@@ -619,7 +619,7 @@ const NewsletterPreferences = () => {
               </p>
               <a
                 href="/newsletter"
-                className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                className="inline-block bg-[#a1db87] text-[#1a1a1a] font-medium px-6 py-3 rounded-lg hover:bg-[#8bc96a] transition-all"
               >
                 Suscribirse al Newsletter
               </a>
