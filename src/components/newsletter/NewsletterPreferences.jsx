@@ -338,7 +338,7 @@ const NewsletterPreferences = () => {
             >
               <div className="bg-[#232323] rounded-lg p-6 border border-[#333]">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Estado de Suscripción</h3>
+                  <h3 className="text-lg font-semibold text-white-900">Estado de Suscripción</h3>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                     subscription.status === 'active'
                       ? 'bg-green-100 text-green-800'
