@@ -276,7 +276,7 @@ const NewsletterPreferences = () => {
         >
           {/* Email Input */}
           <div className="mb-8">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
               Email de suscripción
             </label>
             <div className="flex gap-3">
@@ -405,13 +405,13 @@ const NewsletterPreferences = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
                 Actualizar Preferencias
               </h3>
 
               {/* Frequency */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-white mb-3">
                   Frecuencia de envío
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -432,8 +432,8 @@ const NewsletterPreferences = () => {
                         onChange={(e) => setPreferences(prev => ({ ...prev, frequency: e.target.value }))}
                         className="sr-only"
                       />
-                      <span className="font-medium text-gray-900">{option.label}</span>
-                      <span className="text-sm text-gray-500 mt-1">{option.description}</span>
+                      <span className="font-medium text-white">{option.label}</span>
+                      <span className="text-sm text-gray-300 mt-1">{option.description}</span>
                     </label>
                   ))}
                 </div>
@@ -441,7 +441,7 @@ const NewsletterPreferences = () => {
 
               {/* Keywords */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   Palabras clave de interés
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -482,7 +482,7 @@ const NewsletterPreferences = () => {
 
               {/* Sectors */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   Sectores de interés
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -523,7 +523,7 @@ const NewsletterPreferences = () => {
 
               {/* Sources */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-white mb-3">
                   Fuentes de información
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -611,10 +611,10 @@ const NewsletterPreferences = () => {
               className="text-center py-8"
             >
               <EnvelopeIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-white mb-2">
                 No hay suscripción activa
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-300 mb-6">
                 Este email no está suscrito al newsletter
               </p>
               <a
