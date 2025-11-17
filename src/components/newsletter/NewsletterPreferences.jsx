@@ -560,7 +560,7 @@ const NewsletterPreferences = () => {
 
               {/* Budget Range */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Rango de presupuesto (€)
                 </label>
                 <div className="grid grid-cols-2 gap-3">
