@@ -305,10 +305,10 @@ const NewsletterPreferences = () => {
               animate={{ opacity: 1, scale: 1 }}
               className={`p-4 rounded-lg mb-6 ${
                 message.type === 'success'
-                  ? 'bg-green-50 text-green-800 border border-green-200'
+                  ? 'bg-green-900/20 text-green-300 border border-green-700'
                   : message.type === 'info'
-                  ? 'bg-blue-50 text-blue-800 border border-blue-200'
-                  : 'bg-red-50 text-red-800 border border-red-200'
+                  ? 'bg-[#232323] text-[#a1db87] border border-[#a1db87]'
+                  : 'bg-red-900/20 text-red-300 border border-red-700'
               }`}
             >
               <div className="flex items-center">
@@ -331,7 +331,7 @@ const NewsletterPreferences = () => {
               animate={{ opacity: 1, y: 0 }}
               className="mb-8"
             >
-              <div className="bg-gray-50 rounded-lg p-6">
+              <div className="bg-[#232323] rounded-lg p-6 border border-[#333]">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Estado de Suscripción</h3>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
