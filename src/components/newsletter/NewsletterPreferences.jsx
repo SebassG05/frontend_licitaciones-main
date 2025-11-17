@@ -238,31 +238,31 @@ const NewsletterPreferences = () => {
   };
 
   return (
-    <div className="min-h-screen bg-transparent py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent py-12 sm:py-16 md:py-20 relative overflow-hidden">
       {/* Decoraciones de fondo dinámico */}
       <div className="absolute top-20 left-10 w-96 h-96 bg-[#a1db87]/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#a1db87]/5 rounded-full blur-3xl" />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-8"
+          className="text-center mb-12"
         >
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+            className="inline-flex items-center px-4 py-2 bg-[#2a2a2a] border border-[#a1db87]/30 rounded-full mb-4"
           >
-            <CogIcon className="w-8 h-8 text-white" />
+            <CogIcon className="w-4 h-4 text-[#a1db87] mr-2" />
+            <span className="text-xs sm:text-sm font-semibold text-[#a1db87]">
+              Gestionar Newsletter
+            </span>
           </motion.div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Gestionar Newsletter
-          </h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Actualiza tus preferencias o gestiona tu suscripción
-          </p>
+          </h1>
         </motion.div>
 
         <motion.div
