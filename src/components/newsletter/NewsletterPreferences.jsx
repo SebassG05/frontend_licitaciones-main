@@ -289,13 +289,15 @@ const NewsletterPreferences = () => {
                 placeholder="tu@email.com"
                 disabled={!!subscription}
               />
-              <button
-                onClick={checkSubscription}
-                disabled={loading}
-                className="px-6 py-3 bg-[#a1db87] text-[#1a1a1a] rounded-lg hover:bg-[#8bc96a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Verificando...' : 'Verificar'}
-              </button>
+              {!subscription && (
+                <button
+                  onClick={checkSubscription}
+                  disabled={loading}
+                  className="px-6 py-3 bg-[#a1db87] text-[#1a1a1a] rounded-lg hover:bg-[#8bc96a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  {loading ? 'Verificando...' : 'Verificar'}
+                </button>
+              )}
             </div>
           </div>
 
