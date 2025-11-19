@@ -231,16 +231,16 @@ const Profile = () => {
             <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
               <div className="relative w-30 h-30 md:w-27 md:h-27 rounded-full bg-gradient-to-br from-[#a1db87] to-[#90c977] flex items-center justify-center shadow-lg">
                 {selectedAvatar ? (
-                  <img
-                    src={selectedAvatar.image}
-                    alt="Avatar usuario"
-                    style={{
-                      transform: `rotate(${selectedAvatar.rotation || 0}deg) scale(${selectedAvatar.zoom || 1})`,
-                      objectFit: 'cover',
-                      width: '100%',
-                      height: '100%',
-                    }}
-                  />
+                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+                    <img
+                      src={selectedAvatar.image}
+                      alt="Avatar usuario"
+                      className="w-full h-full object-cover"
+                      style={{
+                        transform: `rotate(${selectedAvatar.rotation || 0}deg) scale(${selectedAvatar.zoom || 1})`
+                      }}
+                    />
+                  </div>
                 ) : (
                   <User className="w-10 h-10 md:w-12 md:h-12 text-[#333333]" />
                 )}
@@ -273,7 +273,7 @@ const Profile = () => {
                               {customAvatars.map((avatar, idx) => (
                                 <button
                                   key={"custom-" + idx}
-                                  className={`rounded-full overflow-hidden border-2 ${selectedAvatar?.image === avatar.image ? 'border-[#a1db87]' : 'border-transparent'} bg-[#181818] flex items-center justify-center w-20 h-20`}
+                                  className={`cursor-pointer rounded-full overflow-hidden border-2 ${selectedAvatar?.image === avatar.image ? 'border-[#a1db87]' : 'border-transparent'} bg-[#181818] flex items-center justify-center w-20 h-20 transition-transform duration-200 hover:scale-105 hover:shadow-lg`}
                                   type="button"
                                   onClick={() => {
                                     const newAvatar = { image: avatar.image, pos: avatar.pos, rotation: avatar.rotation, zoom: avatar.zoom };
@@ -293,7 +293,7 @@ const Profile = () => {
                               {defaultAvatars.map((url, idx) => (
                                 <button
                                   key={idx}
-                                  className={`rounded-full overflow-hidden border-2 ${selectedAvatar?.image === url ? 'border-[#a1db87]' : 'border-transparent'} transition-shadow bg-[#181818] flex items-center justify-center w-20 h-20`}
+                                  className={`cursor-pointer rounded-full overflow-hidden border-2 ${selectedAvatar?.image === url ? 'border-[#a1db87]' : 'border-transparent'} transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-[#181818] flex items-center justify-center w-20 h-20`}
                                   type="button"
                                   onClick={() => {
                                     const newAvatar = { image: url, pos: null, rotation: 0, zoom: 1 };
@@ -307,10 +307,23 @@ const Profile = () => {
                                   />
                                 </button>
                               ))}
+                              {/* Botón para quitar avatar y dejar predeterminado */}
+                              <button
+                                className={`cursor-pointer rounded-full border-2 border-[#e57373] bg-transparent flex items-center justify-center w-20 h-20 relative group transition-transform duration-200 hover:scale-105 hover:shadow-lg`}
+                                type="button"
+                                title="Quitar avatar y dejar predeterminado"
+                                onClick={() => setSelectedAvatar(null)}
+                              >
+                                <span className="absolute inset-0 flex items-center justify-center">
+                                  {/* Círculo transparente */}
+                                  <span className="w-16 h-16 rounded-full bg-transparent border-2 border-dashed border-[#e57373]" />
+                                  {/* Icono de tachado */}
+                                </span>
+                              </button>
                             </div>
                             {selectedAvatar && (
                               <button
-                                className="mt-2 px-6 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold rounded-lg shadow transition-colors"
+                                className="cursor-pointer mt-2 px-6 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold rounded-lg shadow transition-colors"
                                 onClick={async () => {
                                   const dataToSend = {
                                     imageUrl: selectedAvatar.image,
