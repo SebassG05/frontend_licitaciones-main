@@ -8,6 +8,9 @@ import BorradorWizard from './pages/BorradorWizard';
 import Layout from './components/layout/Layout';
 import { AuthProvider } from './context/AuthContext';
 
+import { useEffect, useState } from 'react';
+import CookiesModal from './components/ui/CookiesModal';
+
 // Importación de páginas
 const Home = lazy(() => import('./pages/Home'));
 const Services = lazy(() => import('./pages/Services'));
@@ -33,10 +36,27 @@ const PageLoader = () => (
 );
 
 function App() {
+  const COOKIE_KEY = 'licitaciones_cookies_pref';
+  const [showCookiesModal, setShowCookiesModal] = useState(false);
+
+  useEffect(() => {
+    const cookiesPref = localStorage.getItem(COOKIE_KEY);
+    if (!cookiesPref) {
+      setShowCookiesModal(true);
+    }
+  }, []);
+
+  const handleCloseCookiesModal = () => {
+    setShowCookiesModal(false);
+  };
+
   return (
     <Router>
       <AuthProvider>
         <Layout>
+          {showCookiesModal && (
+            <CookiesModal open={showCookiesModal} onClose={handleCloseCookiesModal} />
+          )}
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Home />} />

@@ -277,7 +277,7 @@ export default function ReviewsSection({ user }) {
             disabled={submitting}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
-            className="bg-[#a1db87] text-[#181818] font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-[#8bc96a] transition-all w-full mt-2"
+            className="cursor-pointer bg-[#a1db87] text-[#181818] font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-[#8bc96a] transition-all w-full mt-2"
           >
             {submitting ? 'Enviando...' : 'Publicar reseña'}
           </motion.button>
