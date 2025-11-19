@@ -347,23 +347,24 @@ const Footer = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {footerSections.legal.links.map((link, index) => (
-              link.name === 'Cookies' ? (
-                <button
-                  key={link.name}
-                  className="cursor-pointer hover:text-[#a1db87] transition-colors bg-transparent border-none p-0 text-inherit"
-                  onClick={() => setShowCookies(true)}
-                >
-                  {link.name}
-                </button>
-              ) : (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className="cursor-pointer hover:text-[#a1db87] transition-colors"
-                >
-                  {link.name}
-                </Link>
-              )
+                link.name === 'Cookies' ? (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className="cursor-pointer hover:text-[#a1db87] transition-colors"
+                    onClick={typeof onShowCookiesModal === 'function' ? onShowCookiesModal : undefined}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className="cursor-pointer hover:text-[#a1db87] transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                )
             ))}
           </div>
         </motion.div>
