@@ -9,6 +9,7 @@ export const getMyAvatar = async () => {
     credentials: 'include',
   });
   const data = await response.json();
+  if (response.status === 404) return null; // No avatar, usuario nuevo o sin avatar
   if (!response.ok) throw new Error(data.message || 'Error al obtener el avatar');
   return data.data;
 };
