@@ -34,12 +34,15 @@ export default function CookiesModal({ open, onClose }) {
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
+          {/* Fondo borroso */}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300" />
           <motion.div
             initial={{ scale: 0.95, y: 40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 40, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 18 }}
             className="bg-[#232323] rounded-2xl shadow-2xl p-8 max-w-md w-full border border-[#a1db87] relative"
+            style={{ zIndex: 51 }}
           >
             <div className="flex items-center gap-3 mb-4">
               <Cookie className="w-8 h-8 text-[#a1db87]" />
@@ -113,13 +116,6 @@ export default function CookiesModal({ open, onClose }) {
                 </div>
               </div>
             )}
-            <button
-              className="absolute top-3 right-4 text-gray-400 hover:text-[#a1db87] text-lg"
-              onClick={() => onClose(false)}
-              title="Cerrar"
-            >
-              ×
-            </button>
           </motion.div>
         </motion.div>
       )}
