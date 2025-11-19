@@ -196,7 +196,7 @@ const Configuration = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/perfil')}
-              className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-medium transition-colors"
+              className="cursor-pointer inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-medium transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver al Perfil
@@ -207,7 +207,7 @@ const Configuration = () => {
               whileTap={{ scale: 0.95 }}
               onClick={handleResetConfig}
               disabled={saving}
-              className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+              className="cursor-pointer inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Restablecer
@@ -257,7 +257,7 @@ const Configuration = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center px-4 py-3 rounded-lg font-medium transition-colors ${
+                      className={`w-full flex items-center px-4 py-3 rounded-lg font-medium transition-colors cursor-pointer ${
                         activeTab === tab.id
                           ? 'bg-[#a1db87] text-[#333333]'
                           : 'text-gray-300 hover:bg-gray-700 hover:text-white'

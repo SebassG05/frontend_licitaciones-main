@@ -136,7 +136,7 @@ export const NotificationSettings = ({ config, onUpdate, saving }) => {
             whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={saving}
-            className="inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
           >
             {saving ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Guardar Cambios
@@ -265,7 +265,7 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={addKeyword}
-              className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
+              className="cursor-pointer px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
             >
               Agregar
             </motion.button>
@@ -328,7 +328,7 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={addLocation}
-              className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
+              className="cursor-pointer px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
             >
               Agregar
             </motion.button>
@@ -406,7 +406,7 @@ export const SearchPreferences = ({ config, onUpdate, saving }) => {
             whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={saving}
-            className="inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
           >
             {saving ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Guardar Preferencias
@@ -747,7 +747,7 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={onPasswordChange}
-              className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
+              className="cursor-pointer px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium"
             >
               Cambiar Contraseña
             </motion.button>
@@ -770,7 +770,7 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={() => setShowForgotPassword(true)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+              className="cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
             >
               Recuperar Contraseña
             </motion.button>
@@ -812,7 +812,7 @@ export const SecuritySettings = ({ config, onUpdate, onPasswordChange, saving })
             whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={saving}
-            className="inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center px-6 py-3 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors disabled:opacity-50"
           >
             {saving ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Guardar Seguridad
