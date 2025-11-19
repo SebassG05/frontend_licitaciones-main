@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import * as profileService from '../services/profile';
+import * as avatarService from '../services/avatar';
+import AvatarPreviewModal from '../components/ui/AvatarPreviewModal';
 
 const Profile = () => {
   const { user, setUser } = useAuth();
@@ -16,6 +18,11 @@ const Profile = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({});
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [customAvatarPreview, setCustomAvatarPreview] = useState(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [customAvatars, setCustomAvatars] = useState([]);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
   const sectionRef = useRef(null);
 
   // Detectar dispositivo
@@ -54,6 +61,21 @@ const Profile = () => {
         localidad: profileData.localidad || '',
         pais: profileData.pais || ''
       });
+      // Cargar avatar desde la colección avatars
+      try {
+        const avatar = await avatarService.getMyAvatar();
+        if (avatar && avatar.imageUrl) {
+          setSelectedAvatar({
+            image: avatar.imageUrl,
+            rotation: avatar.rotation || 0,
+            zoom: avatar.zoom || 1
+          });
+        } else {
+          setSelectedAvatar(null);
+        }
+      } catch {
+        setSelectedAvatar(null);
+      }
     } catch (error) {
       setError('Error al cargar el perfil');
       console.error('Error loading profile:', error);
@@ -91,12 +113,24 @@ const Profile = () => {
         return;
       }
 
-      const updatedProfile = await profileService.updateMyProfile(formData);
+      // Incluir avatar en la actualización si está seleccionado
+      const dataToSend = {
+        ...formData,
+        avatar: selectedAvatar
+          ? {
+              imageUrl: selectedAvatar.image,
+              rotation: selectedAvatar.rotation || 0,
+              zoom: selectedAvatar.zoom || 1
+            }
+          : undefined
+      };
+
+      const updatedProfile = await profileService.updateMyProfile(dataToSend);
       setProfile(updatedProfile);
       setUser({ ...user, nombre: updatedProfile.nombre });
       setEditing(false);
       setSuccess('Perfil actualizado correctamente');
-      
+       
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       setError(error.message || 'Error al actualizar el perfil');
@@ -111,6 +145,20 @@ const Profile = () => {
       [field]: value
     }));
   };
+
+  const defaultAvatars = [
+    'https://res.cloudinary.com/dwjpopzfo/image/upload/v1763552546/avatar_sqeifl.webp',
+    'https://res.cloudinary.com/dwjpopzfo/image/upload/v1763552540/Dise%C3%B1o_sin_t%C3%ADtulo_3_mkss5j.png',
+    'https://res.cloudinary.com/dwjpopzfo/image/upload/v1763552536/Dise%C3%B1o_sin_t%C3%ADtulo_2_pkzoxq.png',
+    'https://res.cloudinary.com/dwjpopzfo/image/upload/v1763552532/Dise%C3%B1o_sin_t%C3%ADtulo_1_fhtpho.png',
+    'https://res.cloudinary.com/dwjpopzfo/image/upload/v1763552528/Dise%C3%B1o_sin_t%C3%ADtulo_eqqlba.png',
+    
+    'https://api.dicebear.com/9.x/glass/svg?seed=empresa1',
+    'https://api.dicebear.com/9.x/glass/svg?seed=empresa2',
+    'https://api.dicebear.com/9.x/glass/svg?seed=empresa3',
+    'https://api.dicebear.com/9.x/glass/svg?seed=empresa4',
+    'https://api.dicebear.com/9.x/glass/svg?seed=empresa5',
+  ];
 
   if (loading) {
     return (
@@ -181,9 +229,141 @@ const Profile = () => {
           {/* Header del card con avatar */}
           <div className="bg-gradient-to-r from-[#a1db87]/20 to-[#90c977]/20 p-6 md:p-8">
             <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-[#a1db87] to-[#90c977] flex items-center justify-center shadow-lg">
-                <User className="w-10 h-10 md:w-12 md:h-12 text-[#333333]" />
+              <div className="relative w-30 h-30 md:w-27 md:h-27 rounded-full bg-gradient-to-br from-[#a1db87] to-[#90c977] flex items-center justify-center shadow-lg">
+                {selectedAvatar ? (
+                  <img
+                    src={selectedAvatar.image}
+                    alt="Avatar usuario"
+                    style={{
+                      transform: `rotate(${selectedAvatar.rotation || 0}deg) scale(${selectedAvatar.zoom || 1})`,
+                      objectFit: 'cover',
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                ) : (
+                  <User className="w-10 h-10 md:w-12 md:h-12 text-[#333333]" />
+                )}
+                <button
+                  className="cursor-pointer absolute bottom-0 right-0 bg-[#333333] hover:bg-[#232323] text-[#a1db87] rounded-full p-2 shadow transition-colors"
+                  title="Actualizar foto de perfil"
+                  onClick={() => setShowAvatarModal(true)}
+                >
+                  <Edit3 className="w-4 h-4" />
+                </button>
               </div>
+                    {/* Modal para seleccionar avatar predeterminado */}
+                    <AnimatePresence>
+                      {showAvatarModal && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                        >
+                          <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                            className="bg-[#232323] rounded-2xl shadow-2xl px-10 py-6 max-w-2xl w-full border border-[#a1db87] relative"
+                          >
+                            <h2 className="text-xl font-bold text-[#a1db87] mb-4">Selecciona tu imagen de perfil</h2>
+                            <div className="grid grid-cols-4 gap-6 mb-6">
+                              {customAvatars.map((avatar, idx) => (
+                                <button
+                                  key={"custom-" + idx}
+                                  className={`rounded-full overflow-hidden border-2 ${selectedAvatar?.image === avatar.image ? 'border-[#a1db87]' : 'border-transparent'} bg-[#181818] flex items-center justify-center w-20 h-20`}
+                                  type="button"
+                                  onClick={() => {
+                                    const newAvatar = { image: avatar.image, pos: avatar.pos, rotation: avatar.rotation, zoom: avatar.zoom };
+                                    setSelectedAvatar(newAvatar);
+                                  }}
+                                >
+                                  <img
+                                    src={avatar.image}
+                                    alt={`Avatar personalizado ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                    style={{
+                                      transform: `rotate(${avatar.rotation || 0}deg) scale(${avatar.zoom || 1})`,
+                                    }}
+                                  />
+                                </button>
+                              ))}
+                              {defaultAvatars.map((url, idx) => (
+                                <button
+                                  key={idx}
+                                  className={`rounded-full overflow-hidden border-2 ${selectedAvatar?.image === url ? 'border-[#a1db87]' : 'border-transparent'} transition-shadow bg-[#181818] flex items-center justify-center w-20 h-20`}
+                                  type="button"
+                                  onClick={() => {
+                                    const newAvatar = { image: url, pos: null, rotation: 0, zoom: 1 };
+                                    setSelectedAvatar(newAvatar);
+                                  }}
+                                >
+                                  <img
+                                    src={url}
+                                    alt={`Avatar ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                            {selectedAvatar && (
+                              <button
+                                className="mt-2 px-6 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold rounded-lg shadow transition-colors"
+                                onClick={async () => {
+                                  const dataToSend = {
+                                    imageUrl: selectedAvatar.image,
+                                    rotation: selectedAvatar.rotation || 0,
+                                    zoom: selectedAvatar.zoom || 1
+                                  };
+                                  try {
+                                    await avatarService.saveMyAvatar(dataToSend);
+                                    setSuccess('Avatar guardado correctamente');
+                                    await loadProfile();
+                                    setShowAvatarModal(false);
+                                  } catch (error) {
+                                    setError('Error al guardar el avatar');
+                                  }
+                                }}
+                              >
+                                Guardar
+                              </button>
+                            )}
+                            <div className="mb-4 flex flex-col items-center">
+                              <label htmlFor="avatar-upload" className="cursor-pointer bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold px-5 py-2 rounded-lg shadow transition-colors mb-2">
+                                Subir imagen personalizada
+                              </label>
+                              <input
+                                id="avatar-upload"
+                                type="file"
+                                accept="image/png, image/jpeg, image/jpg, image/svg+xml"
+                                className="hidden"
+                                onChange={e => {
+                                  const file = e.target.files[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = ev => {
+                                      setCustomAvatarPreview(ev.target.result);
+                                      setShowPreviewModal(true);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                              <span className="text-xs text-gray-400">Formatos permitidos: PNG, JPG, SVG</span>
+                            </div>
+                            <button
+                              className="absolute top-3 right-4 text-gray-400 hover:text-[#a1db87] text-lg"
+                              onClick={() => { setShowAvatarModal(false); setCustomAvatarPreview(null); setShowPreviewModal(false); }}
+                              title="Cerrar"
+                            >
+                              ×
+                            </button>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
               <div className="flex-1 text-center sm:text-left">
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
                   {profile?.nombre || 'Usuario'}
@@ -361,6 +541,20 @@ const Profile = () => {
             </div>
           </div>
         </motion.div>
+
+        {showPreviewModal && (
+          <AvatarPreviewModal
+            image={customAvatarPreview}
+            open={showPreviewModal}
+            onClose={() => { setShowPreviewModal(false); setCustomAvatarPreview(null); setShowAvatarModal(true); }}
+            onConfirm={data => {
+              setCustomAvatars(prev => [...prev, data]);
+              setSelectedAvatar({ image: data.image, pos: data.pos, rotation: data.rotation, zoom: data.zoom });
+              setShowPreviewModal(false);
+              setShowAvatarModal(true);
+            }}
+          />
+        )}
       </div>
     </div>
   );
