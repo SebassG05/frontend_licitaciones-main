@@ -148,7 +148,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
                   <motion.button
                     whileHover={{ x: 4 }}
                     onClick={handleNavigateToProfile}
-                    className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
+                    className="cursor-pointer w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
                   >
                     <div className="flex items-center space-x-3">
                       <User className="w-5 h-5 text-gray-400 group-hover:text-[#a1db87] transition-colors" />
@@ -160,7 +160,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
                   <motion.button
                     whileHover={{ x: 4 }}
                     onClick={handleNavigateToSettings}
-                    className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
+                    className="cursor-pointer w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#333333] transition-all group"
                   >
                     <div className="flex items-center space-x-3">
                       <Shield className="w-5 h-5 text-gray-400 group-hover:text-[#a1db87] transition-colors" />

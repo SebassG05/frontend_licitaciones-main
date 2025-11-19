@@ -272,7 +272,7 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleReset}
                   className="
-                    px-6 py-3 text-sm font-semibold text-gray-400 
+                    cursor-pointer px-6 py-3 text-sm font-semibold text-gray-400 
                     border-2 border-gray-700 rounded-xl
                     hover:text-white hover:bg-[#252525] hover:border-gray-600
                     transition-all duration-300

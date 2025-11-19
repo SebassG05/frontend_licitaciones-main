@@ -202,7 +202,7 @@ const Profile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleEdit}
-                    className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors flex items-center space-x-2"
+                    className="cursor-pointer px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors flex items-center space-x-2"
                   >
                     <Edit3 className="w-4 h-4" />
                     <span>Editar</span>
@@ -214,7 +214,7 @@ const Profile = () => {
                       whileTap={{ scale: 0.95 }}
                       onClick={handleSave}
                       disabled={saving}
-                      className="px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors flex items-center space-x-2 disabled:opacity-50"
+                      className="cursor-pointer px-4 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#333333] rounded-lg font-medium transition-colors flex items-center space-x-2 disabled:opacity-50"
                     >
                       {saving ? (
                         <Loader className="w-4 h-4 animate-spin" />
@@ -227,7 +227,7 @@ const Profile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={handleCancel}
-                      className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
+                      className="cursor-pointer px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
                     >
                       <X className="w-4 h-4" />
                       <span>Cancelar</span>

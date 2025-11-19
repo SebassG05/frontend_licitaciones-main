@@ -257,7 +257,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="flex items-center gap-2 text-[#a1db87] hover:text-white text-xs font-semibold mt-2 transition-colors duration-300"
+                className="cursor-pointer flex items-center gap-2 text-[#a1db87] hover:text-white text-xs font-semibold mt-2 transition-colors duration-300"
               >
                 {isExpanded ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {isExpanded ? 'Ver menos' : 'Ver más'}
