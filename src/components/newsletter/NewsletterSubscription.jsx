@@ -375,7 +375,7 @@ const NewsletterSubscription = () => {
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="text-[#a1db87] hover:text-[#8bc96a] font-medium text-sm transition-colors"
+            className="text-[#a1db87] hover:text-[#8bc96a] font-medium text-sm transition-colors cursor-pointer"
           >
             {showAdvanced ? 'Ocultar opciones avanzadas' : 'Mostrar opciones avanzadas'}
           </button>
@@ -406,7 +406,7 @@ const NewsletterSubscription = () => {
                 <button
                   type="button"
                   onClick={addKeyword}
-                  className="px-4 py-2 bg-[#a1db87] text-[#1a1a1a] rounded-lg hover:bg-[#8bc96a] transition-colors font-medium"
+                  className="cursor-pointer px-4 py-2 bg-[#a1db87] text-[#1a1a1a] rounded-lg hover:bg-[#8bc96a] transition-colors font-medium"
                 >
                   Añadir
                 </button>
@@ -447,7 +447,7 @@ const NewsletterSubscription = () => {
                 <button
                   type="button"
                   onClick={addSector}
-                  className="px-4 py-2 bg-[#8bc96a] text-[#1a1a1a] rounded-lg hover:bg-[#a1db87] transition-colors font-medium"
+                  className="cursor-pointer px-4 py-2 bg-[#8bc96a] text-[#1a1a1a] rounded-lg hover:bg-[#a1db87] transition-colors font-medium"
                 >
                   Añadir
                 </button>
@@ -551,10 +551,10 @@ const NewsletterSubscription = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className={`w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
+              className={`cursor-pointer w-full py-4 px-6 rounded-lg font-medium text-[#1a1a1a] transition-all ${
                 loading
                   ? 'bg-gray-600 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#8bc96a] to-[#a1db87] hover:from-[#a1db87] hover:to-[#8bc96a] shadow-lg hover:shadow-xl shadow-[#a1db87]/20'
+                  : 'bg-gradient-to-r from-[#8bc96a] to-[#a1db87] hover:from-[#a1db87] hover:to-[#8bc96a] shadow-lg hover:shadow-xl shadow-[#a1db87]/20 cursor-pointer'
               }`}
             >
               {loading ? 'Actualizando...' : 'Actualizar Preferencias'}
@@ -568,7 +568,7 @@ const NewsletterSubscription = () => {
               disabled={loading}
               className="w-full py-3 px-6 rounded-lg font-medium text-red-400 border-2 border-red-500/30 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all"
             >
-              Cancelar Suscripción
+                <span className="cursor-pointer">Cancelar Suscripción</span>
             </motion.button>
           </div>
         ) : (
