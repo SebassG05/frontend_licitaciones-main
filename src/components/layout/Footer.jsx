@@ -368,9 +368,7 @@ const Footer = () => {
           </div>
         </motion.div>
       </Container>
-      {showCookies && (
-        <CookiesModal open={showCookies} onClose={() => setShowCookies(false)} />
-      )}
+      {/* CookiesModal eliminado para evitar duplicidad, ahora solo se gestiona en App.jsx */}
     </footer>
   );
 };

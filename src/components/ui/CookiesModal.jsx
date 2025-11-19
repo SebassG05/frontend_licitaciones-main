@@ -11,23 +11,32 @@ export default function CookiesModal({ open, onClose }) {
     analytics: true,
     personalization: true,
   });
+  const [closing, setClosing] = useState(false);
+
+  const closeWithAnimation = (cb) => {
+    setClosing(true);
+    setTimeout(() => {
+      cb();
+      setClosing(false);
+    }, 350); // Duration matches AnimatePresence exit
+  };
 
   const handleAcceptAll = () => {
     localStorage.setItem(COOKIE_KEY, JSON.stringify({ ...prefs, accepted: true }));
-    onClose(true);
+    closeWithAnimation(() => onClose(true));
   };
   const handleRejectAll = () => {
     localStorage.setItem(COOKIE_KEY, JSON.stringify({ necessary: true, analytics: false, personalization: false, accepted: false }));
-    onClose(false);
+    closeWithAnimation(() => onClose(false));
   };
   const handleSaveConfig = () => {
     localStorage.setItem(COOKIE_KEY, JSON.stringify({ ...prefs, accepted: true }));
-    onClose(true);
+    closeWithAnimation(() => onClose(true));
   };
 
   return (
     <AnimatePresence>
-      {open && (
+      {open && !closing && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -39,7 +48,7 @@ export default function CookiesModal({ open, onClose }) {
           <motion.div
             initial={{ scale: 0.95, y: 40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.95, y: 40, opacity: 0 }}
+            exit={{ scale: 0.8, y: 40, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 18 }}
             className="bg-[#232323] rounded-2xl shadow-2xl p-8 max-w-md w-full border border-[#a1db87] relative"
             style={{ zIndex: 51 }}
@@ -59,19 +68,19 @@ export default function CookiesModal({ open, onClose }) {
             {!showConfig ? (
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
-                  className="bg-[#a1db87] text-[#181818] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#8bc96a] transition-all w-full"
+                  className="cursor-pointer bg-[#a1db87] text-[#181818] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#8bc96a] transition-all w-full"
                   onClick={handleAcceptAll}
                 >
                   Aceptar todas
                 </button>
                 <button
-                  className="bg-gray-700 text-gray-200 font-bold px-6 py-2 rounded-xl shadow hover:bg-gray-600 transition-all w-full"
+                  className="cursor-pointer bg-gray-700 text-gray-200 font-bold px-6 py-2 rounded-xl shadow hover:bg-gray-600 transition-all w-full"
                   onClick={handleRejectAll}
                 >
                   Rechazar
                 </button>
                 <button
-                  className="bg-[#232323] border border-[#a1db87] text-[#a1db87] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#181818] transition-all w-full flex items-center justify-center gap-2"
+                  className="cursor-pointer bg-[#232323] border border-[#a1db87] text-[#a1db87] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#181818] transition-all w-full flex items-center justify-center gap-2"
                   onClick={() => setShowConfig(true)}
                 >
                   <Settings2 className="w-4 h-4" /> Configurar
@@ -96,19 +105,19 @@ export default function CookiesModal({ open, onClose }) {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 mt-2">
                   <button
-                    className="bg-[#a1db87] text-[#181818] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#8bc96a] transition-all w-full"
+                    className="cursor-pointer bg-[#a1db87] text-[#181818] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#8bc96a] transition-all w-full"
                     onClick={handleSaveConfig}
                   >
                     Guardar configuración
                   </button>
                   <button
-                    className="bg-gray-700 text-gray-200 font-bold px-6 py-2 rounded-xl shadow hover:bg-gray-600 transition-all w-full"
+                    className="cursor-pointer bg-gray-700 text-gray-200 font-bold px-6 py-2 rounded-xl shadow hover:bg-gray-600 transition-all w-full"
                     onClick={handleRejectAll}
                   >
                     Rechazar todas
                   </button>
                   <button
-                    className="bg-[#232323] border border-[#a1db87] text-[#a1db87] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#181818] transition-all w-full"
+                    className="cursor-pointer bg-[#232323] border border-[#a1db87] text-[#a1db87] font-bold px-6 py-2 rounded-xl shadow hover:bg-[#181818] transition-all w-full"
                     onClick={() => setShowConfig(false)}
                   >
                     Volver
