@@ -332,8 +332,12 @@ const Profile = () => {
                               <button
                                 className="cursor-pointer mt-2 px-6 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold rounded-lg shadow transition-colors"
                                 onClick={async () => {
+                                  let imageUrl = selectedAvatar.image;
+                                  // Si es una imagen personalizada (base64), ya está lista
+                                  // Si es una predeterminada, es una URL
+                                  // Ambas se envían igual
                                   const dataToSend = {
-                                    imageUrl: selectedAvatar.image,
+                                    imageUrl,
                                     rotation: selectedAvatar.rotation || 0,
                                     zoom: selectedAvatar.zoom || 1
                                   };
