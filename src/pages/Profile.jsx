@@ -62,23 +62,21 @@ const Profile = () => {
         pais: profileData.pais || ''
       });
       // Cargar avatar desde la colección avatars
-      try {
-        const avatar = await avatarService.getMyAvatar();
-        if (avatar && avatar.imageUrl) {
-          setSelectedAvatar({
-            image: avatar.imageUrl,
-            rotation: avatar.rotation || 0,
-            zoom: avatar.zoom || 1
-          });
-        } else {
-          setSelectedAvatar(null);
-        }
-      } catch {
+      const avatar = await avatarService.getMyAvatar();
+      if (avatar && avatar.imageUrl) {
+        setSelectedAvatar({
+          image: avatar.imageUrl,
+          rotation: avatar.rotation || 0,
+          zoom: avatar.zoom || 1
+        });
+      } else {
         setSelectedAvatar(null);
       }
     } catch (error) {
       setError('Error al cargar el perfil');
-      console.error('Error loading profile:', error);
+      if (error.message && !error.message.includes('404')) {
+        console.error('Error loading profile:', error);
+      }
     } finally {
       setLoading(false);
     }
