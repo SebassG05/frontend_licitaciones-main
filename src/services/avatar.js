@@ -29,4 +29,19 @@ export const saveMyAvatar = async (avatarData) => {
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Error al guardar el avatar');
   return data.data;
+
+};
+
+export const deleteMyAvatar = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No está autenticado.');
+  const response = await fetch(`${API_URL}/users/avatar`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` },
+    credentials: 'include',
+  });
+  if (response.status === 404) return null;
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Error al eliminar el avatar');
+  return data.data;
 };

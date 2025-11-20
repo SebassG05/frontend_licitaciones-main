@@ -272,7 +272,7 @@ const Profile = () => {
                             <div className="grid grid-cols-4 gap-6 mb-6">
                               {customAvatars.map((avatar, idx) => (
                                 <button
-                                  key={"custom-" + idx}
+                                  key={`custom-${idx}-${avatar.image || idx}`}
                                   className={`cursor-pointer rounded-full overflow-hidden border-2 ${selectedAvatar?.image === avatar.image ? 'border-[#a1db87]' : 'border-transparent'} bg-[#181818] flex items-center justify-center w-20 h-20 transition-transform duration-200 hover:scale-105 hover:shadow-lg`}
                                   type="button"
                                   onClick={() => {
@@ -292,7 +292,7 @@ const Profile = () => {
                               ))}
                               {defaultAvatars.map((url, idx) => (
                                 <button
-                                  key={idx}
+                                  key={`default-${idx}-${url}`}
                                   className={`cursor-pointer rounded-full overflow-hidden border-2 ${selectedAvatar?.image === url ? 'border-[#a1db87]' : 'border-transparent'} transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-[#181818] flex items-center justify-center w-20 h-20`}
                                   type="button"
                                   onClick={() => {
@@ -311,13 +311,22 @@ const Profile = () => {
                               <button
                                 className={`cursor-pointer rounded-full border-2 border-[#e57373] bg-transparent flex items-center justify-center w-20 h-20 relative group transition-transform duration-200 hover:scale-105 hover:shadow-lg`}
                                 type="button"
-                                title="Quitar avatar y dejar predeterminado"
-                                onClick={() => setSelectedAvatar(null)}
+                                title="Quitar avatar y dejar perfil sin imagen"
+                                onClick={async () => {
+                                  try {
+                                    await avatarService.deleteMyAvatar(); // Debes tener este método en avatarService
+                                    setSelectedAvatar(null);
+                                    setSuccess('Avatar eliminado correctamente');
+                                    await loadProfile();
+                                    setShowAvatarModal(false);
+                                  } catch (error) {
+                                    setError('Error al eliminar el avatar');
+                                  }
+                                }}
                               >
                                 <span className="absolute inset-0 flex items-center justify-center">
                                   {/* Círculo transparente */}
                                   <span className="w-16 h-16 rounded-full bg-transparent border-2 border-dashed border-[#e57373]" />
-                                  {/* Icono de tachado */}
                                 </span>
                               </button>
                             </div>
