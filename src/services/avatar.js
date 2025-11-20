@@ -8,9 +8,13 @@ export const getMyAvatar = async () => {
     headers: { 'Authorization': `Bearer ${token}` },
     credentials: 'include',
   });
-  const data = await response.json();
   if (response.status === 404) return null; // No avatar, usuario nuevo o sin avatar
-  if (!response.ok) throw new Error(data.message || 'Error al obtener el avatar');
+  if (!response.ok && response.status !== 404) {
+    const data = await response.json();
+    throw new Error(data.message || 'Error al obtener el avatar');
+  }
+  if (response.status === 404) return null;
+  const data = await response.json();
   return data.data;
 };
 
