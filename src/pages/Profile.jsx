@@ -332,17 +332,27 @@ const Profile = () => {
                               <button
                                 className="cursor-pointer mt-2 px-6 py-2 bg-[#a1db87] hover:bg-[#90c977] text-[#232323] font-semibold rounded-lg shadow transition-colors"
                                 onClick={async () => {
-                                  let imageUrl = selectedAvatar.image;
-                                  // Si es una imagen personalizada (base64), ya está lista
-                                  // Si es una predeterminada, es una URL
-                                  // Ambas se envían igual
-                                  const dataToSend = {
-                                    imageUrl,
-                                    rotation: selectedAvatar.rotation || 0,
-                                    zoom: selectedAvatar.zoom || 1
-                                  };
                                   try {
-                                    await avatarService.saveMyAvatar(dataToSend);
+                                    // Si es base64, convertir a archivo y enviar como FormData
+                                    if (selectedAvatar.image.startsWith('data:image')) {
+                                      // Convertir base64 a Blob
+                                      const arr = selectedAvatar.image.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                                      for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
+                                      const file = new File([u8arr], 'avatar.png', { type: mime });
+                                      const formData = new FormData();
+                                      formData.append('avatar', file);
+                                      formData.append('rotation', selectedAvatar.rotation || 0);
+                                      formData.append('zoom', selectedAvatar.zoom || 1);
+                                      await avatarService.saveMyAvatar(formData, true); // true = multipart
+                                    } else {
+                                      // Si es predeterminada, enviar como JSON
+                                      const dataToSend = {
+                                        imageUrl: selectedAvatar.image,
+                                        rotation: selectedAvatar.rotation || 0,
+                                        zoom: selectedAvatar.zoom || 1
+                                      };
+                                      await avatarService.saveMyAvatar(dataToSend);
+                                    }
                                     setSuccess('Avatar guardado correctamente');
                                     await loadProfile();
                                     setShowAvatarModal(false);
