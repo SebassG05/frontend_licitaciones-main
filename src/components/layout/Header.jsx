@@ -397,14 +397,13 @@ const handleNavigation = useCallback((path) => {
                                         {isAuthenticated ? (
                                             <>
                                                 {user?.avatar?.imageUrl ? (
-                                                    <img
-                                                        src={user.avatar.imageUrl}
-                                                        alt="Avatar"
-                                                        className="w-7 h-7 rounded-full object-cover mr-2 border border-[#a1db87]"
-                                                    />
-                                                ) : (
-                                                    <User className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
-                                                )}
+                                                    {user?.avatar?.imageUrl ? (
+                                                        <img
+                                                            src={user.avatar.imageUrl}
+                                                            alt="Avatar"
+                                                            className="w-7 h-7 rounded-full object-cover mr-2 border border-[#a1db87]"
+                                                        />
+                                                    ) : null}
                                                 <span className="hidden xl:inline">{user?.nombre?.split(' ')[0] || 'Usuario'}</span>
                                             </>
                                         ) : (
