@@ -158,6 +158,13 @@ const Profile = () => {
     'https://api.dicebear.com/9.x/glass/svg?seed=empresa5',
   ];
 
+  useEffect(() => {
+    // Sincroniza el avatar global (contexto) con el del perfil
+    if (selectedAvatar && selectedAvatar.image) {
+      setUser(prev => prev ? { ...prev, avatar: { imageUrl: selectedAvatar.image } } : prev);
+    }
+  }, [selectedAvatar, setUser]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-transparent flex items-center justify-center px-4">

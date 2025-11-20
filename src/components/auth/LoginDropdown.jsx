@@ -134,11 +134,19 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
               >
                 {/* Info del usuario */}
                 <div className="flex items-center space-x-3 p-3 bg-[#333333]/50 rounded-xl">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#a1db87]/30 to-[#a1db87]/50 flex items-center justify-center border-2 border-[#a1db87]/40">
-                    <User className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#a1db87]/30 to-[#a1db87]/50 flex items-center justify-center border-2 border-[#a1db87]/40 overflow-hidden">
+                    {user?.avatar?.imageUrl ? (
+                      <img
+                        src={user.avatar.imageUrl}
+                        alt="Avatar"
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-6 h-6 text-white" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-semibold truncate">{user?.name || 'Usuario'}</p>
+                    <p className="text-white font-semibold truncate">{user?.nombre || 'Usuario'}</p>
                     <p className="text-gray-400 text-sm truncate">{user?.email || 'email@ejemplo.com'}</p>
                   </div>
                 </div>
