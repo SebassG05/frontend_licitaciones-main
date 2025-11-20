@@ -21,19 +21,35 @@ export const getMyAvatar = async () => {
 export const saveMyAvatar = async (avatarData) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No está autenticado.');
-  const response = await fetch(`${API_URL}/users/avatar`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    credentials: 'include',
-    body: JSON.stringify(avatarData),
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Error al guardar el avatar');
-  return data.data;
 
+  // Si avatarData es FormData, enviar como multipart/form-data
+  if (avatarData instanceof FormData) {
+    const response = await fetch(`${API_URL}/users/avatar`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: avatarData,
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al guardar el avatar');
+    return data.data;
+  } else {
+    // Si es JSON (avatar predeterminado)
+    const response = await fetch(`${API_URL}/users/avatar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(avatarData),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al guardar el avatar');
+    return data.data;
+  }
 };
 
 export const deleteMyAvatar = async () => {
