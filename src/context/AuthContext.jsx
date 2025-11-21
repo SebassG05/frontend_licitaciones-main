@@ -102,13 +102,14 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await authService.login(email, password);
-      setUser(response.data.user);
-      
-      // Hacer una mini recarga para mostrar los datos sin parsear
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-      
+      // Obtener perfil completo tras login
+      try {
+        const profileModule = await import('../services/profile');
+        const profileData = await profileModule.getMyProfile();
+        setUser({ ...response.data.user, ...profileData });
+      } catch (err) {
+        setUser(response.data.user);
+      }
       return { success: true };
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
