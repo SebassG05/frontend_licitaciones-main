@@ -55,6 +55,7 @@ const Profile = () => {
       setLoading(true);
       const profileData = await profileService.getMyProfile();
       setProfile(profileData);
+      setUser(prev => ({ ...prev, ...profileData }));
       setFormData({
         nombre: profileData.nombre || '',
         telefono: profileData.telefono || '',
