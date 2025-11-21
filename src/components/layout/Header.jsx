@@ -301,10 +301,7 @@ const handleNavigation = useCallback((path) => {
                             />
                         </motion.div>
 
-                        {/* Buscador - visible en tablet y desktop */}
-                        <div className="hidden md:flex flex-1 max-w-xs lg:max-w-md xl:max-w-lg">
-                            <SearchBar isMobile={false} isScrolled={isScrolled} />
-                        </div>
+                        {/* Espacio eliminado para repartir el header */}
 
                         {/* Navegación central - solo desktop */}
                         <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
