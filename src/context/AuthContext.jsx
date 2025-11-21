@@ -28,8 +28,16 @@ export const AuthProvider = ({ children }) => {
           setInitialized(true);
           return;
         }
-        // Si hay token, verificar su validez
-        const userData = await authService.getProfile();
+        // Si hay token, obtener perfil completo del usuario
+        let userData = await authService.getProfile();
+        // Si el servicio de perfil existe, usarlo para obtener datos más completos
+        try {
+          const profileModule = await import('../services/profile');
+          const profileData = await profileModule.getMyProfile();
+          userData = { ...userData, ...profileData };
+        } catch (err) {
+          // Si falla, usar solo los datos mínimos
+        }
         setUser(userData);
         // Obtener configuración de usuario (incluye sessionTimeout)
         if (userData) {
