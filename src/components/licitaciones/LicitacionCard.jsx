@@ -437,7 +437,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                   <Tag className="w-4 h-4 text-amber-400" />
                   <span className="font-semibold text-gray-400 text-xs">Referencia</span>
                 </div>
-                <span className="text-white font-mono text-xs">
+                <span className="text-white font-mono text-xs select-none blur-sm">
                   {licitacion.referenceId || licitacion.numeroReferenciaInterna}
                 </span>
               </div>
