@@ -38,6 +38,14 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
           // Si falla, usar solo los datos mínimos
         }
+        // Obtener avatar actualizado y sincronizarlo en el contexto
+        try {
+          const avatarModule = await import('../services/avatar');
+          const avatarData = await avatarModule.getMyAvatar();
+          userData = { ...userData, avatar: avatarData };
+        } catch (err) {
+          // Si falla, dejar avatar como está
+        }
         setUser(userData);
         // Obtener configuración de usuario (incluye sessionTimeout)
         if (userData) {
