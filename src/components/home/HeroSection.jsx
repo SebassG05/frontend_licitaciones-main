@@ -180,7 +180,7 @@ const HeroSection = () => {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-lime-500/20 rounded-lg flex items-center justify-center">
-                          <Euro className="w-5 h-5 text-lime-400" />
+                          <Sparkles className="w-5 h-5 text-lime-400" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-white text-sm sm:text-base">Cascading Funding</h3>
@@ -195,7 +195,7 @@ const HeroSection = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-lime-400 font-semibold text-sm">
-                        {stats?.breakdown?.cascadingFunding ? `${stats.breakdown.cascadingFunding.toLocaleString()}+ convocatorias` : 'Cargando...'}
+                        {stats?.breakdown?.cascadingFunding ? `${stats.breakdown.cascadingFunding.toLocaleString()}+ licitaciones` : 'Cargando...'}
                       </span>
                       <ArrowRight className="w-4 h-4 text-lime-400 group-hover:translate-x-1 transition-transform" />
                     </div>
