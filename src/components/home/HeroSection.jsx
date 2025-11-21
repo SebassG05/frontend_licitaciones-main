@@ -195,7 +195,9 @@ const HeroSection = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-lime-400 font-semibold text-sm">
-                        {stats?.breakdown?.cascadingFunding ? `${stats.breakdown.cascadingFunding.toLocaleString()}+ licitaciones` : 'Cargando...'}
+                        {typeof stats?.breakdown?.cascadingFunding === 'number'
+                          ? `${stats.breakdown.cascadingFunding}+ licitaciones`
+                          : 'Cargando...'}
                       </span>
                       <ArrowRight className="w-4 h-4 text-lime-400 group-hover:translate-x-1 transition-transform" />
                     </div>
