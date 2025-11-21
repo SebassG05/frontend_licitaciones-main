@@ -41,6 +41,7 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
     'comisionEuropea': 'Comisión Europea',
     'nacionesUnidas': 'Naciones Unidas',
     'contratacionEstadoEspana': 'Contratación del Estado España',
+    'cascadeFunding': 'Cascade Funding',
   };
 
   const statusOptions = [
