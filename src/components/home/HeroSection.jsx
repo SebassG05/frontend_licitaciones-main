@@ -8,6 +8,8 @@ import {
 import Container from '../ui/Container';
 
 const HeroSection = () => {
+    const [showBoxes, setShowBoxes] = useState(true);
+    const [hideAnim, setHideAnim] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [stats, setStats] = useState(null);
 
@@ -96,135 +98,174 @@ const HeroSection = () => {
               </div>
 
               {/* Grid de fuentes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                {/* Banco Mundial */}
+              {showBoxes && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`group bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 rounded-xl p-4 sm:p-6 hover:border-blue-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: hideAnim ? 0 : 1 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                        <Building2 className="w-5 h-5 text-blue-400" />
+                  {/* Banco Mundial */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className={`group bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 rounded-xl p-4 sm:p-6 hover:border-blue-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                          <Building2 className="w-5 h-5 text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Banco Mundial</h3>
+                          <p className="text-xs text-gray-400">World Bank Group</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white text-sm sm:text-base">Banco Mundial</h3>
-                        <p className="text-xs text-gray-400">World Bank Group</p>
-                      </div>
+                      <span className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">Activa</span>
                     </div>
-                    <span className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">Activa</span>
-                  </div>
-                  <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Proyectos de desarrollo, infraestructura y programas sociales a nivel internacional.
-                    Financiación por ejemplo para sostenibilidad ambiental.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-blue-400 font-semibold text-sm">
-                      {stats?.breakdown?.bancoMundial ? `${stats.breakdown.bancoMundial.toLocaleString()}+ proyectos` : 'Cargando...'}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Proyectos de desarrollo, infraestructura y programas sociales a nivel internacional.
+                      Financiación por ejemplo para sostenibilidad ambiental.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-blue-400 font-semibold text-sm">
+                        {stats?.breakdown?.bancoMundial ? `${stats.breakdown.bancoMundial.toLocaleString()}+ proyectos` : 'Cargando...'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
 
-                {/* Comisión Europea */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`group bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 rounded-xl p-4 sm:p-6 hover:border-amber-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                        <Euro className="w-5 h-5 text-amber-400" />
+                  {/* Comisión Europea */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className={`group bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 rounded-xl p-4 sm:p-6 hover:border-amber-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                          <Euro className="w-5 h-5 text-amber-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Comisión Europea</h3>
+                          <p className="text-xs text-gray-400">European Commission</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white text-sm sm:text-base">Comisión Europea</h3>
-                        <p className="text-xs text-gray-400">European Commission</p>
-                      </div>
+                      <span className="px-2 py-1 bg-amber-500/20 text-amber-300 text-xs rounded-full">Activa</span>
                     </div>
-                    <span className="px-2 py-1 bg-amber-500/20 text-amber-300 text-xs rounded-full">Activa</span>
-                  </div>
-                  <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Contratos públicos, subvenciones y programas de financiación de la Unión Europea.
-                    Oportunidades en sectores estratégicos como innovación.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-amber-400 font-semibold text-sm">
-                      {stats?.breakdown?.comisionEuropea ? `${stats.breakdown.comisionEuropea.toLocaleString()}+ contratos` : 'Cargando...'}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Contratos públicos, subvenciones y programas de financiación de la Unión Europea.
+                      Oportunidades en sectores estratégicos como innovación.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-amber-400 font-semibold text-sm">
+                        {stats?.breakdown?.comisionEuropea ? `${stats.breakdown.comisionEuropea.toLocaleString()}+ contratos` : 'Cargando...'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
 
-                {/* Naciones Unidas */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`group bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-xl p-4 sm:p-6 hover:border-emerald-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                        <Award className="w-5 h-5 text-emerald-400" />
+                  {/* Cascading Funding */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.25 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="group bg-gradient-to-br from-lime-500/10 to-lime-600/5 border border-lime-500/20 rounded-xl p-4 sm:p-6 hover:border-lime-400/40 transition-all duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-lime-500/20 rounded-lg flex items-center justify-center">
+                          <Euro className="w-5 h-5 text-lime-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Cascading Funding</h3>
+                          <p className="text-xs text-gray-400">European Commission</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white text-sm sm:text-base">Naciones Unidas</h3>
-                        <p className="text-xs text-gray-400">United Nations</p>
-                      </div>
+                      <span className="px-2 py-1 bg-lime-500/20 text-lime-300 text-xs rounded-full">Activa</span>
                     </div>
-                    <span className="px-2 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full">Activa</span>
-                  </div>
-                  <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Oportunidades de cooperación internacional, ayuda humanitaria y desarrollo sostenible.
-                    Contratos en áreas de salud, medio ambiente...
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-emerald-400 font-semibold text-sm">
-                      {stats?.breakdown?.nacionesUnidas ? `${stats.breakdown.nacionesUnidas.toLocaleString()}+ anuncios` : 'Cargando...'}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Oportunidades de financiación en cascada para proyectos innovadores y colaborativos en Europa.
+                      Subvenciones para startups, pymes y consorcios en sectores estratégicos.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lime-400 font-semibold text-sm">
+                        {stats?.breakdown?.cascadingFunding ? `${stats.breakdown.cascadingFunding.toLocaleString()}+ convocatorias` : 'Cargando...'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-lime-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
 
-                {/* Contratación del Estado España */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`group bg-gradient-to-br from-orange-500/10 to-orange-600/5 border border-orange-500/20 rounded-xl p-4 sm:p-6 hover:border-orange-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-orange-400" />
+                  {/* Naciones Unidas */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className={`group bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-xl p-4 sm:p-6 hover:border-emerald-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                          <Award className="w-5 h-5 text-emerald-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Naciones Unidas</h3>
+                          <p className="text-xs text-gray-400">United Nations</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white text-sm sm:text-base">Contratación del Estado</h3>
-                        <p className="text-xs text-gray-400">España</p>
-                      </div>
+                      <span className="px-2 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full">Activa</span>
                     </div>
-                    <span className="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">Activa</span>
-                  </div>
-                  <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
-                    Licitaciones y contratos públicos del Estado español en todos los sectores.
-                    Incluye ministerios, comunidades autónomas y organismos públicos.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-orange-400 font-semibold text-sm">
-                      {stats?.breakdown?.contratacionEstadoEspana ? `${stats.breakdown.contratacionEstadoEspana.toLocaleString()}+ licitaciones` : 'Cargando...'}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-orange-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Oportunidades de cooperación internacional, ayuda humanitaria y desarrollo sostenible.
+                      Contratos en áreas de salud, medio ambiente...
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-400 font-semibold text-sm">
+                        {stats?.breakdown?.nacionesUnidas ? `${stats.breakdown.nacionesUnidas.toLocaleString()}+ anuncios` : 'Cargando...'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
+
+                  {/* Contratación del Estado España */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className={`group bg-gradient-to-br from-orange-500/10 to-orange-600/5 border border-orange-500/20 rounded-xl p-4 sm:p-6 hover:border-orange-400/40 transition-all duration-300 ${!stats ? 'animate-pulse' : ''}`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-orange-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Contratación del Estado</h3>
+                          <p className="text-xs text-gray-400">España</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full">Activa</span>
+                    </div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Licitaciones y contratos públicos del Estado español en todos los sectores.
+                      Incluye ministerios, comunidades autónomas y organismos públicos.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-orange-400 font-semibold text-sm">
+                        {stats?.breakdown?.contratacionEstadoEspana ? `${stats.breakdown.contratacionEstadoEspana.toLocaleString()}+ licitaciones` : 'Cargando...'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-orange-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
                 </motion.div>
-              </div>
+              )}
 
               {/* Footer con información adicional */}
               <motion.div
