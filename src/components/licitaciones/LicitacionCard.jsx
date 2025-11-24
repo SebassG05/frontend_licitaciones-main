@@ -138,7 +138,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
     if (days === null) return 'No disponible';
     
     if (days < 0) {
-      return `${formattedDate} (Expirada)`;
+     
     } else if (days === 0) {
       return `${formattedDate} (¡Hoy!)`;
     } else if (days === 1) {
@@ -437,7 +437,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                   <Tag className="w-4 h-4 text-amber-400" />
                   <span className="font-semibold text-gray-400 text-xs">Referencia</span>
                 </div>
-                <span className="text-white font-mono text-xs select-none blur-sm">
+                <span className={`text-white font-mono text-xs select-none ${!isUserAuthenticated ? 'blur-sm' : ''}`}>
                   {licitacion.referenceId || licitacion.numeroReferenciaInterna}
                 </span>
               </div>
