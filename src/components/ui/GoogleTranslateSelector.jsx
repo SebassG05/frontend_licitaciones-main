@@ -44,19 +44,20 @@ const GoogleTranslateSelector = () => {
 
   const changeLanguage = (langCode) => {
     try {
-      if (langCode === 'es') {
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        window.location.reload();
+      const combo = document.querySelector('.goog-te-combo');
+      if (combo) {
+        // Si existe el combo, úsalo siempre para cambiar el idioma
+        combo.value = langCode === 'es' ? '' : langCode;
+        combo.dispatchEvent(new Event('change'));
       } else {
-        const combo = document.querySelector('.goog-te-combo');
-        if (combo) {
-          combo.value = langCode;
-          combo.dispatchEvent(new Event('change'));
+        // Si no existe el combo, manipula la cookie
+        if (langCode === 'es') {
+          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         } else {
           document.cookie = `googtrans=/es/${langCode}; path=/; domain=${window.location.hostname}`;
-          setTimeout(() => window.location.reload(), 500);
         }
+        setTimeout(() => window.location.reload(), 500);
       }
     } catch (error) {
       console.error('Error cambiando idioma:', error);
