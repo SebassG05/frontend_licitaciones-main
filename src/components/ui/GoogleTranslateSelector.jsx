@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const GoogleTranslateSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [comboReady, setComboReady] = useState(false);
   const dropdownRef = useRef(null);
 
   const languages = [
@@ -20,6 +21,16 @@ const GoogleTranslateSelector = () => {
     const checkGoogleTranslate = () => {
       if (window.google && window.google.translate) {
         setIsReady(true);
+        // Esperar a que el combo esté en el DOM
+        const waitForCombo = () => {
+          const combo = document.querySelector('.goog-te-combo');
+          if (combo) {
+            setComboReady(true);
+          } else {
+            setTimeout(waitForCombo, 300);
+          }
+        };
+        waitForCombo();
       } else {
         setTimeout(checkGoogleTranslate, 500);
       }
@@ -46,18 +57,22 @@ const GoogleTranslateSelector = () => {
     try {
       const combo = document.querySelector('.goog-te-combo');
       if (combo) {
-        // Si existe el combo, úsalo siempre para cambiar el idioma
         combo.value = langCode === 'es' ? '' : langCode;
         combo.dispatchEvent(new Event('change'));
       } else {
-        // Si no existe el combo, manipula la cookie
-        if (langCode === 'es') {
-          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        } else {
-          document.cookie = `googtrans=/es/${langCode}; path=/; domain=${window.location.hostname}`;
-        }
-        setTimeout(() => window.location.reload(), 500);
+        // Si no existe el combo, espera y vuelve a intentar
+        setComboReady(false);
+        const retryChange = () => {
+          const comboRetry = document.querySelector('.goog-te-combo');
+          if (comboRetry) {
+            comboRetry.value = langCode === 'es' ? '' : langCode;
+            comboRetry.dispatchEvent(new Event('change'));
+            setComboReady(true);
+          } else {
+            setTimeout(retryChange, 300);
+          }
+        };
+        retryChange();
       }
     } catch (error) {
       console.error('Error cambiando idioma:', error);
@@ -102,22 +117,22 @@ const GoogleTranslateSelector = () => {
             {/* Lista de idiomas - Sin indicador de selección */}
             <div className="p-2">
               {languages.map((lang, idx) => (
-                <motion.button
-                  key={lang.code}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                    transition: { delay: idx * 0.05 }
-                  }}
-                  whileHover={{ x: 2 }}
-                  onClick={() => changeLanguage(lang.code)}
-                  disabled={!isReady}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-300 hover:text-white hover:bg-[#333333]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
-                >
-                  <span className="text-lg">{lang.flag}</span>
-                  <span className="text-sm font-medium">{lang.name}</span>
-                </motion.button>
+                  <motion.button
+                    key={lang.code}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      transition: { delay: idx * 0.05 }
+                    }}
+                    whileHover={{ x: 2 }}
+                    onClick={() => changeLanguage(lang.code)}
+                    disabled={!isReady || !comboReady}
+                    className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-300 hover:text-white hover:bg-[#333333]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    <span className="text-sm font-medium">{lang.name}</span>
+                  </motion.button>
               ))}
             </div>
 
