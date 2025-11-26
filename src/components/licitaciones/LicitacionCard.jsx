@@ -136,9 +136,8 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
     const formattedDate = formatDate(deadline);
     
     if (days === null) return 'No disponible';
-    
     if (days < 0) {
-     
+      return `${formattedDate} (Vencida)`;
     } else if (days === 0) {
       return `${formattedDate} (¡Hoy!)`;
     } else if (days === 1) {
