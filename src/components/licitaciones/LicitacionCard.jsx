@@ -339,14 +339,17 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
             )}
 
             {/* Presupuesto */}
-            {(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto) && (
+            {((licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto) || (licitacion.source === 'cascadeFunding' && licitacion.maxFunding)) && (
               <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 group/item hover:border-[#a1db87]/30 transition-all duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Euro className="w-4 h-4 text-[#a1db87]" />
                   <span className="font-semibold text-gray-400 text-xs">Presupuesto</span>
                 </div>
                 <span className="text-[#a1db87] font-bold text-sm lg:text-base">
-                  {renderBlurredCurrency(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto, licitacion.currency)}
+                  {licitacion.source === 'cascadeFunding' && licitacion.maxFunding
+                    ? licitacion.maxFunding
+                    : renderBlurredCurrency(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto, licitacion.currency)
+                  }
                 </span>
               </div>
             )}
