@@ -347,7 +347,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
                 </div>
                 <span className="text-[#a1db87] font-bold text-sm lg:text-base">
                   {licitacion.source === 'cascadeFunding' && licitacion.maxFunding
-                    ? licitacion.maxFunding
+                    ? renderBlurredField(licitacion.maxFunding, 'No especificado')
                     : renderBlurredCurrency(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto, licitacion.currency)
                   }
                 </span>
