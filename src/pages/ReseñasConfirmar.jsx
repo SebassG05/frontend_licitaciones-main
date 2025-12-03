@@ -10,7 +10,7 @@ export default function ReseñasConfirmar() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch(`https://licitanor.evenor-tech.com/api/reviews/confirm/${token}`)
+    fetch(`https://dtas.evenor-tech.com/api/reviews/confirm/${token}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {

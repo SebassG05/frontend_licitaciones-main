@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { Star, User, Send } from 'lucide-react';
 
 // API endpoints
-const API_URL = 'https://licitanor.evenor-tech.com/api/reviews';
+const API_URL = 'https://dtas.evenor-tech.com/api/reviews';
 
 
 export default function ReviewsSection({ user }) {

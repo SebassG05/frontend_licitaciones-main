@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://licitanor.evenor-tech.com/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://dtas.evenor-tech.com/api';
 
 /**
  * Servicio para manejar notificaciones del usuario
