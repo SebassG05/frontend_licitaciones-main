@@ -51,11 +51,52 @@ const HeroSection = () => {
   return (
     <section className="relative pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-hidden">
       <Container>
+        {/* Título principal del sistema */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white via-[#a1db87] to-white bg-clip-text text-transparent mb-3">
+            Evenor Digital Tender Advisory System
+          </h1>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative mb-6"
+          >
+            <div className="flex items-center justify-center space-x-4 mb-3">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#a1db87]"></div>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a1db87] to-emerald-400 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="relative bg-black/50 backdrop-blur-sm border border-[#a1db87]/40 rounded-lg px-6 py-2">
+                  <span className="text-lg font-bold text-[#a1db87] tracking-[0.2em]">
+                    D T A S
+                  </span>
+                </div>
+              </div>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#a1db87]"></div>
+            </div>
+            <div className="text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="inline-block"
+              >
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-[#a1db87]/50 to-transparent mt-1"></div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+
         {/* Badge superior centrado */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center mb-6"
         >
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#2a2a2a] border border-[#a1db87]/30 rounded-full">
