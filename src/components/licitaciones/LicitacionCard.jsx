@@ -185,8 +185,8 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
               </motion.span>
             )}
 
-            {/* Badge de presupuesto destacado */}
-            {(licitacion.budget || licitacion.presupuesto) && (
+            {/* Badge de presupuesto destacado - oculto para contrataciones del estado */}
+            {(licitacion.budget || licitacion.presupuesto) && licitacion.source !== 'contratacionEstadoEspana' && (
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30"
@@ -268,10 +268,11 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
         {/* Sección de información detallada - ahora abajo en grid */}
         <div className="px-6 pb-6">
           {(() => {
-            // Contar cuántos elementos de información tenemos
+            // Contar cuántos elementos de información tenemos (excluyendo presupuesto para contrataciones del estado)
             const infoElements = [
               licitacion.deadline || licitacion.fechaLimite,
-              licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto,
+              // Solo incluir presupuesto si no es contratación del estado
+              licitacion.source !== 'contratacionEstadoEspana' ? (licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto) : null,
               licitacion.location || licitacion.paisRegion,
               licitacion.organoContratacion || licitacion.entity,
               licitacion.tipoLicitacion || licitacion.type || licitacion.category,
@@ -338,8 +339,8 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
               </div>
             )}
 
-            {/* Presupuesto */}
-            {(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto) && (
+            {/* Presupuesto - oculto para contrataciones del estado */}
+            {(licitacion.budget || licitacion.estimatedValue || licitacion.presupuesto) && licitacion.source !== 'contratacionEstadoEspana' && (
               <div className="bg-[#2a2a2a] p-3 lg:p-4 rounded-xl border border-gray-700 group/item hover:border-[#a1db87]/30 transition-all duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Euro className="w-4 h-4 text-[#a1db87]" />
