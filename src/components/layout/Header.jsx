@@ -107,6 +107,7 @@ const Header = () => {
     const menuItems = [
         { name: 'Inicio', path: '/' },
         { name: 'Licitaciones', path: '/licitaciones' },
+        { name: 'Foro', path: '/foro' },
         { name: 'Borrador de propuesta', path: '/borrador-propuesta' },
         { name: 'Newsletter', path: '/newsletter' },
         { name: 'Servicios', path: '/servicios' },

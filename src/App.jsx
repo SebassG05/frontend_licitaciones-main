@@ -19,6 +19,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Configuration = lazy(() => import('./pages/Configuration'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Licitaciones = lazy(() => import('./pages/Licitaciones'));
+const ForumLicitacion = lazy(() => import('./pages/ForumLicitacion'));
 const NewsletterPage = lazy(() => import('./pages/NewsletterPage'));
 const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'));
 const NewsletterPreferences = lazy(() => import('./components/newsletter/NewsletterPreferences'));
@@ -62,6 +63,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/servicios" element={<Services />} />
               <Route path="/licitaciones" element={<Licitaciones />} />
+              <Route path="/foro" element={<ForumLicitacion />} />
+              <Route path="/foro/:licitacionId" element={<ForumLicitacion />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/reseñas/confirmar/:token" element={<ReseñasConfirmar />} />
