@@ -175,7 +175,7 @@ const ForumLicitacion = () => {
   // Estados para el formulario de crear post
   const [formPost, setFormPost] = useState({
     titulo: '',
-    descripcion: '',
+    contenido: '',
     tipoPost: 'busco_socios',
     presupuestoMin: '',
     presupuestoMax: '',
@@ -240,7 +240,7 @@ const ForumLicitacion = () => {
       setMostrarFormulario(false);
       setFormPost({
         titulo: '',
-        descripcion: '',
+        contenido: '',
         tipoPost: 'busco_socios',
         presupuestoMin: '',
         presupuestoMax: '',
@@ -1169,8 +1169,8 @@ const ForumLicitacion = () => {
                             >
                               <option value="busco_socios">Busco socios</option>
                               <option value="ofrezco_servicios">Ofrezco servicios</option>
-                              <option value="consulta">Consulta técnica</option>
-                              <option value="colaboracion">Colaboración</option>
+                              <option value="consulta_tecnica">Consulta técnica</option>
+                              <option value="informacion_general">Información general</option>
                             </select>
                           </div>
 
@@ -1234,8 +1234,8 @@ const ForumLicitacion = () => {
                               Descripción *
                             </label>
                             <textarea
-                              value={formPost.descripcion}
-                              onChange={(e) => setFormPost(prev => ({ ...prev, descripcion: e.target.value }))}
+                              value={formPost.contenido}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, contenido: e.target.value }))}
                               className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors resize-none"
                               rows={6}
                               placeholder="Describe en detalle lo que buscas o ofreces..."
