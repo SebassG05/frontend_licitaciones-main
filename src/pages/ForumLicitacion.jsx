@@ -18,8 +18,10 @@ import {
   ArrowRight,
   Heart,
   Reply,
+  Loader,
   ExternalLink,
-  Tag
+  Tag,
+  Edit3
 } from 'lucide-react';
 import Container from '../components/ui/Container';
 import { useAuth } from '../context/AuthContext';
@@ -28,15 +30,34 @@ import { useAuth } from '../context/AuthContext';
 const forumAPI = {
   // Obtener posts de una licitación
   async getPostsByLicitacion(licitacionId) {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/posts/${licitacionId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Fetch con manejo silencioso de errores
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/licitacion/${licitacionId}/posts`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }).catch(() => {
+        // Si hay error de red, devolver respuesta simulada con 404
+        return { status: 404, ok: false };
+      });
+      
+      // Si es 404 o no hay respuesta, devolver estructura vacía (normal para licitaciones sin posts)
+      if (!response || response.status === 404) {
+        return { success: true, data: { posts: [], total: 0 } };
       }
-    });
-    if (!response.ok) throw new Error('Error al obtener posts del foro');
-    return await response.json();
+      
+      if (!response.ok) {
+        return { success: true, data: { posts: [], total: 0 } };
+      }
+      
+      return await response.json();
+    } catch (error) {
+      // Silenciosamente devolver estructura vacía para cualquier error
+      return { success: true, data: { posts: [], total: 0 } };
+    }
   },
 
   // Obtener detalles de una licitación
@@ -55,7 +76,7 @@ const forumAPI = {
   // Crear un nuevo post
   async crearPost(licitacionId, postData) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/posts`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/licitacion/${licitacionId}/posts`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -99,12 +120,18 @@ const forumAPI = {
   // Obtener perfil de empresa
   async obtenerPerfilEmpresa() {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/perfil`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/empresa/perfil`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
+    
+    // Si es 404, el perfil no existe aún (normal para nuevos usuarios)
+    if (response.status === 404) {
+      return null;
+    }
+    
     if (!response.ok) throw new Error('Error al obtener perfil de empresa');
     return await response.json();
   },
@@ -145,6 +172,19 @@ const ForumLicitacion = () => {
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [cargandoRespuesta, setCargandoRespuesta] = useState(false);
   
+  // Estados para el formulario de crear post
+  const [formPost, setFormPost] = useState({
+    titulo: '',
+    descripcion: '',
+    tipoPost: 'busco_socios',
+    presupuestoMin: '',
+    presupuestoMax: '',
+    fechaLimite: '',
+    requisitos: '',
+    contactoInfo: ''
+  });
+  const [creandoPost, setCreandoPost] = useState(false);
+  
   // Estados para el buscador de licitaciones
   const [licitacionesBusqueda, setLicitacionesBusqueda] = useState([]);
   const [terminoBusqueda, setTerminoBusqueda] = useState('');
@@ -171,12 +211,12 @@ const ForumLicitacion = () => {
         // Cargar datos en paralelo
         const [licitacionData, postsData, perfilData] = await Promise.all([
           forumAPI.getLicitacion(licitacionId).catch(() => null),
-          forumAPI.getPostsByLicitacion(licitacionId).catch(() => []),
+          forumAPI.getPostsByLicitacion(licitacionId).catch(() => ({ success: true, data: { posts: [] } })),
           forumAPI.obtenerPerfilEmpresa().catch(() => null)
         ]);
 
         setLicitacion(licitacionData);
-        setPosts(postsData || []);
+        setPosts(postsData?.data?.posts || []);
         setPerfilEmpresa(perfilData);
         
       } catch (err) {
@@ -191,14 +231,28 @@ const ForumLicitacion = () => {
   }, [licitacionId]);
 
   // Funciones de manejo
-  const handleCrearPost = async (postData) => {
+  const handleCrearPost = async (e) => {
+    e.preventDefault();
     try {
-      const nuevoPost = await forumAPI.crearPost(licitacionId, postData);
-      setPosts(prevPosts => [nuevoPost, ...prevPosts]);
+      setCreandoPost(true);
+      const nuevoPost = await forumAPI.crearPost(licitacionId, formPost);
+      setPosts(prevPosts => [nuevoPost.data, ...prevPosts]);
       setMostrarFormulario(false);
+      setFormPost({
+        titulo: '',
+        descripcion: '',
+        tipoPost: 'busco_socios',
+        presupuestoMin: '',
+        presupuestoMax: '',
+        fechaLimite: '',
+        requisitos: '',
+        contactoInfo: ''
+      });
     } catch (err) {
       console.error('Error creando post:', err);
       setError('Error al crear el post');
+    } finally {
+      setCreandoPost(false);
     }
   };
 
@@ -652,11 +706,96 @@ const ForumLicitacion = () => {
           </div>
         </motion.div>
 
+        {/* Información del perfil de empresa */}
+        {perfilEmpresa && perfilEmpresa.success !== false ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-gradient-to-r from-[#1a1a1a] to-[#252525] border border-[#2a2a2a] rounded-xl p-6 mb-8"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] rounded-lg flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-[#1a1a1a]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {perfilEmpresa?.data?.nombreEmpresa || 'Tu empresa'}
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    {perfilEmpresa?.data?.sectores?.join(', ') || 'Sectores de especialización'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                {perfilEmpresa?.data?.verificado && (
+                  <div className="flex items-center gap-1 text-green-400 text-sm">
+                    <CheckCircle className="w-4 h-4" />
+                    Verificado
+                  </div>
+                )}
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/perfil-empresa')}
+                  className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 px-4 py-2 rounded-lg border border-[#3a3a3a] flex items-center gap-2 transition-all duration-300"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  Editar perfil
+                </motion.button>
+              </div>
+            </div>
+            
+            {perfilEmpresa?.data?.descripcion && (
+              <p className="text-gray-300 text-sm mt-3 leading-relaxed">
+                {perfilEmpresa.data.descripcion.length > 150 
+                  ? `${perfilEmpresa.data.descripcion.substring(0, 150)}...` 
+                  : perfilEmpresa.data.descripcion
+                }
+              </p>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-6 mb-8"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <Building2 className="w-6 h-6 text-amber-400 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-amber-400 mb-1">
+                    Completa tu perfil de empresa
+                  </h3>
+                  <p className="text-sm text-amber-300 leading-relaxed">
+                    Para participar activamente en el foro, crea tu perfil con información de tu empresa y servicios.
+                  </p>
+                </div>
+              </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/perfil-empresa')}
+                className="bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Crear perfil
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Estadísticas del foro */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.15 }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
         >
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center">
@@ -942,41 +1081,216 @@ const ForumLicitacion = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl max-w-md w-full p-6 shadow-2xl"
+                className={`bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl w-full p-6 shadow-2xl ${
+                  perfilEmpresa && perfilEmpresa.success !== false ? 'max-w-5xl' : 'max-w-md'
+                }`}
               >
-                <h3 className="text-xl font-bold text-white mb-4">Participar en el foro</h3>
-                <div className="space-y-4">
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
-                    <div className="flex items-start gap-3">
-                      <Building2 className="w-5 h-5 text-amber-400 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-amber-400 mb-1">Perfil de empresa requerido</h4>
-                        <p className="text-sm text-amber-300 leading-relaxed">
-                          Para participar en el foro de colaboración, primero necesitas completar tu perfil de empresa con información sobre tus servicios y especialidades.
-                        </p>
+                {/* Si no tiene perfil de empresa, mostrar mensaje */}
+                {(!perfilEmpresa || perfilEmpresa.success === false) ? (
+                  <>
+                    <h3 className="text-xl font-bold text-white mb-4">Participar en el foro</h3>
+                    <div className="space-y-4">
+                      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
+                        <div className="flex items-start gap-3">
+                          <Building2 className="w-5 h-5 text-amber-400 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-amber-400 mb-1">Perfil de empresa requerido</h4>
+                            <p className="text-sm text-amber-300 leading-relaxed">
+                              Para participar en el foro de colaboración, primero necesitas completar tu perfil de empresa con información sobre tus servicios y especialidades.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-3">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => {
+                            setMostrarFormulario(false);
+                            navigate('/perfil-empresa');
+                          }}
+                          className="flex-1 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300"
+                        >
+                          Completar perfil
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setMostrarFormulario(false)}
+                          className="flex-1 bg-[#2a2a2a] text-gray-300 py-3 px-4 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300"
+                        >
+                          Cancelar
+                        </motion.button>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => navigate('/perfil-empresa')}
-                      className="flex-1 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300"
-                    >
-                      Completar perfil
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setMostrarFormulario(false)}
-                      className="flex-1 bg-[#2a2a2a] text-gray-300 py-3 px-4 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300"
-                    >
-                      Cancelar
-                    </motion.button>
-                  </div>
-                </div>
+                  </>
+                ) : (
+                  /* Si tiene perfil, mostrar formulario para crear post */
+                  <>
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl font-bold text-white">Crear nuevo post</h3>
+                      <button
+                        onClick={() => setMostrarFormulario(false)}
+                        className="text-gray-400 hover:text-white transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleCrearPost} className="space-y-4">
+                      {/* Título del post - ancho completo */}
+                      <div className="col-span-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Título del post *
+                        </label>
+                        <input
+                          type="text"
+                          value={formPost.titulo}
+                          onChange={(e) => setFormPost(prev => ({ ...prev, titulo: e.target.value }))}
+                          className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors"
+                          placeholder="Describe brevemente tu propuesta o búsqueda"
+                          required
+                        />
+                      </div>
+
+                      {/* Grid de dos columnas */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Columna izquierda */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Tipo de post *
+                            </label>
+                            <select
+                              value={formPost.tipoPost}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, tipoPost: e.target.value }))}
+                              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white focus:outline-none focus:border-[#a1db87] transition-colors"
+                            >
+                              <option value="busco_socios">Busco socios</option>
+                              <option value="ofrezco_servicios">Ofrezco servicios</option>
+                              <option value="consulta">Consulta técnica</option>
+                              <option value="colaboracion">Colaboración</option>
+                            </select>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Presupuesto mín. (€)
+                              </label>
+                              <input
+                                type="number"
+                                value={formPost.presupuestoMin}
+                                onChange={(e) => setFormPost(prev => ({ ...prev, presupuestoMin: e.target.value }))}
+                                className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors"
+                                placeholder="0"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Presupuesto máx. (€)
+                              </label>
+                              <input
+                                type="number"
+                                value={formPost.presupuestoMax}
+                                onChange={(e) => setFormPost(prev => ({ ...prev, presupuestoMax: e.target.value }))}
+                                className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors"
+                                placeholder="Sin límite"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Fecha límite
+                            </label>
+                            <input
+                              type="date"
+                              value={formPost.fechaLimite}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, fechaLimite: e.target.value }))}
+                              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white focus:outline-none focus:border-[#a1db87] transition-colors"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Información de contacto
+                            </label>
+                            <input
+                              type="text"
+                              value={formPost.contactoInfo}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, contactoInfo: e.target.value }))}
+                              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors"
+                              placeholder="Email, teléfono, o método de contacto preferido"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Columna derecha */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Descripción *
+                            </label>
+                            <textarea
+                              value={formPost.descripcion}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, descripcion: e.target.value }))}
+                              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors resize-none"
+                              rows={6}
+                              placeholder="Describe en detalle lo que buscas o ofreces..."
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Requisitos específicos
+                            </label>
+                            <textarea
+                              value={formPost.requisitos}
+                              onChange={(e) => setFormPost(prev => ({ ...prev, requisitos: e.target.value }))}
+                              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#a1db87] transition-colors resize-none"
+                              rows={4}
+                              placeholder="Experiencia requerida, certificaciones, ubicación geográfica..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 pt-4">
+                        <motion.button
+                          type="submit"
+                          disabled={creandoPost}
+                          whileHover={{ scale: creandoPost ? 1 : 1.05 }}
+                          whileTap={{ scale: creandoPost ? 1 : 0.95 }}
+                          className="flex-1 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                          {creandoPost ? (
+                            <>
+                              <Loader className="w-4 h-4 animate-spin" />
+                              Creando...
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4" />
+                              Publicar post
+                            </>
+                          )}
+                        </motion.button>
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setMostrarFormulario(false)}
+                          className="px-6 py-3 bg-[#2a2a2a] text-gray-300 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300"
+                        >
+                          Cancelar
+                        </motion.button>
+                      </div>
+                    </form>
+                  </>
+                )}
               </motion.div>
             </motion.div>
           )}
