@@ -511,12 +511,33 @@ const ForumLicitacion = () => {
             transition={{ delay: 0.15 }}
             className="mb-8 flex justify-center"
           >
-            <button
-              onClick={() => navigate('/foro/todos')}
-              className="px-6 py-3 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] rounded-xl font-semibold shadow-lg hover:shadow-[#a1db87]/25 transition-all duration-300"
+            <motion.button
+              whileHover={{ scale: 1.07, boxShadow: '0 8px 32px -8px #a1db87', y: -2, transition: { duration: 0.7, ease: 'easeOut' } }}
+              whileTap={{ scale: 0.98, transition: { duration: 0.25 } }}
+              onClick={() => {
+                // Animación de transición de página al navegar
+                const container = document.querySelector('.min-h-screen.bg-black');
+                if (container) {
+                  container.animate([
+                    { opacity: 1, transform: 'translateY(0px)' },
+                    { opacity: 0, transform: 'translateY(-40px)' }
+                  ], {
+                    duration: 700,
+                    easing: 'ease-in-out',
+                    fill: 'forwards'
+                  });
+                  setTimeout(() => {
+                    navigate('/foro/todos');
+                  }, 650);
+                } else {
+                  navigate('/foro/todos');
+                }
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] rounded-xl font-semibold shadow-lg hover:shadow-[#a1db87]/25 transition-all duration-700 cursor-pointer"
+              style={{ cursor: 'pointer' }}
             >
               Ver todos los posts del foro
-            </button>
+            </motion.button>
           </motion.div>
 
           {/* Lista de licitaciones */}

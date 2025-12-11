@@ -57,7 +57,7 @@ const ForumAllPosts = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black pb-16">
+    <div className="min-h-screen bg-transparent pb-16">
       <div className="max-w-5xl mx-auto pt-10 px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow">Todos los posts del foro</h2>
