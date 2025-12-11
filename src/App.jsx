@@ -29,6 +29,7 @@ const Documentacion = lazy(() => import('./pages/Documentacion'));
 const Reseñas = lazy(() => import('./pages/Reseñas'));
 const ReseñasConfirmar = lazy(() => import('./pages/ReseñasConfirmar'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const ForumAllPosts = lazy(() => import('./pages/ForumAllPosts'));
 
 // Componente de carga
 const PageLoader = () => (
@@ -65,6 +66,7 @@ function App() {
               <Route path="/servicios" element={<Services />} />
               <Route path="/licitaciones" element={<Licitaciones />} />
               <Route path="/foro" element={<ForumLicitacion />} />
+              <Route path="/foro/todos" element={<ForumAllPosts />} />
               <Route path="/foro/:licitacionId" element={<ForumLicitacion />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/perfil" element={<Profile />} />

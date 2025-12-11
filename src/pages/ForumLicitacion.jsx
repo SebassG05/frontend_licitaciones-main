@@ -462,6 +462,7 @@ const ForumLicitacion = () => {
 
   // Vista general del foro cuando no hay licitacionId específica
   if (!licitacionId) {
+
     return (
       <div className="min-h-screen bg-black">
         <Container className="py-8">
@@ -484,7 +485,7 @@ const ForumLicitacion = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8"
+            className="mb-4"
           >
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -501,6 +502,21 @@ const ForumLicitacion = () => {
                 </div>
               )}
             </div>
+          </motion.div>
+
+          {/* Botón para ver todos los posts del foro */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-8 flex justify-center"
+          >
+            <button
+              onClick={() => navigate('/foro/todos')}
+              className="px-6 py-3 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] rounded-xl font-semibold shadow-lg hover:shadow-[#a1db87]/25 transition-all duration-300"
+            >
+              Ver todos los posts del foro
+            </button>
           </motion.div>
 
           {/* Lista de licitaciones */}
