@@ -1010,14 +1010,9 @@ const ForumLicitacion = () => {
                   {/* Footer del post */}
                   <div className="flex items-center justify-between pt-4 border-t border-[#2a2a2a]">
                     <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div
-                        className="flex items-center gap-1 hover:text-[#a1db87] cursor-pointer transition-colors"
-                        onClick={() => setPostExpandido(post._id === postExpandido ? null : post._id)}
-                      >
+                      <div className="flex items-center gap-1 hover:text-gray-300 transition-colors">
                         <MessageSquare className="w-4 h-4" />
-                        <span>
-                          {post.numeroRespuestas} respuesta{post.numeroRespuestas === 1 ? '' : 's'}
-                        </span>
+                        <span>{post.numeroRespuestas} respuestas</span>
                       </div>
                       <div className="flex items-center gap-1 hover:text-gray-300 transition-colors">
                         <Heart className="w-4 h-4" />
@@ -1029,13 +1024,6 @@ const ForumLicitacion = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span
-                        className="text-emerald-400 hover:underline hover:text-white cursor-pointer text-sm font-medium flex items-center gap-1"
-                        onClick={() => abrirFormularioRespuesta(post)}
-                      >
-                        <Reply className="w-3 h-3" />
-                        Responder
-                      </span>
                       <motion.button 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -1045,35 +1033,16 @@ const ForumLicitacion = () => {
                         <Heart className="w-3 h-3" />
                         Interés
                       </motion.button>
+                      <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => abrirFormularioRespuesta(post)}
+                        className="px-3 py-1.5 text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1"
+                      >
+                        <Reply className="w-3 h-3" />
+                        Responder
+                      </motion.button>
                     </div>
-                  </div>
-
-                  {/* Conversación completa expandida */}
-                  {postExpandido === post._id && post.respuestas.length > 0 && (
-                    <div className="bg-[#232323] rounded-xl p-4 mt-4">
-                      <h4 className="font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                        <Reply className="w-4 h-4" />
-                        Conversación completa ({post.respuestas.length})
-                      </h4>
-                      <div className="space-y-3">
-                        {post.respuestas.map((respuesta, idx) => (
-                          <div key={idx} className="bg-[#1a1a1a] rounded-lg p-3 border border-[#2a2a2a]">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <Building2 className="w-3 h-3 text-gray-500" />
-                                <span className="text-sm font-medium text-gray-300">{respuesta.empresa.nombreEmpresa}</span>
-                                {respuesta.empresa.verificado && (
-                                  <CheckCircle className="w-3 h-3 text-[#a1db87]" />
-                                )}
-                              </div>
-                              <span className="text-xs text-gray-500">{formatearFechaRelativa(respuesta.fechaRespuesta)}</span>
-                            </div>
-                            <p className="text-sm text-gray-400 leading-relaxed">{respuesta.mensaje}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                   </div>
                 </motion.div>
               ))}
