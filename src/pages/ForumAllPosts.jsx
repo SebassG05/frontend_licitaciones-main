@@ -53,6 +53,19 @@ const ForumAllPosts = () => {
   const toggleFavorito = async (postId) => {
     setFavLoading(postId);
     try {
+      setPosts((prevPosts) => prevPosts.map(post => {
+        if (post._id === postId) {
+          const yaEsFavorito = favoritos.includes(postId);
+          const count = post.empresasInteresadas?.length || 0;
+          return {
+            ...post,
+            empresasInteresadas: yaEsFavorito
+              ? (count > 0 ? Array(count - 1).fill('fake') : [])
+              : Array(count + 1).fill('fake')
+          };
+        }
+        return post;
+      }));
       if (favoritos.includes(postId)) {
         await desmarcarFavorito(postId);
         setFavoritos(favoritos.filter(f => f !== postId));
