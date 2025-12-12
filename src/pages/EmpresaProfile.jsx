@@ -11,25 +11,8 @@ import Container from '../components/ui/Container';
 // Servicio API para el perfil de empresa
 const empresaProfileAPI = {
   async obtenerPerfil() {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/empresa/perfil`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.text();
-      // Si es 404, el perfil no existe - esto es normal para nuevos usuarios
-      if (response.status === 404) {
-        return null; // Devolver null en lugar de lanzar error
-      }
-      console.error('Error response:', response.status, errorData);
-      throw new Error(`Error ${response.status}: ${errorData || 'Error al obtener perfil'}`);
-    }
-    
-    return await response.json();
+    const { getPerfilEmpresa } = await import('../services/forum');
+    return await getPerfilEmpresa();
   },
 
   async crearOActualizarPerfil(data) {
