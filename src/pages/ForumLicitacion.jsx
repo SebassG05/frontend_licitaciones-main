@@ -136,23 +136,12 @@ const forumAPI = {
     return await response.json();
   },
 
-  // Buscar licitaciones para el foro
+  // Buscar licitaciones para el foro usando el servicio global
   async buscarLicitaciones(search = '', page = 1) {
-    const token = localStorage.getItem('token');
-    const params = new URLSearchParams({
-      search,
-      page: page.toString(),
-      limit: '10'
-    });
-    
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/licitaciones?${params}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    if (!response.ok) throw new Error('Error al buscar licitaciones');
-    return await response.json();
+    // Importar dinámicamente el servicio para evitar ciclos
+    const { getLicitaciones } = await import('../services/licitaciones');
+    // Usar el mismo formato de params que el servicio
+    return await getLicitaciones({ search, page, limit: 10 });
   }
 };
 
