@@ -80,3 +80,18 @@ export const getFavoritos = async () => {
   if (!response.ok) throw new Error('Error al obtener favoritos');
   return await response.json();
 };
+
+// Responder a un post
+export const responderPost = async (postId, mensaje) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/posts/${postId}/responder`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ mensaje })
+  });
+  if (!response.ok) throw new Error('Error al responder post');
+  return await response.json();
+};
