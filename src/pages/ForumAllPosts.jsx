@@ -130,6 +130,14 @@ const ForumAllPosts = () => {
                     <Heart className={`w-4 h-4 ${favoritos.includes(post._id) ? 'fill-pink-400' : ''}`} />
                     <span>{post.empresasInteresadas?.length || 0} interesados</span>
                   </button>
+                  <button
+                    className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-green-500 text-[#1a1a1a] font-bold border-2 border-emerald-400 rounded-xl shadow-md hover:from-green-400 hover:to-emerald-500 hover:text-white transition-all duration-200 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400 ml-2"
+                    aria-label="Responder a este post"
+                    // TODO: Añadir lógica para abrir modal o formulario de respuesta
+                  >
+                    <Reply className="w-4 h-4" />
+                    <span>Responder</span>
+                  </button>
                 </div>
               </div>
             );

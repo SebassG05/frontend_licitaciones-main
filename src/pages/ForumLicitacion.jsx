@@ -1034,13 +1034,14 @@ const ForumLicitacion = () => {
                         Interés
                       </motion.button>
                       <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => abrirFormularioRespuesta(post)}
-                        className="px-3 py-1.5 text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1"
+                        className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-green-500 text-[#1a1a1a] font-bold border-2 border-emerald-400 rounded-xl shadow-md hover:from-green-400 hover:to-emerald-500 hover:text-white transition-all duration-200 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                        aria-label="Responder a este post"
                       >
-                        <Reply className="w-3 h-3" />
-                        Responder
+                        <Reply className="w-4 h-4" />
+                        <span>Responder</span>
                       </motion.button>
                     </div>
                   </div>
