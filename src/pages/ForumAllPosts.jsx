@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { getAllForumPosts } from '../services/forum';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply } from 'lucide-react';
 
 const ForumAllPosts = () => {
@@ -35,21 +35,10 @@ const ForumAllPosts = () => {
       setLoading(true);
       setError("");
       try {
-        const token = localStorage.getItem('token');
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/posts`;
-        const res = await axios.get(apiUrl, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        setPosts(res.data.data || []);
+        const posts = await getAllForumPosts();
+        setPosts(posts);
       } catch (err) {
-        if (err.response) {
-          setError(`Error: ${err.response.status} - ${err.response.data?.message || err.response.statusText}`);
-        } else {
-          setError("Error al cargar los posts del foro.");
-        }
+        setError("Error al cargar los posts del foro.");
       }
       setLoading(false);
     };
