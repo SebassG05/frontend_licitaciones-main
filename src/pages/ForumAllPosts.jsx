@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos } from '../services/forum';
-import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply } from 'lucide-react';
+import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost } from '../services/forum';
+import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply, CheckCircle } from 'lucide-react';
 
 const ForumAllPosts = () => {
     // Colores y etiquetas por tipo de post
@@ -31,6 +31,10 @@ const ForumAllPosts = () => {
   const [error, setError] = useState("");
   const [favoritos, setFavoritos] = useState([]);
   const [favLoading, setFavLoading] = useState(null); // postId que está cargando favorito
+  const [postRespondiendo, setPostRespondiendo] = useState(null);
+  const [respuestaTexto, setRespuestaTexto] = useState('');
+  const [cargandoRespuesta, setCargandoRespuesta] = useState(false);
+  const [errorRespuesta, setErrorRespuesta] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -77,6 +81,27 @@ const ForumAllPosts = () => {
       // Manejo de error opcional
     }
     setFavLoading(null);
+  };
+
+  const handleAbrirResponder = (postId) => {
+    setPostRespondiendo(postId);
+    setRespuestaTexto('');
+    setErrorRespuesta('');
+  };
+
+  const handleEnviarRespuesta = async (postId) => {
+    if (!respuestaTexto.trim()) return;
+    setCargandoRespuesta(true);
+    setErrorRespuesta('');
+    try {
+      const actualizado = await responderPost(postId, respuestaTexto.trim());
+      setPosts((prev) => prev.map(p => p._id === postId ? actualizado : p));
+      setPostRespondiendo(null);
+      setRespuestaTexto('');
+    } catch (e) {
+      setErrorRespuesta('Error al responder el post');
+    }
+    setCargandoRespuesta(false);
   };
 
   return (
@@ -133,12 +158,63 @@ const ForumAllPosts = () => {
                   <button
                     className="px-3 py-1.5 text-emerald-400 border border-emerald-500/20 rounded-lg bg-[#181818] hover:bg-emerald-500/10 hover:text-emerald-300 transition-all duration-200 flex items-center gap-1 ml-2 focus:outline-none focus:ring-1 focus:ring-emerald-400"
                     aria-label="Responder a este post"
-                    // TODO: Añadir lógica para abrir modal o formulario de respuesta
+                    onClick={() => handleAbrirResponder(post._id)}
                   >
                     <Reply className="w-4 h-4" />
                     <span>Responder</span>
                   </button>
                 </div>
+                {/* Conversación y formulario de respuesta inline */}
+                {postRespondiendo === post._id && (
+                  <div className="mt-6 bg-[#202020] border border-emerald-900/20 rounded-xl p-4">
+                    <div className="mb-4">
+                      <div className="font-semibold text-emerald-300 mb-2 flex items-center gap-2"><Reply className="w-4 h-4" /> Conversación</div>
+                      {post.respuestas && post.respuestas.length > 0 ? (
+                        <div className="space-y-3 max-h-60 overflow-y-auto">
+                          {post.respuestas.map((r, idx) => (
+                            <div key={idx} className="bg-[#181818] rounded-lg p-3 border border-[#232323]">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Building2 className="w-3 h-3 text-gray-500" />
+                                <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
+                                {r.empresa?.verificado && <CheckCircle className="w-3 h-3 text-[#a1db87]" />}
+                                <span className="text-xs text-gray-500 ml-2">{new Date(r.fechaRespuesta).toLocaleString('es-ES')}</span>
+                              </div>
+                              <div className="text-xs text-gray-400">{r.mensaje}</div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 text-xs">No hay respuestas aún.</div>
+                      )}
+                    </div>
+                    <textarea
+                      className="w-full min-h-[80px] bg-[#181818] border border-emerald-500/20 rounded-lg p-2 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none resize-none mb-2"
+                      placeholder="Escribe tu respuesta..."
+                      value={respuestaTexto}
+                      onChange={e => setRespuestaTexto(e.target.value)}
+                      maxLength={1000}
+                      disabled={cargandoRespuesta}
+                    />
+                    <div className="flex gap-2 items-center">
+                      <button
+                        className="px-4 py-2 bg-emerald-500 text-black rounded-lg font-semibold hover:bg-emerald-400 transition disabled:opacity-50"
+                        onClick={() => handleEnviarRespuesta(post._id)}
+                        disabled={cargandoRespuesta || !respuestaTexto.trim()}
+                      >
+                        {cargandoRespuesta ? 'Enviando...' : 'Enviar respuesta'}
+                      </button>
+                      <button
+                        className="px-3 py-2 text-gray-400 hover:text-white text-xs"
+                        onClick={() => setPostRespondiendo(null)}
+                        disabled={cargandoRespuesta}
+                      >
+                        Cancelar
+                      </button>
+                      <span className="ml-auto text-xs text-gray-500">{respuestaTexto.length}/1000</span>
+                    </div>
+                    {errorRespuesta && <div className="text-red-400 text-xs mt-2">{errorRespuesta}</div>}
+                  </div>
+                )}
               </div>
             );
           })}
