@@ -92,6 +92,15 @@ export const responderPost = async (postId, mensaje) => {
     },
     body: JSON.stringify({ mensaje })
   });
-  if (!response.ok) throw new Error('Error al responder post');
-  return await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error('Respuesta del servidor no válida');
+  }
+  if (!response.ok) {
+    // Si el backend envía un mensaje, lo mostramos
+    throw new Error(data.message || 'Error al responder post');
+  }
+  return data.data || data;
 };
