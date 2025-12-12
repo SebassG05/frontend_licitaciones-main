@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllForumPosts } from '../services/forum';
+import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos } from '../services/forum';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply } from 'lucide-react';
 
 const ForumAllPosts = () => {
@@ -29,6 +29,8 @@ const ForumAllPosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [favoritos, setFavoritos] = useState([]);
+  const [favLoading, setFavLoading] = useState(null); // postId que está cargando favorito
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -37,6 +39,9 @@ const ForumAllPosts = () => {
       try {
         const posts = await getAllForumPosts();
         setPosts(posts);
+        // Cargar favoritos del usuario
+        const favs = await getFavoritos();
+        setFavoritos(favs.map(f => f._id));
       } catch (err) {
         setError("Error al cargar los posts del foro.");
       }
@@ -44,6 +49,22 @@ const ForumAllPosts = () => {
     };
     fetchPosts();
   }, []);
+
+  const toggleFavorito = async (postId) => {
+    setFavLoading(postId);
+    try {
+      if (favoritos.includes(postId)) {
+        await desmarcarFavorito(postId);
+        setFavoritos(favoritos.filter(f => f !== postId));
+      } else {
+        await marcarFavorito(postId);
+        setFavoritos([...favoritos, postId]);
+      }
+    } catch (e) {
+      // Manejo de error opcional
+    }
+    setFavLoading(null);
+  };
 
   return (
     <div className="min-h-screen bg-transparent pb-16">
@@ -87,10 +108,15 @@ const ForumAllPosts = () => {
                     <Reply className="w-4 h-4" />
                     <span>{post.numeroRespuestas || 0} respuestas</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
-                    <Heart className="w-4 h-4" />
+                  <button
+                    className={`flex items-center gap-2 text-xs ${favoritos.includes(post._id) ? 'text-pink-400' : 'text-gray-400'} transition-colors`}
+                    onClick={() => toggleFavorito(post._id)}
+                    disabled={favLoading === post._id}
+                    title={favoritos.includes(post._id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                  >
+                    <Heart className={`w-4 h-4 ${favoritos.includes(post._id) ? 'fill-pink-400' : ''}`} />
                     <span>{post.empresasInteresadas?.length || 0} interesados</span>
-                  </div>
+                  </button>
                 </div>
               </div>
             );

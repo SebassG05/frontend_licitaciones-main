@@ -39,3 +39,44 @@ export const getPostsByLicitacion = async (licitacionId) => {
   if (!response.ok) throw new Error('Error al obtener posts de la licitación');
   return await response.json();
 };
+
+// Marcar un post como favorito
+export const marcarFavorito = async (postId) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/posts/${postId}/favorito`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error('Error al marcar favorito');
+  return await response.json();
+};
+
+// Desmarcar un post como favorito
+export const desmarcarFavorito = async (postId) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/posts/${postId}/favorito`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error('Error al desmarcar favorito');
+  return await response.json();
+};
+
+// Obtener los posts favoritos del usuario
+export const getFavoritos = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/favoritos`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error('Error al obtener favoritos');
+  return await response.json();
+};
