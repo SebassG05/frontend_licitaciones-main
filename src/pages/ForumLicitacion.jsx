@@ -60,17 +60,10 @@ const forumAPI = {
     }
   },
 
-  // Obtener detalles de una licitación
+  // Obtener detalles de una licitación usando el servicio global
   async getLicitacion(licitacionId) {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/licitaciones/${licitacionId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    if (!response.ok) throw new Error('Error al obtener licitación');
-    return await response.json();
+    const { getLicitacionById } = await import('../services/licitaciones');
+    return await getLicitacionById(licitacionId);
   },
 
   // Crear un nuevo post
