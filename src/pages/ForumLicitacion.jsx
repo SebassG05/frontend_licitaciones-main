@@ -28,35 +28,13 @@ import { useAuth } from '../context/AuthContext';
 
 // Servicio API para el foro
 const forumAPI = {
-  // Obtener posts de una licitación
+  // Obtener posts de una licitación usando el servicio global
   async getPostsByLicitacion(licitacionId) {
     try {
-      const token = localStorage.getItem('token');
-      
-      // Fetch con manejo silencioso de errores
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/licitacion/${licitacionId}/posts`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }).catch(() => {
-        // Si hay error de red, devolver respuesta simulada con 404
-        return { status: 404, ok: false };
-      });
-      
-      // Si es 404 o no hay respuesta, devolver estructura vacía (normal para licitaciones sin posts)
-      if (!response || response.status === 404) {
-        return { success: true, data: { posts: [], total: 0 } };
-      }
-      
-      if (!response.ok) {
-        return { success: true, data: { posts: [], total: 0 } };
-      }
-      
-      return await response.json();
+      const { getPostsByLicitacion } = await import('../services/forum');
+      return await getPostsByLicitacion(licitacionId);
     } catch (error) {
-      // Silenciosamente devolver estructura vacía para cualquier error
-      return { success: true, data: { posts: [], total: 0 } };
+      return { posts: [], total: 0 };
     }
   },
 

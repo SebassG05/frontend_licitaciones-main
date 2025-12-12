@@ -26,3 +26,16 @@ export const getPerfilEmpresa = async () => {
   if (!response.ok) throw new Error('Error al obtener perfil de empresa');
   return await response.json();
 };
+
+export const getPostsByLicitacion = async (licitacionId) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/licitacion/${licitacionId}/posts`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (response.status === 404) return { posts: [], total: 0 };
+  if (!response.ok) throw new Error('Error al obtener posts de la licitación');
+  return await response.json();
+};
