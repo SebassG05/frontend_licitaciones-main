@@ -13,3 +13,16 @@ export const getAllForumPosts = async () => {
   const data = await response.json();
   return data.data || [];
 };
+
+export const getPerfilEmpresa = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/empresa/perfil`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('Error al obtener perfil de empresa');
+  return await response.json();
+};

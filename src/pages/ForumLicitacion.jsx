@@ -117,23 +117,10 @@ const forumAPI = {
     return await response.json();
   },
 
-  // Obtener perfil de empresa
+  // Obtener perfil de empresa usando el servicio global
   async obtenerPerfilEmpresa() {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/empresa/perfil`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    // Si es 404, el perfil no existe aún (normal para nuevos usuarios)
-    if (response.status === 404) {
-      return null;
-    }
-    
-    if (!response.ok) throw new Error('Error al obtener perfil de empresa');
-    return await response.json();
+    const { getPerfilEmpresa } = await import('../services/forum');
+    return await getPerfilEmpresa();
   },
 
   // Buscar licitaciones para el foro usando el servicio global
