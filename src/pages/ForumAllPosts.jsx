@@ -3,6 +3,7 @@ import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, resp
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ForumAllPosts = () => {
     // Colores y etiquetas por tipo de post
@@ -29,6 +30,7 @@ const ForumAllPosts = () => {
       }
     };
   const [posts, setPosts] = useState([]);
+  const [modalDelete, setModalDelete] = useState({ open: false, postId: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [favoritos, setFavoritos] = useState([]);
@@ -40,14 +42,15 @@ const ForumAllPosts = () => {
 
   const { user } = useAuth();
 
-  // Función global para borrar post con confirmación
+  // Modal de confirmación para borrar post
   const handleDeletePost = async (postId) => {
-    if (!window.confirm('¿Seguro que quieres borrar este post? Esta acción no se puede deshacer.')) return;
     try {
       await deleteForumPost(postId);
       setPosts((prev) => prev.filter(p => p._id !== postId));
+      setModalDelete({ open: false, postId: null });
     } catch (e) {
       alert(e.message || 'Error al eliminar el post');
+      setModalDelete({ open: false, postId: null });
     }
   };
 
@@ -137,15 +140,56 @@ const ForumAllPosts = () => {
             return (
               <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group relative">
                                 {/* Icono de papelera roja solo para el autor */}
-                                {user && post.autor && (post.autor.user === user._id || post.autor._id === user.empresaProfileId) && (
+                {user && post.autor && (post.autor.user === user._id || post.autor._id === user.empresaProfileId) && (
+                  <button
+                    className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
+                    title="Eliminar post"
+                    onClick={() => setModalDelete({ open: true, postId: post._id })}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                )}
+                      {/* Modal de confirmación para borrar post */}
+                      <AnimatePresence>
+                        {modalDelete.open && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+                            onClick={() => setModalDelete({ open: false, postId: null })}
+                          >
+                            <motion.div
+                              initial={{ scale: 0.95, y: 40, opacity: 0 }}
+                              animate={{ scale: 1, y: 0, opacity: 1 }}
+                              exit={{ scale: 0.95, y: 40, opacity: 0 }}
+                              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                              onClick={e => e.stopPropagation()}
+                              className="bg-[#181818] border border-red-500/30 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
+                            >
+                              <div className="flex flex-col items-center gap-3">
+                                <Trash2 className="w-10 h-10 text-red-400 mb-2" />
+                                <h2 className="text-xl font-bold text-white mb-2">¿Eliminar post?</h2>
+                                <p className="text-gray-300 mb-4">¿Seguro que quieres borrar este post? <span className="text-red-400 font-semibold">Esta acción no se puede deshacer.</span></p>
+                                <div className="flex gap-4 justify-center mt-2">
                                   <button
-                                    className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
-                                    title="Eliminar post"
-                                    onClick={() => handleDeletePost(post._id)}
+                                    className="px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
+                                    onClick={() => handleDeletePost(modalDelete.postId)}
                                   >
-                                    <Trash2 className="w-5 h-5" />
+                                    Sí, borrar
                                   </button>
-                                )}
+                                  <button
+                                    className="px-6 py-2 rounded-xl bg-[#232323] text-gray-300 font-semibold hover:bg-[#333] border border-[#333] transition-all duration-200"
+                                    onClick={() => setModalDelete({ open: false, postId: null })}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold border flex items-center gap-2 ${tipo.color}`}>
                     {tipo.icon}
