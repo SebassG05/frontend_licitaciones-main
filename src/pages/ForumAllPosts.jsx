@@ -40,16 +40,18 @@ const ForumAllPosts = () => {
 
   const { user } = useAuth();
 
+  // Función global para borrar post con confirmación
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm('¿Seguro que quieres borrar este post? Esta acción no se puede deshacer.')) return;
+    try {
+      await deleteForumPost(postId);
+      setPosts((prev) => prev.filter(p => p._id !== postId));
+    } catch (e) {
+      alert(e.message || 'Error al eliminar el post');
+    }
+  };
+
   useEffect(() => {
-      const handleDeletePost = async (postId) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este post? Esta acción no se puede deshacer.')) return;
-        try {
-          await deleteForumPost(postId);
-          setPosts((prev) => prev.filter(p => p._id !== postId));
-        } catch (e) {
-          alert(e.message || 'Error al eliminar el post');
-        }
-      };
     const fetchPosts = async () => {
       setLoading(true);
       setError("");
@@ -135,7 +137,7 @@ const ForumAllPosts = () => {
             return (
               <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group relative">
                                 {/* Icono de papelera roja solo para el autor */}
-                                {user && post.autor && post.autor.user === user._id && (
+                                {user && post.autor && (post.autor.user === user._id || post.autor._id === user.empresaProfileId) && (
                                   <button
                                     className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
                                     title="Eliminar post"
