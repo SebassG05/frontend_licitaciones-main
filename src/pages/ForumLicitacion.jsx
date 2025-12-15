@@ -623,6 +623,18 @@ const ForumLicitacion = () => {
   return (
     <div className="min-h-screen bg-black">
       <Container className="py-8">
+        {/* Botón para volver a todos los posts */}
+        <div className="mb-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/foro')}
+            className="px-4 py-2 bg-[#2a2a2a] text-gray-300 border border-[#3a3a3a] rounded-xl hover:bg-[#333333] transition-all duration-200 flex items-center gap-2"
+          >
+            <Reply className="w-4 h-4" />
+            Ver todos los posts
+          </motion.button>
+        </div>
         {/* Header de la licitación */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1023,30 +1035,10 @@ const ForumLicitacion = () => {
                       </div>
                       <div className="flex items-center gap-1 hover:text-gray-300 transition-colors">
                         <Eye className="w-4 h-4" />
-                        <span>{Math.floor(Math.random() * 50) + 10} vistas</span>
+                        <span>{post.vistas || 0} vistas</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleMarcarInteres(post._id)}
-                        className="px-3 py-1.5 text-blue-400 hover:bg-blue-500/10 border border-blue-500/20 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1"
-                      >
-                        <Heart className="w-3 h-3" />
-                        Interés
-                      </motion.button>
-                      <motion.button 
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => abrirFormularioRespuesta(post)}
-                        className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-green-500 text-[#1a1a1a] font-bold border-2 border-emerald-400 rounded-xl shadow-md hover:from-green-400 hover:to-emerald-500 hover:text-white transition-all duration-200 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                        aria-label="Responder a este post"
-                      >
-                        <Reply className="w-4 h-4" />
-                        <span>Responder</span>
-                      </motion.button>
-                    </div>
+                    {/* Botones de interés y responder eliminados para vista detalle */}
                   </div>
                 </motion.div>
               ))}
