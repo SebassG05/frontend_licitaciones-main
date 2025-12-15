@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost } from '../services/forum';
+import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost, deleteForumPost } from '../services/forum';
+import { Trash2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply, CheckCircle } from 'lucide-react';
 
 const ForumAllPosts = () => {
@@ -36,7 +38,18 @@ const ForumAllPosts = () => {
   const [cargandoRespuesta, setCargandoRespuesta] = useState(false);
   const [errorRespuesta, setErrorRespuesta] = useState('');
 
+  const { user } = useAuth();
+
   useEffect(() => {
+      const handleDeletePost = async (postId) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este post? Esta acción no se puede deshacer.')) return;
+        try {
+          await deleteForumPost(postId);
+          setPosts((prev) => prev.filter(p => p._id !== postId));
+        } catch (e) {
+          alert(e.message || 'Error al eliminar el post');
+        }
+      };
     const fetchPosts = async () => {
       setLoading(true);
       setError("");
@@ -120,7 +133,17 @@ const ForumAllPosts = () => {
           {posts.map((post) => {
             const tipo = tipoPostInfo[post.tipoPost] || tipoPostInfo.informacion_general;
             return (
-              <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group">
+              <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group relative">
+                                {/* Icono de papelera roja solo para el autor */}
+                                {user && post.autor && post.autor.user === user._id && (
+                                  <button
+                                    className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
+                                    title="Eliminar post"
+                                    onClick={() => handleDeletePost(post._id)}
+                                  >
+                                    <Trash2 className="w-5 h-5" />
+                                  </button>
+                                )}
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold border flex items-center gap-2 ${tipo.color}`}>
                     {tipo.icon}

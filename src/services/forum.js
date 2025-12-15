@@ -1,3 +1,24 @@
+// Eliminar un post del foro
+export const deleteForumPost = async (postId) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/posts/${postId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error('Respuesta del servidor no válida');
+  }
+  if (!response.ok) {
+    throw new Error(data.message || 'Error al eliminar post');
+  }
+  return data;
+};
 // Servicio para obtener todos los posts del foro
 const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
