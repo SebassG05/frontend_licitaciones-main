@@ -251,7 +251,7 @@ const ForumAllPosts = () => {
                     <span>{post.numeroRespuestas || 0} respuestas</span>
                   </div>
                   <button
-                    className={`flex items-center gap-2 text-xs ${favoritos.includes(post._id) ? 'text-pink-400' : 'text-gray-400'} transition-colors`}
+                    className={`flex items-center gap-2 text-xs ${favoritos.includes(post._id) ? 'text-pink-400' : 'text-gray-400'} transition-colors cursor-pointer`}
                     onClick={() => toggleFavorito(post._id)}
                     disabled={favLoading === post._id}
                     title={favoritos.includes(post._id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
