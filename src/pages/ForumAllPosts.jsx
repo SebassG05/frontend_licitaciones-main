@@ -39,6 +39,8 @@ const ForumAllPosts = () => {
   const [respuestaTexto, setRespuestaTexto] = useState('');
   const [cargandoRespuesta, setCargandoRespuesta] = useState(false);
   const [errorRespuesta, setErrorRespuesta] = useState('');
+  // Estado para el modal de error al eliminar post
+  const [modalError, setModalError] = useState({ open: false, message: '' });
 
   const { user } = useAuth();
 
@@ -49,7 +51,7 @@ const ForumAllPosts = () => {
       setPosts((prev) => prev.filter(p => p._id !== postId));
       setModalDelete({ open: false, postId: null });
     } catch (e) {
-      alert(e.message || 'Error al eliminar el post');
+      setModalError({ open: true, message: e.message || 'Error al eliminar el post' });
       setModalDelete({ open: false, postId: null });
     }
   };
@@ -134,6 +136,39 @@ const ForumAllPosts = () => {
         {!loading && !error && posts.length === 0 && (
           <div className="text-center py-10 text-gray-400">No hay posts en el foro.</div>
         )}
+        {/* Modal de error al eliminar post */}
+        <AnimatePresence>
+          {modalError.open && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+              onClick={() => setModalError({ open: false, message: '' })}
+            >
+              <motion.div
+                initial={{ scale: 0.95, y: 40, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.95, y: 40, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                onClick={e => e.stopPropagation()}
+                className="bg-[#181818] border border-red-500/30 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <Info className="w-10 h-10 text-red-400 mb-2" />
+                  <h2 className="text-xl font-bold text-white mb-2">No se puede eliminar el post</h2>
+                  <p className="text-gray-300 mb-4">{modalError.message}</p>
+                  <button
+                    className="px-6 py-2 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-all duration-200 shadow"
+                    onClick={() => setModalError({ open: false, message: '' })}
+                  >
+                    Aceptar
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="space-y-8">
           {posts.map((post) => {
             const tipo = tipoPostInfo[post.tipoPost] || tipoPostInfo.informacion_general;
