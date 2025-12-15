@@ -17,7 +17,8 @@ const empresaProfileAPI = {
 
   async crearOActualizarPerfil(data) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/empresa/perfil`, {
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://dtas.evenor-tech.com/api';
+    const response = await fetch(`${API_URL}/forum/empresa/perfil`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

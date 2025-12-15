@@ -99,7 +99,7 @@ const ForumAllPosts = () => {
       setPostRespondiendo(null);
       setRespuestaTexto('');
     } catch (e) {
-      setErrorRespuesta('Error al responder el post');
+      setErrorRespuesta(e.message || 'Error al responder el post');
     }
     setCargandoRespuesta(false);
   };

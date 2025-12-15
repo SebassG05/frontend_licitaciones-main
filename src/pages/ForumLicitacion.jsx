@@ -47,7 +47,8 @@ const forumAPI = {
   // Crear un nuevo post
   async crearPost(licitacionId, postData) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/licitacion/${licitacionId}/posts`, {
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://dtas.evenor-tech.com/api';
+    const response = await fetch(`${API_URL}/forum/licitacion/${licitacionId}/posts`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -62,7 +63,8 @@ const forumAPI = {
   // Responder a un post
   async responderPost(postId, respuesta) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/posts/${postId}/responder`, {
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://dtas.evenor-tech.com/api';
+    const response = await fetch(`${API_URL}/forum/posts/${postId}/responder`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -77,7 +79,8 @@ const forumAPI = {
   // Marcar interés en un post
   async marcarInteres(postId) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3007/api'}/forum/posts/${postId}/interes`, {
+    const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://dtas.evenor-tech.com/api';
+    const response = await fetch(`${API_URL}/forum/posts/${postId}/interes`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
