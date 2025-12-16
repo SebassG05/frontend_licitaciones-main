@@ -59,9 +59,9 @@ const ForumAllPosts = () => {
   };
 
   useEffect(() => {
-    // Mostrar inmediatamente el popup premium si el usuario no está autenticado
-    // o si está autenticado pero no tiene cuenta premium.
-    const shouldShow = !isAuthenticated || (user && user.isPremium !== true);
+    // Mostrar inmediatamente el popup premium si el usuario no está autenticado.
+    // Usuarios autenticados pueden acceder (aunque no sean premium).
+    const shouldShow = !isAuthenticated;
     setShowPremiumPopup(shouldShow);
 
     // Si debemos mostrar el popup, no intentar cargar los posts (bloqueamos la vista)
@@ -79,7 +79,7 @@ const ForumAllPosts = () => {
       } catch (err) {
         // Si el backend indica que el usuario no tiene acceso por falta de suscripción
         const msg = (err && err.message) ? err.message : '';
-        const isPremiumError = (err && err.status === 403) || /premium/.test(msg.toLowerCase()) || (user && user.isPremium !== true);
+        const isPremiumError = (err && err.status === 403) || /premium/.test(msg.toLowerCase());
         if (isPremiumError) {
           setShowPremiumPopup(true);
           setError('');

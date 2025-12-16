@@ -467,8 +467,8 @@ const ForumLicitacion = () => {
               whileHover={{ scale: 1.07, boxShadow: '0 8px 32px -8px #a1db87', y: -2, transition: { duration: 0.7, ease: 'easeOut' } }}
               whileTap={{ scale: 0.98, transition: { duration: 0.25 } }}
               onClick={() => {
-                // Si el usuario no está autenticado o no es premium, abrir modal premium aquí
-                const notPremium = !isAuthenticated || (user && user.isPremium !== true);
+                // Si el usuario no está autenticado, abrir modal premium aquí
+                const notPremium = !isAuthenticated;
                 if (notPremium) {
                   setShowPremium(true);
                   return;
@@ -523,7 +523,7 @@ const ForumLicitacion = () => {
                     transition={{ delay: index * 0.05 }}
                     className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 hover:border-[#a1db87]/30 transition-all duration-300 cursor-pointer"
                     onClick={() => {
-                      const notAllowed = !isAuthenticated || (user && user.isPremium !== true);
+                      const notAllowed = !isAuthenticated;
                       if (notAllowed) {
                         setShowPremium(true);
                         return;
