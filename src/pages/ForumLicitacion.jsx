@@ -651,24 +651,38 @@ const ForumLicitacion = () => {
                 {/* Badges principales */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
-                    licitacion?.estado === 'abierta' 
+                    (licitacion?.estado || licitacion?.status) === 'abierta' || (licitacion?.estado || licitacion?.status) === 'open'
                       ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                       : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
                   }`}>
-                    {licitacion?.estado?.toUpperCase()}
+                    {(licitacion?.estado || licitacion?.status)?.toUpperCase()}
                   </span>
-                  
-                  <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30">
-                    💰 {licitacion?.presupuesto?.toLocaleString('es-ES')}€
-                  </span>
-                  
-                  <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-amber-500/10 text-amber-400 border-amber-500/20">
-                    🏛️ Comisión Europea
-                  </span>
-                  
-                  <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-purple-500/10 text-purple-400 border-purple-500/20">
-                    🏷️ {licitacion?.tipoLicitacion}
-                  </span>
+                  {/* Mostrar presupuesto solo si existe */}
+                  {(licitacion?.budget || licitacion?.presupuesto) > 0 && (
+                    <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30">
+                      💰 {(licitacion?.budget || licitacion?.presupuesto)?.toLocaleString('es-ES')}{licitacion?.currency || '€'}
+                    </span>
+                  )}
+                  {/* Mostrar fuente solo si existe */}
+                  {(licitacion?.source || licitacion?.fuente) && (
+                    <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-amber-500/10 text-amber-400 border-amber-500/20">
+                      🏛️ {(() => {
+                        const src = licitacion?.source || licitacion?.fuente;
+                        if (src === 'comisionEuropea') return 'Comisión Europea';
+                        if (src === 'bancoMundial') return 'Banco Mundial';
+                        if (src === 'nacionesUnidas') return 'Naciones Unidas';
+                        if (src === 'cascadeFunding') return 'Cascade Funding';
+                        if (src === 'contratacionEstadoEspana') return 'España';
+                        return src;
+                      })()}
+                    </span>
+                  )}
+                  {/* Mostrar tipo de licitación solo si existe */}
+                  {(licitacion?.category || licitacion?.tipoLicitacion) && (
+                    <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-purple-500/10 text-purple-400 border-purple-500/20">
+                      🏷️ {licitacion?.category || licitacion?.tipoLicitacion}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-4">
