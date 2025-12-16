@@ -159,7 +159,7 @@ const ForumAllPosts = () => {
                   <h2 className="text-xl font-bold text-white mb-2">No se puede eliminar el post</h2>
                   <p className="text-gray-300 mb-4">{modalError.message}</p>
                   <button
-                    className="px-6 py-2 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-all duration-200 shadow"
+                    className="px-6 py-2 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-all duration-200 shadow cursor-pointer"
                     onClick={() => setModalError({ open: false, message: '' })}
                   >
                     Aceptar
@@ -177,7 +177,7 @@ const ForumAllPosts = () => {
                                 {/* Icono de papelera roja solo para el autor */}
                 {user && post.autor && (post.autor.user === user._id || post.autor._id === user.empresaProfileId) && (
                   <button
-                    className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
+                    className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10 cursor-pointer"
                     title="Eliminar post"
                     onClick={() => setModalDelete({ open: true, postId: post._id })}
                   >
@@ -214,7 +214,7 @@ const ForumAllPosts = () => {
                                     Sí, borrar
                                   </button>
                                   <button
-                                    className="px-6 py-2 rounded-xl bg-[#232323] text-gray-300 font-semibold hover:bg-[#333] border border-[#333] transition-all duration-200"
+                                    className="px-6 py-2 rounded-xl bg-[#232323] text-gray-300 font-semibold hover:bg-[#333] border border-[#333] transition-all duration-200 cursor-pointer"
                                     onClick={() => setModalDelete({ open: false, postId: null })}
                                   >
                                     Cancelar
@@ -260,7 +260,7 @@ const ForumAllPosts = () => {
                     <span>{post.empresasInteresadas?.length || 0} interesados</span>
                   </button>
                   <button
-                    className="px-3 py-1.5 text-emerald-400 border border-emerald-500/20 rounded-lg bg-[#181818] hover:bg-emerald-500/10 hover:text-emerald-300 transition-all duration-200 flex items-center gap-1 ml-2 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                    className="px-3 py-1.5 text-emerald-400 border border-emerald-500/20 rounded-lg bg-[#181818] hover:bg-emerald-500/10 hover:text-emerald-300 transition-all duration-200 flex items-center gap-1 ml-2 focus:outline-none focus:ring-1 focus:ring-emerald-400 cursor-pointer"
                     aria-label="Responder a este post"
                     onClick={() => handleAbrirResponder(post._id)}
                   >
@@ -268,57 +268,70 @@ const ForumAllPosts = () => {
                     <span>Responder</span>
                   </button>
                 </div>
-                {/* Conversación y formulario de respuesta inline */}
-                {postRespondiendo === post._id && (
-                  <div className="mt-6 bg-[#202020] border border-emerald-900/20 rounded-xl p-4">
-                    <div className="mb-4">
-                      <div className="font-semibold text-emerald-300 mb-2 flex items-center gap-2"><Reply className="w-4 h-4" /> Conversación</div>
-                      {post.respuestas && post.respuestas.length > 0 ? (
-                        <div className="space-y-3 max-h-60 overflow-y-auto">
-                          {post.respuestas.map((r, idx) => (
-                            <div key={idx} className="bg-[#181818] rounded-lg p-3 border border-[#232323]">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Building2 className="w-3 h-3 text-gray-500" />
-                                <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
-                                {r.empresa?.verificado && <CheckCircle className="w-3 h-3 text-[#a1db87]" />}
-                                <span className="text-xs text-gray-500 ml-2">{new Date(r.fechaRespuesta).toLocaleString('es-ES')}</span>
+                {/* Conversación y formulario de respuesta inline animados */}
+                <AnimatePresence initial={false}>
+                  {postRespondiendo === post._id && (
+                    <motion.div
+                      key="conversacion-respuesta"
+                      initial={{ opacity: 0, y: 30, height: 0 }}
+                      animate={{ opacity: 1, y: 0, height: 'auto' }}
+                      exit={{ opacity: 0, y: 30, height: 0 }}
+                      transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+                      className="mt-6 bg-[#202020] border border-emerald-900/20 rounded-xl p-4 overflow-hidden"
+                    >
+                      <div className="mb-4">
+                        <div className="font-semibold text-emerald-300 mb-2 flex items-center gap-2"><Reply className="w-4 h-4" /> Conversación</div>
+                        {post.respuestas && post.respuestas.length > 0 ? (
+                          <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
+                            {post.respuestas.map((r, idx) => (
+                              <div key={idx} className="bg-[#181818] rounded-lg p-3 border border-[#232323]">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Building2 className="w-3 h-3 text-gray-500" />
+                                  <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
+                                  {r.empresa?.verificado && <CheckCircle className="w-3 h-3 text-[#a1db87]" />}
+                                  <span className="text-xs text-gray-500 ml-2">{new Date(r.fechaRespuesta).toLocaleString('es-ES')}</span>
+                                </div>
+                                <div className="text-xs text-gray-400">{r.mensaje}</div>
                               </div>
-                              <div className="text-xs text-gray-400">{r.mensaje}</div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-gray-500 text-xs">No hay respuestas aún.</div>
-                      )}
-                    </div>
-                    <textarea
-                      className="w-full min-h-[80px] bg-[#181818] border border-emerald-500/20 rounded-lg p-2 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none resize-none mb-2"
-                      placeholder="Escribe tu respuesta..."
-                      value={respuestaTexto}
-                      onChange={e => setRespuestaTexto(e.target.value)}
-                      maxLength={1000}
-                      disabled={cargandoRespuesta}
-                    />
-                    <div className="flex gap-2 items-center">
-                      <button
-                        className="px-4 py-2 bg-emerald-500 text-black rounded-lg font-semibold hover:bg-emerald-400 transition disabled:opacity-50"
-                        onClick={() => handleEnviarRespuesta(post._id)}
-                        disabled={cargandoRespuesta || !respuestaTexto.trim()}
-                      >
-                        {cargandoRespuesta ? 'Enviando...' : 'Enviar respuesta'}
-                      </button>
-                      <button
-                        className="px-3 py-2 text-gray-400 hover:text-white text-xs"
-                        onClick={() => setPostRespondiendo(null)}
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-gray-500 text-xs">No hay respuestas aún.</div>
+                        )}
+                      </div>
+                      <motion.textarea
+                        className="w-full min-h-[80px] bg-[#181818] border border-emerald-500/20 rounded-lg p-2 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none resize-none mb-2"
+                        placeholder="Escribe tu respuesta..."
+                        value={respuestaTexto}
+                        onChange={e => setRespuestaTexto(e.target.value)}
+                        maxLength={1000}
                         disabled={cargandoRespuesta}
-                      >
-                        Cancelar
-                      </button>
-                      <span className="ml-auto text-xs text-gray-500">{respuestaTexto.length}/1000</span>
-                    </div>
-                    {errorRespuesta && <div className="text-red-400 text-xs mt-2">{errorRespuesta}</div>}
-                  </div>
-                )}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.25 }}
+                      />
+                      <div className="flex gap-2 items-center">
+                        <button
+                          className="px-4 py-2 bg-emerald-500 text-black rounded-lg font-semibold hover:bg-emerald-400 transition disabled:opacity-50 cursor-pointer"
+                          onClick={() => handleEnviarRespuesta(post._id)}
+                          disabled={cargandoRespuesta || !respuestaTexto.trim()}
+                        >
+                          {cargandoRespuesta ? 'Enviando...' : 'Enviar respuesta'}
+                        </button>
+                        <button
+                          className="px-3 py-2 text-gray-400 hover:text-white text-xs cursor-pointer"
+                          onClick={() => setPostRespondiendo(null)}
+                          disabled={cargandoRespuesta}
+                        >
+                          Cancelar
+                        </button>
+                        <span className="ml-auto text-xs text-gray-500">{respuestaTexto.length}/1000</span>
+                      </div>
+                      {errorRespuesta && <div className="text-red-400 text-xs mt-2">{errorRespuesta}</div>}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
