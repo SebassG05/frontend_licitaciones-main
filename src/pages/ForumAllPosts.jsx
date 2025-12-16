@@ -110,10 +110,10 @@ const ForumAllPosts = () => {
       }));
       if (favoritos.includes(postId)) {
         await desmarcarFavorito(postId);
-        setFavoritos(favoritos.filter(f => f !== postId));
+        setFavoritos(prev => prev.filter(f => f !== postId));
       } else {
         await marcarFavorito(postId);
-        setFavoritos([...favoritos, postId]);
+        setFavoritos(prev => [...prev, postId]);
       }
     } catch (e) {
       // Manejo de error opcional
@@ -141,6 +141,12 @@ const ForumAllPosts = () => {
     }
     setCargandoRespuesta(false);
   };
+
+  const postsSorted = [...posts].sort((a, b) => {
+    const aFav = favoritos.includes(a._id) ? 1 : 0;
+    const bFav = favoritos.includes(b._id) ? 1 : 0;
+    return (bFav - aFav) || (new Date(b.createdAt) - new Date(a.createdAt));
+  });
 
   if (showPremiumPopup) {
     return (
@@ -198,7 +204,7 @@ const ForumAllPosts = () => {
           )}
         </AnimatePresence>
         <div className="space-y-8">
-          {posts.map((post) => {
+          {postsSorted.map((post) => {
             const tipo = tipoPostInfo[post.tipoPost] || tipoPostInfo.informacion_general;
             return (
               <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group relative">
