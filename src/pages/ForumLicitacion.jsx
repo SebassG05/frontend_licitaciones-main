@@ -696,7 +696,7 @@ const ForumLicitacion = () => {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setMostrarFormulario(true)}
-                className="bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 flex items-center gap-2 font-semibold transition-all duration-300"
+                className="bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 flex items-center gap-2 font-semibold transition-all duration-300 cursor-pointer"
               >
                 <Plus className="w-5 h-5" />
                 Crear Post
@@ -740,7 +740,7 @@ const ForumLicitacion = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate('/perfil-empresa')}
-                  className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 px-4 py-2 rounded-lg border border-[#3a3a3a] flex items-center gap-2 transition-all duration-300"
+                  className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 px-4 py-2 rounded-lg border border-[#3a3a3a] flex items-center gap-2 transition-all duration-300 cursor-pointer"
                 >
                   <Edit3 className="w-4 h-4" />
                   Editar perfil

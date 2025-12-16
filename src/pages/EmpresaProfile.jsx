@@ -319,7 +319,7 @@ const EmpresaProfile = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setEditing(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] rounded-xl hover:bg-white transition-all duration-300 font-semibold"
+                className="flex items-center gap-2 px-4 py-2 bg-[#a1db87] text-[#1a1a1a] rounded-xl hover:bg-white transition-all duration-300 font-semibold cursor-pointer"
               >
                 <Edit3 className="w-4 h-4" />
                 Editar Perfil
@@ -1048,7 +1048,7 @@ const EmpresaProfile = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={añadirProyecto}
-                        className="flex-1 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300"
+                        className="flex-1 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 cursor-pointer"
                       >
                         Añadir Proyecto
                       </motion.button>
@@ -1057,7 +1057,7 @@ const EmpresaProfile = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setMostrarFormProyecto(false)}
-                        className="flex-1 bg-[#2a2a2a] text-gray-300 py-3 px-4 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300"
+                        className="flex-1 bg-[#2a2a2a] text-gray-300 py-3 px-4 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300 cursor-pointer"
                       >
                         Cancelar
                       </motion.button>
@@ -1080,7 +1080,7 @@ const EmpresaProfile = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={saving}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] rounded-xl hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {saving ? (
                   <>
@@ -1105,7 +1105,7 @@ const EmpresaProfile = () => {
                     setError('');
                     setSuccess('');
                   }}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#2a2a2a] text-gray-300 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300"
+                  className="flex items-center gap-2 px-6 py-3 bg-[#2a2a2a] text-gray-300 rounded-xl hover:bg-[#333333] border border-[#2a2a2a] transition-all duration-300 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                   Cancelar

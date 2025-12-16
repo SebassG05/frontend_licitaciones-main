@@ -567,7 +567,7 @@ const NewsletterSubscription = () => {
               type="button"
               onClick={handleUnsubscribe}
               disabled={loading}
-              className="w-full py-3 px-6 rounded-lg font-medium text-red-400 border-2 border-red-500/30 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all"
+              className="w-full py-3 px-6 rounded-lg font-medium text-red-400 border-2 border-red-500/30 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <span className="cursor-pointer">Cancelar Suscripción</span>
             </motion.button>

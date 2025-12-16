@@ -184,7 +184,7 @@ const LoginDropdown = ({ isOpen, onClose, isMobile = false }) => {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleLogout}
                   disabled={isLoading}
-                  className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl font-semibold transition-all duration-300 border-2 border-red-500/30 hover:border-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl font-semibold transition-all duration-300 border-2 border-red-500/30 hover:border-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isLoading ? (
                     <Loader className="w-5 h-5 animate-spin" />
