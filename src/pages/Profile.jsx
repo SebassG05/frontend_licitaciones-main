@@ -608,7 +608,7 @@ const Profile = () => {
               href="/perfil-empresa"
               className="px-6 py-2 rounded-lg font-semibold transition-colors duration-200 shadow bg-[#a1db87] hover:bg-[#90c977] text-[#232323] text-lg"
             >
-              Ir a {user?.empresaProfileId ? 'actualizar' : 'crear'} perfil de empresa
+              Ir a crear/editar TU perfil de empresa
             </a>
           </div>
         </div>

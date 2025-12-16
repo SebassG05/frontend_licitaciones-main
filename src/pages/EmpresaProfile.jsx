@@ -158,14 +158,15 @@ const EmpresaProfile = () => {
       setError('');
       setSuccess('');
 
+      // Convertir tecnologías a cadena separada por comas antes de enviar
       const dataToSend = {
         ...formData,
-        contacto: {
-          direccion: formData.direccion,
-          telefono: formData.telefono,
-          email: formData.email,
-          sitioWeb: formData.sitioWeb
-        }
+        proyectosDestacados: formData.proyectosDestacados.map(proyecto => ({
+          ...proyecto,
+          tecnologias: Array.isArray(proyecto.tecnologias)
+            ? proyecto.tecnologias.join(',')
+            : proyecto.tecnologias
+        }))
       };
 
       const resultado = await empresaProfileAPI.crearOActualizarPerfil(dataToSend);
