@@ -165,7 +165,7 @@ const ForumLicitacion = () => {
           forumAPI.obtenerPerfilEmpresa().catch(() => null)
         ]);
 
-        setLicitacion(licitacionData);
+        setLicitacion(licitacionData?.data || licitacionData);
         setPosts(postsData?.data?.posts || []);
         setPerfilEmpresa(perfilData);
         
@@ -644,8 +644,8 @@ const ForumLicitacion = () => {
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl shadow-2xl p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h1 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
-                  {licitacion?.titulo}
+                <h1 className="text-xl lg:text-2xl font-bold text-white leading-tight mb-3">
+                  {licitacion?.titulo || licitacion?.title || 'Título no disponible'}
                 </h1>
                 
                 {/* Badges principales */}
