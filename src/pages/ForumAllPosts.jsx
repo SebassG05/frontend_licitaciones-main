@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost, deleteForumPost } from '../services/forum';
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import PremiumPopup from '../components/ui/PremiumPopup';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -41,8 +42,9 @@ const ForumAllPosts = () => {
   const [errorRespuesta, setErrorRespuesta] = useState('');
   // Estado para el modal de error al eliminar post
   const [modalError, setModalError] = useState({ open: false, message: '' });
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   // Modal de confirmación para borrar post
   const handleDeletePost = async (postId) => {
@@ -57,6 +59,14 @@ const ForumAllPosts = () => {
   };
 
   useEffect(() => {
+    // Mostrar inmediatamente el popup premium si el usuario no está autenticado
+    // o si está autenticado pero no tiene cuenta premium.
+    const shouldShow = !isAuthenticated || (user && user.isPremium !== true);
+    setShowPremiumPopup(shouldShow);
+
+    // Si debemos mostrar el popup, no intentar cargar los posts (bloqueamos la vista)
+    if (shouldShow) return;
+
     const fetchPosts = async () => {
       setLoading(true);
       setError("");
@@ -67,12 +77,20 @@ const ForumAllPosts = () => {
         const favs = await getFavoritos();
         setFavoritos(favs.map(f => f._id));
       } catch (err) {
-        setError("Error al cargar los posts del foro.");
+        // Si el backend indica que el usuario no tiene acceso por falta de suscripción
+        const msg = (err && err.message) ? err.message : '';
+        const isPremiumError = (err && err.status === 403) || /premium/.test(msg.toLowerCase()) || (user && user.isPremium !== true);
+        if (isPremiumError) {
+          setShowPremiumPopup(true);
+          setError('');
+        } else {
+          setError("Error al cargar los posts del foro.");
+        }
       }
       setLoading(false);
     };
     fetchPosts();
-  }, []);
+  }, [isAuthenticated, user]);
 
   const toggleFavorito = async (postId) => {
     setFavLoading(postId);
@@ -123,6 +141,16 @@ const ForumAllPosts = () => {
     }
     setCargandoRespuesta(false);
   };
+
+  if (showPremiumPopup) {
+    return (
+      <PremiumPopup
+        isOpen={true}
+        onClose={() => setShowPremiumPopup(false)}
+        onLoginClick={() => window.dispatchEvent(new CustomEvent('openLogin'))}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-transparent pb-16">
@@ -336,6 +364,14 @@ const ForumAllPosts = () => {
             );
           })}
         </div>
+        {/* Premium Popup fuera del contenedor */}
+        <PremiumPopup
+          isOpen={showPremiumPopup}
+          onClose={() => setShowPremiumPopup(false)}
+          onLoginClick={() => {
+            window.dispatchEvent(new CustomEvent('openLogin'));
+          }}
+        />
       </div>
     </div>
   );

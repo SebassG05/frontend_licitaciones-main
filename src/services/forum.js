@@ -30,9 +30,20 @@ export const getAllForumPosts = async () => {
       'Content-Type': 'application/json'
     }
   });
-  if (!response.ok) throw new Error('Error al obtener los posts del foro');
-  const data = await response.json();
-  return data.data || [];
+  let data;
+  const text = await response.text();
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (e) {
+    data = null;
+  }
+  if (!response.ok) {
+    const message = (data && (data.message || data.error)) || response.statusText || 'Error al obtener los posts del foro';
+    const err = new Error(message);
+    err.status = response.status;
+    throw err;
+  }
+  return (data && (data.data || data)) || [];
 };
 
 export const getPerfilEmpresa = async () => {

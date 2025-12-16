@@ -1,17 +1,24 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, X, CheckCircle } from 'lucide-react';
+import { Crown, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PremiumPopup = ({ isOpen, onClose, onLoginClick }) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
 
   const handleLoginClick = () => {
-    onClose(); // Cerrar el popup premium
-    if (onLoginClick) {
-      onLoginClick(); // Ejecutar callback para abrir login
-    } else {
-      // Fallback: disparar evento personalizado para que el header lo capture
-      window.dispatchEvent(new CustomEvent('openLogin'));
-    }
+    // Cerrar popup, navegar a inicio y abrir el login en el header
+    if (onClose) onClose();
+    // Navegar a home primero
+    navigate('/');
+    // Dar pequeño retardo para asegurarnos que el header está montado en la ruta de destino
+    setTimeout(() => {
+      if (onLoginClick) {
+        onLoginClick();
+      } else {
+        window.dispatchEvent(new CustomEvent('openLogin'));
+      }
+    }, 120);
   };
 
   const premiumFeatures = [
@@ -30,7 +37,6 @@ const PremiumPopup = ({ isOpen, onClose, onLoginClick }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-          onClick={onClose}
         />
         
         {/* Modal */}
@@ -44,13 +50,6 @@ const PremiumPopup = ({ isOpen, onClose, onLoginClick }) => {
         >
           {/* Header with gradient */}
           <div className="bg-gradient-to-r from-[#a1db87] to-[#8ac573] p-5 relative">
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors duration-200 z-20"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
-            
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-2">
                 <Crown className="w-7 h-7 text-white" />
@@ -101,8 +100,8 @@ const PremiumPopup = ({ isOpen, onClose, onLoginClick }) => {
               </motion.a>
               
               <button
-                onClick={onClose}
-                className="w-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 font-medium py-3 rounded-xl transition-colors duration-200 text-sm border border-gray-600 hover:border-gray-500"
+                onClick={() => { onClose && onClose(); window.location.href = '/'; }}
+                className="cursor-pointer w-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-gray-300 font-medium py-3 rounded-xl transition-colors duration-200 text-sm border border-gray-600 hover:border-gray-500"
               >
                 Continuar con versión gratuita
               </button>

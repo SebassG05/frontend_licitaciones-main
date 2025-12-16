@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import Container from '../components/ui/Container';
 import { useAuth } from '../context/AuthContext';
+import PremiumPopup from '../components/ui/PremiumPopup';
 
 // Servicio API para el foro
 const forumAPI = {
@@ -109,7 +110,8 @@ const forumAPI = {
 const ForumLicitacion = () => {
   const { licitacionId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const [showPremium, setShowPremium] = useState(false);
   
   const [licitacion, setLicitacion] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -461,10 +463,17 @@ const ForumLicitacion = () => {
             transition={{ delay: 0.15 }}
             className="mb-8 flex justify-center"
           >
-            <motion.button
+              <motion.button
               whileHover={{ scale: 1.07, boxShadow: '0 8px 32px -8px #a1db87', y: -2, transition: { duration: 0.7, ease: 'easeOut' } }}
               whileTap={{ scale: 0.98, transition: { duration: 0.25 } }}
               onClick={() => {
+                // Si el usuario no está autenticado o no es premium, abrir modal premium aquí
+                const notPremium = !isAuthenticated || (user && user.isPremium !== true);
+                if (notPremium) {
+                  setShowPremium(true);
+                  return;
+                }
+
                 // Animación de transición de página al navegar
                 const container = document.querySelector('.min-h-screen.bg-black');
                 if (container) {
@@ -489,6 +498,13 @@ const ForumLicitacion = () => {
               Ver todos los posts del foro
             </motion.button>
           </motion.div>
+
+          {/* Premium popup abierto desde la vista general del foro */}
+          <PremiumPopup
+            isOpen={showPremium}
+            onClose={() => setShowPremium(false)}
+            onLoginClick={() => window.dispatchEvent(new CustomEvent('openLogin'))}
+          />
 
           {/* Lista de licitaciones */}
           <motion.div
