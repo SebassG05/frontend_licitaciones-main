@@ -597,6 +597,21 @@ const Profile = () => {
           />
         )}
       </div>
+            {/* Apartado para perfil de empresa */}
+        <div className="mb-8 mt-16 flex flex-col items-center justify-center">
+          <div className="bg-[#232323] border border-[#a1db87]/30 rounded-xl p-6 flex flex-col items-center w-full max-w-xl">
+            <h2 className="text-xl font-bold text-[#a1db87] mb-2 flex items-center gap-2">
+              <Building2 className="w-6 h-6" /> Perfil de empresa
+            </h2>
+            <p className="text-gray-400 mb-4 text-center">Gestiona la información de tu empresa para participar en licitaciones, foros y más.</p>
+            <a
+              href="/perfil-empresa"
+              className="px-6 py-2 rounded-lg font-semibold transition-colors duration-200 shadow bg-[#a1db87] hover:bg-[#90c977] text-[#232323] text-lg"
+            >
+              Ir a {user?.empresaProfileId ? 'actualizar' : 'crear'} perfil de empresa
+            </a>
+          </div>
+        </div>
     </div>
   );
 };
