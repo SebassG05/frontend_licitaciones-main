@@ -522,7 +522,14 @@ const ForumLicitacion = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                     className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 hover:border-[#a1db87]/30 transition-all duration-300 cursor-pointer"
-                    onClick={() => navigate(`/foro/${licitacion._id}`)}
+                    onClick={() => {
+                      const notAllowed = !isAuthenticated || (user && user.isPremium !== true);
+                      if (notAllowed) {
+                        setShowPremium(true);
+                        return;
+                      }
+                      navigate(`/foro/${licitacion._id}`);
+                    }}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
