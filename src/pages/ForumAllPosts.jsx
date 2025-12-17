@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost, deleteForumPost } from '../services/forum';
+import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost, deleteForumPost, eliminarRespuesta } from '../services/forum';
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PremiumPopup from '../components/ui/PremiumPopup';
@@ -32,6 +32,7 @@ const ForumAllPosts = () => {
     };
   const [posts, setPosts] = useState([]);
   const [modalDelete, setModalDelete] = useState({ open: false, postId: null });
+  const [modalDeleteRespuesta, setModalDeleteRespuesta] = useState({ open: false, postId: null, respuestaId: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [favoritos, setFavoritos] = useState([]);
@@ -57,6 +58,17 @@ const ForumAllPosts = () => {
     } catch (e) {
       setModalError({ open: true, message: e.message || 'Error al eliminar el post' });
       setModalDelete({ open: false, postId: null });
+    }
+  };
+
+  const handleDeleteRespuesta = async (postId, respuestaId) => {
+    try {
+      const actualizado = await eliminarRespuesta(postId, respuestaId);
+      setPosts((prev) => prev.map(p => p._id === postId ? actualizado : p));
+      setModalDeleteRespuesta({ open: false, postId: null, respuestaId: null });
+    } catch (e) {
+      setModalError({ open: true, message: e.message || 'Error al eliminar la respuesta' });
+      setModalDeleteRespuesta({ open: false, postId: null, respuestaId: null });
     }
   };
 
@@ -280,6 +292,47 @@ const ForumAllPosts = () => {
                           </motion.div>
                         )}
                       </AnimatePresence>
+                      {/* Modal de confirmación para borrar respuesta */}
+                      <AnimatePresence>
+                        {modalDeleteRespuesta.open && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+                            onClick={() => setModalDeleteRespuesta({ open: false, postId: null, respuestaId: null })}
+                          >
+                            <motion.div
+                              initial={{ scale: 0.95, y: 40, opacity: 0 }}
+                              animate={{ scale: 1, y: 0, opacity: 1 }}
+                              exit={{ scale: 0.95, y: 40, opacity: 0 }}
+                              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                              onClick={e => e.stopPropagation()}
+                              className="bg-[#181818] border border-red-500/30 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
+                            >
+                              <div className="flex flex-col items-center gap-3">
+                                <Trash2 className="w-10 h-10 text-red-400 mb-2" />
+                                <h2 className="text-xl font-bold text-white mb-2">¿Eliminar respuesta?</h2>
+                                <p className="text-gray-300 mb-4">¿Seguro que quieres borrar esta respuesta? <span className="text-red-400 font-semibold">Esta acción no se puede deshacer.</span></p>
+                                <div className="flex gap-4 justify-center mt-2">
+                                  <button
+                                    className="px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
+                                    onClick={() => handleDeleteRespuesta(modalDeleteRespuesta.postId, modalDeleteRespuesta.respuestaId)}
+                                  >
+                                    Sí, borrar
+                                  </button>
+                                  <button
+                                    className="px-6 py-2 rounded-xl bg-[#232323] text-gray-300 font-semibold hover:bg-[#333] border border-[#333] transition-all duration-200 cursor-pointer"
+                                    onClick={() => setModalDeleteRespuesta({ open: false, postId: null, respuestaId: null })}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold border flex items-center gap-2 ${tipo.color}`}>
                     {tipo.icon}
@@ -365,24 +418,20 @@ const ForumAllPosts = () => {
                                       </button>
                                     </div>
                                     {/* Botón eliminar discreto en la esquina superior derecha */}
-                                    {user && r.empresa && (String(r.empresa._id) === String(user?.empresa?._id) || String(r.empresa._id) === String(user?.empresaProfileId)) && (
-                                      <button
-                                        className="absolute bottom-2 right-2 text-red-400 hover:text-red-500 opacity-70 hover:opacity-100 p-1 rounded cursor-pointer"
-                                        onClick={async () => {
-                                          const ok = confirm('¿Eliminar esta respuesta?');
-                                          if (!ok) return;
-                                          try {
-                                            const actualizado = await eliminarRespuesta(post._id, r._id);
-                                            setPosts(prev => prev.map(p => p._id === post._id ? actualizado : p));
-                                          } catch (err) {
-                                            setErrorRespuesta(err.message || 'Error al eliminar respuesta');
-                                          }
-                                        }}
-                                        title="Eliminar respuesta"
-                                      >
-                                        <Trash2 className="w-4 h-4" />
-                                      </button>
-                                    )}
+                                    {(() => {
+                                      const canDeleteReply = (typeof r.canDeleteRespuesta !== 'undefined')
+                                        ? Boolean(r.canDeleteRespuesta)
+                                        : Boolean(user && r.empresa && (String(r.empresa._id) === String(user?.empresa?._id) || String(r.empresa._id) === String(user?.empresaProfileId)));
+                                      return canDeleteReply ? (
+                                        <button
+                                          className="absolute bottom-2 right-2 text-red-400 hover:text-red-500 opacity-70 hover:opacity-100 p-1 rounded cursor-pointer"
+                                          onClick={() => setModalDeleteRespuesta({ open: true, postId: post._id, respuestaId: r._id })}
+                                          title="Eliminar respuesta"
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </button>
+                                      ) : null;
+                                    })()}
                                     <div className="text-xs text-gray-400">{r.mensaje}</div>
                                     {children.length > 0 && (
                                       <div className="mt-2 space-y-2">
