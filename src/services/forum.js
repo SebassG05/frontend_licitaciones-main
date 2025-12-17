@@ -136,3 +136,23 @@ export const responderPost = async (postId, mensaje, parentRespuesta = null) => 
   }
   return data.data || data;
 };
+
+// Eliminar una respuesta de un post
+export const eliminarRespuesta = async (postId, respuestaId) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/forum/posts/${postId}/respuestas/${respuestaId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error('Respuesta del servidor no válida');
+  }
+  if (!response.ok) throw new Error(data.message || 'Error al eliminar respuesta');
+  return data.data || data;
+};

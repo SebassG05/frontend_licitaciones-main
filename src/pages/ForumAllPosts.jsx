@@ -351,7 +351,7 @@ const ForumAllPosts = () => {
                               const renderReply = (r, level = 0) => {
                                 const children = mapChildren(r._id);
                                 return (
-                                  <div key={r._id} className={`bg-[#181818] rounded-lg p-3 border border-[#232323] ${level > 0 ? 'ml-4' : ''} ${r._id === respuestaPadreId ? 'ring-2 ring-emerald-500/30 bg-emerald-900/5' : ''}`}>
+                                  <div key={r._id} className={`relative bg-[#181818] rounded-lg p-3 border border-[#232323] ${level > 0 ? 'ml-4' : ''} ${r._id === respuestaPadreId ? 'ring-2 ring-emerald-500/30 bg-emerald-900/5' : ''}`}>
                                     <div className="flex items-center gap-2 mb-1">
                                       <Building2 className="w-3 h-3 text-gray-500" />
                                       <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
@@ -364,6 +364,25 @@ const ForumAllPosts = () => {
                                         Responder
                                       </button>
                                     </div>
+                                    {/* Botón eliminar discreto en la esquina superior derecha */}
+                                    {user && r.empresa && (String(r.empresa._id) === String(user?.empresa?._id) || String(r.empresa._id) === String(user?.empresaProfileId)) && (
+                                      <button
+                                        className="absolute bottom-2 right-2 text-red-400 hover:text-red-500 opacity-70 hover:opacity-100 p-1 rounded cursor-pointer"
+                                        onClick={async () => {
+                                          const ok = confirm('¿Eliminar esta respuesta?');
+                                          if (!ok) return;
+                                          try {
+                                            const actualizado = await eliminarRespuesta(post._id, r._id);
+                                            setPosts(prev => prev.map(p => p._id === post._id ? actualizado : p));
+                                          } catch (err) {
+                                            setErrorRespuesta(err.message || 'Error al eliminar respuesta');
+                                          }
+                                        }}
+                                        title="Eliminar respuesta"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                    )}
                                     <div className="text-xs text-gray-400">{r.mensaje}</div>
                                     {children.length > 0 && (
                                       <div className="mt-2 space-y-2">
