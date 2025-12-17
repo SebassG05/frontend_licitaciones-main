@@ -24,6 +24,7 @@ import {
   Edit3
 } from 'lucide-react';
 import Container from '../components/ui/Container';
+import { eliminarRespuesta } from '../services/forum';
 import { useAuth } from '../context/AuthContext';
 import PremiumPopup from '../components/ui/PremiumPopup';
 
@@ -1034,7 +1035,7 @@ const ForumLicitacion = () => {
                       </h4>
                       <div className="space-y-3">
                         {post.respuestas.slice(0, 2).map((respuesta, idx) => (
-                          <div key={idx} className="bg-[#1a1a1a] rounded-lg p-3 border border-[#2a2a2a]">
+                          <div key={idx} className="relative bg-[#1a1a1a] rounded-lg p-3 border border-[#2a2a2a]">
                             <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-2">
                                 <Building2 className="w-3 h-3 text-gray-500" />
@@ -1046,6 +1047,30 @@ const ForumLicitacion = () => {
                               <span className="text-xs text-gray-500">{formatearFechaRelativa(respuesta.fechaRespuesta)}</span>
                             </div>
                             <p className="text-sm text-gray-400 leading-relaxed">{respuesta.mensaje}</p>
+                            {(() => {
+                              const canDeleteReply = (typeof respuesta.canDeleteRespuesta !== 'undefined')
+                                ? Boolean(respuesta.canDeleteRespuesta)
+                                : Boolean(perfilEmpresa && respuesta.empresa && (String(respuesta.empresa._id || respuesta.empresa) === String(perfilEmpresa._id)));
+                              if (!canDeleteReply) return null;
+                              return (
+                                <button
+                                  className="absolute bottom-2 right-2 text-red-400 hover:text-red-500 opacity-80 p-1 rounded"
+                                  onClick={async () => {
+                                    const ok = confirm('¿Eliminar esta respuesta?');
+                                    if (!ok) return;
+                                    try {
+                                      const actualizado = await eliminarRespuesta(post._id, respuesta._id || respuesta._id);
+                                      setPosts(prev => prev.map(p => p._id === post._id ? actualizado : p));
+                                    } catch (err) {
+                                      console.error('Error al eliminar respuesta:', err);
+                                    }
+                                  }}
+                                  title="Eliminar respuesta"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              );
+                            })()}
                           </div>
                         ))}
                         {post.respuestas.length > 2 && (

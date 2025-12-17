@@ -275,7 +275,7 @@ const ForumAllPosts = () => {
                                 <p className="text-gray-300 mb-4">¿Seguro que quieres borrar este post? <span className="text-red-400 font-semibold">Esta acción no se puede deshacer.</span></p>
                                 <div className="flex gap-4 justify-center mt-2">
                                   <button
-                                    className="px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
+                                    className="cursor-pointer px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
                                     onClick={() => handleDeletePost(modalDelete.postId)}
                                   >
                                     Sí, borrar
@@ -316,7 +316,7 @@ const ForumAllPosts = () => {
                                 <p className="text-gray-300 mb-4">¿Seguro que quieres borrar esta respuesta? <span className="text-red-400 font-semibold">Esta acción no se puede deshacer.</span></p>
                                 <div className="flex gap-4 justify-center mt-2">
                                   <button
-                                    className="px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
+                                    className="cursor-pointer px-6 py-2 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-200 shadow"
                                     onClick={() => handleDeleteRespuesta(modalDeleteRespuesta.postId, modalDeleteRespuesta.respuestaId)}
                                   >
                                     Sí, borrar
@@ -402,6 +402,8 @@ const ForumAllPosts = () => {
                               };
 
                               const renderReply = (r, level = 0) => {
+                                // DEBUG: inspeccionar flag de borrado por respuesta
+                                try { console.log('DEBUG renderReply:', { replyId: r._id, canDeleteRespuesta: r.canDeleteRespuesta, empresa: r.empresa }); } catch(e){}
                                 const children = mapChildren(r._id);
                                 return (
                                   <div key={r._id} className={`relative bg-[#181818] rounded-lg p-3 border border-[#232323] ${level > 0 ? 'ml-4' : ''} ${r._id === respuestaPadreId ? 'ring-2 ring-emerald-500/30 bg-emerald-900/5' : ''}`}>
