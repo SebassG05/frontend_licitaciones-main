@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, responderPost, deleteForumPost } from '../services/forum';
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -38,8 +38,10 @@ const ForumAllPosts = () => {
   const [favLoading, setFavLoading] = useState(null); // postId que está cargando favorito
   const [postRespondiendo, setPostRespondiendo] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState('');
+  const [respuestaPadreId, setRespuestaPadreId] = useState(null);
   const [cargandoRespuesta, setCargandoRespuesta] = useState(false);
   const [errorRespuesta, setErrorRespuesta] = useState('');
+  const textareaRef = useRef(null);
   // Estado para el modal de error al eliminar post
   const [modalError, setModalError] = useState({ open: false, message: '' });
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
@@ -121,20 +123,29 @@ const ForumAllPosts = () => {
     setFavLoading(null);
   };
 
-  const handleAbrirResponder = (postId) => {
+  const handleAbrirResponder = (postId, respuestaId = null) => {
     setPostRespondiendo(postId);
+    setRespuestaPadreId(respuestaId);
     setRespuestaTexto('');
     setErrorRespuesta('');
   };
+
+  useEffect(() => {
+    if (postRespondiendo) {
+      // Pequeño retraso para esperar animación y luego enfocar
+      setTimeout(() => textareaRef.current?.focus(), 120);
+    }
+  }, [postRespondiendo, respuestaPadreId]);
 
   const handleEnviarRespuesta = async (postId) => {
     if (!respuestaTexto.trim()) return;
     setCargandoRespuesta(true);
     setErrorRespuesta('');
     try {
-      const actualizado = await responderPost(postId, respuestaTexto.trim());
+      const actualizado = await responderPost(postId, respuestaTexto.trim(), respuestaPadreId);
       setPosts((prev) => prev.map(p => p._id === postId ? actualizado : p));
       setPostRespondiendo(null);
+      setRespuestaPadreId(null);
       setRespuestaTexto('');
     } catch (e) {
       setErrorRespuesta(e.message || 'Error al responder el post');
@@ -317,25 +328,87 @@ const ForumAllPosts = () => {
                         <div className="font-semibold text-emerald-300 mb-2 flex items-center gap-2"><Reply className="w-4 h-4" /> Conversación</div>
                         {post.respuestas && post.respuestas.length > 0 ? (
                           <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
-                            {post.respuestas.map((r, idx) => (
-                              <div key={idx} className="bg-[#181818] rounded-lg p-3 border border-[#232323]">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Building2 className="w-3 h-3 text-gray-500" />
-                                  <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
-                                  {r.empresa?.verificado && <CheckCircle className="w-3 h-3 text-[#a1db87]" />}
-                                  <span className="text-xs text-gray-500 ml-2">{new Date(r.fechaRespuesta).toLocaleString('es-ES')}</span>
-                                </div>
-                                <div className="text-xs text-gray-400">{r.mensaje}</div>
-                              </div>
-                            ))}
+                            {/* Renderizar respuestas en árbol: primero los que no tienen parentRespuesta */}
+                            {(() => {
+                              const respuestas = post.respuestas || [];
+                              const mapChildren = (parentId) => {
+                                return respuestas.filter(rr => {
+                                  if (!parentId) return !rr.parentRespuesta;
+                                  return rr.parentRespuesta && String(rr.parentRespuesta) === String(parentId);
+                                });
+                              };
+
+                              const renderReply = (r, level = 0) => {
+                                const children = mapChildren(r._id);
+                                return (
+                                  <div key={r._id} className={`bg-[#181818] rounded-lg p-3 border border-[#232323] ${level > 0 ? 'ml-4' : ''} ${r._id === respuestaPadreId ? 'ring-2 ring-emerald-500/30 bg-emerald-900/5' : ''}`}>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <Building2 className="w-3 h-3 text-gray-500" />
+                                      <span className="text-xs font-medium text-gray-300">{r.empresa?.nombreEmpresa || 'Empresa'}</span>
+                                      {r.empresa?.verificado && <CheckCircle className="w-3 h-3 text-[#a1db87]" />}
+                                      <span className="text-xs text-gray-500 ml-2">{new Date(r.fechaRespuesta).toLocaleString('es-ES')}</span>
+                                      <button
+                                        className="ml-auto text-xs text-emerald-400 hover:underline cursor-pointer"
+                                        onClick={() => handleAbrirResponder(post._id, r._id)}
+                                      >
+                                        Responder
+                                      </button>
+                                    </div>
+                                    <div className="text-xs text-gray-400">{r.mensaje}</div>
+                                    {children.length > 0 && (
+                                      <div className="mt-2 space-y-2">
+                                        {children.map(child => renderReply(child, level + 1))}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              };
+
+                              const topLevel = mapChildren(null);
+                              if (topLevel.length === 0) return <div className="text-gray-500 text-xs">No hay respuestas aún.</div>;
+                              return topLevel.map(r => renderReply(r, 0));
+                            })()}
                           </div>
                         ) : (
                           <div className="text-gray-500 text-xs">No hay respuestas aún.</div>
                         )}
                       </div>
+                      {/* Vista previa del comentario al que se responde (si aplica) */}
+                      <AnimatePresence>
+                        {respuestaPadreId && (() => {
+                          const padre = post.respuestas.find(rr => String(rr._id) === String(respuestaPadreId));
+                          if (!padre) return null;
+                          return (
+                            <motion.div
+                              key="preview-parent"
+                              initial={{ opacity: 0, y: -6 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{ duration: 0.18 }}
+                              className="mb-2 border-l-4 border-emerald-500/40 bg-emerald-900/5 rounded-lg p-3 text-xs text-gray-200"
+                            >
+                              <div className="flex items-start gap-2">
+                                <div className="flex-1">
+                                  <div className="font-medium text-emerald-300">Respondiendo a {padre.empresa?.nombreEmpresa || 'Empresa'}</div>
+                                  <div className="text-gray-300 truncate">{padre.mensaje}</div>
+                                </div>
+                                <button
+                                  className="text-xs text-gray-400 hover:text-white ml-3"
+                                  onClick={() => setRespuestaPadreId(null)}
+                                  aria-label="Cancelar respuesta específica"
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
+                            </motion.div>
+                          );
+                        })()}
+                      </AnimatePresence>
+
                       <motion.textarea
+                        ref={textareaRef}
                         className="w-full min-h-[80px] bg-[#181818] border border-emerald-500/20 rounded-lg p-2 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none resize-none mb-2"
-                        placeholder="Escribe tu respuesta..."
+                        placeholder={respuestaPadreId ? 'Escribe tu respuesta (respondiendo)...' : 'Escribe tu respuesta...'}
                         value={respuestaTexto}
                         onChange={e => setRespuestaTexto(e.target.value)}
                         maxLength={1000}

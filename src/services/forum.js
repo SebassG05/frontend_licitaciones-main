@@ -114,7 +114,7 @@ export const getFavoritos = async () => {
 };
 
 // Responder a un post
-export const responderPost = async (postId, mensaje) => {
+export const responderPost = async (postId, mensaje, parentRespuesta = null) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${API_URL}/forum/posts/${postId}/responder`, {
     method: 'POST',
@@ -122,7 +122,7 @@ export const responderPost = async (postId, mensaje) => {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ mensaje })
+    body: JSON.stringify({ mensaje, parentRespuesta })
   });
   let data;
   try {
