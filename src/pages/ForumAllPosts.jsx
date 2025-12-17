@@ -217,10 +217,20 @@ const ForumAllPosts = () => {
         <div className="space-y-8">
           {postsSorted.map((post) => {
             const tipo = tipoPostInfo[post.tipoPost] || tipoPostInfo.informacion_general;
+            // Preferir la bandera `canDelete` enviada por el backend si existe
+            const isAuthor = (typeof post.canDelete !== 'undefined')
+              ? Boolean(post.canDelete)
+              : Boolean(user && post.autor && (
+                (post.autor.user && String(post.autor.user) === String(user._id)) ||
+                (post.autor._id && String(post.autor._id) === String(user._id)) ||
+                (post.autor._id && user.empresa && String(post.autor._id) === String(user.empresa._id)) ||
+                (post.autor._id && user.empresaProfileId && String(post.autor._id) === String(user.empresaProfileId))
+              ));
+
             return (
               <div key={post._id} className="bg-[#181818] border border-[#232323] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 group relative">
                                 {/* Icono de papelera roja solo para el autor */}
-                {user && post.autor && (post.autor.user === user._id || post.autor._id === user.empresaProfileId) && (
+                {isAuthor && (
                   <button
                     className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10 cursor-pointer"
                     title="Eliminar post"
