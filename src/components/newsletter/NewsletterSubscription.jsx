@@ -11,11 +11,11 @@ const NewsletterSubscription = () => {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    frequency: 'weekly',
+    frequency: 'daily',
     interests: {
       keywords: [],
       sectors: [],
-      sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana'],
+      sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana', 'cascadeFunding'],
       budgetRange: { min: '', max: '' }
     }
   });
@@ -70,7 +70,7 @@ const NewsletterSubscription = () => {
           const interests = data.data.subscription.interests || prev.interests;
           setFormData(prev => ({
             ...prev,
-            frequency: data.data.subscription.frequency || 'weekly',
+            frequency: 'daily',
             interests: {
               ...interests,
               budgetRange: {
@@ -113,7 +113,7 @@ const NewsletterSubscription = () => {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          frequency: formData.frequency,
+          frequency: 'daily',
           interests: {
             ...formData.interests,
             budgetRange: {
@@ -141,11 +141,11 @@ const NewsletterSubscription = () => {
           // Limpiar formulario solo si es una nueva suscripción
           setFormData({
             email: user?.email || '', // Mantener el email del usuario logueado
-            frequency: 'weekly',
+            frequency: 'daily',
             interests: {
               keywords: [],
               sectors: [],
-              sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana'],
+              sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana', 'cascadeFunding'],
               budgetRange: { min: '', max: '' }
             }
           });
@@ -251,11 +251,11 @@ const NewsletterSubscription = () => {
         // Resetear formulario
         setFormData({
           email: user?.email || '',
-          frequency: 'weekly',
+          frequency: 'daily',
           interests: {
             keywords: [],
             sectors: [],
-            sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana'],
+            sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana', 'cascadeFunding'],
             budgetRange: { min: '', max: '' }
           }
         });
@@ -339,37 +339,7 @@ const NewsletterSubscription = () => {
           />
         </div>
 
-        {/* Frequency */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-3">
-            Frecuencia de envío
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {frequencyOptions.map((option) => (
-              <motion.label
-                key={option.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`relative flex flex-col p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                  formData.frequency === option.value
-                    ? 'border-[#a1db87] bg-[#a1db87]/20'
-                    : 'border-gray-600 bg-[#333333] hover:border-gray-500'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="frequency"
-                  value={option.value}
-                  checked={formData.frequency === option.value}
-                  onChange={(e) => setFormData(prev => ({ ...prev, frequency: e.target.value }))}
-                  className="sr-only"
-                />
-                <span className="font-medium text-white">{option.label}</span>
-                <span className="text-sm text-gray-400 mt-1">{option.description}</span>
-              </motion.label>
-            ))}
-          </div>
-        </div>
+        {/* Frequency: forzada a diario en backend; UI oculta */}
 
         {/* Advanced Options Toggle */}
         <div className="flex items-center justify-between">

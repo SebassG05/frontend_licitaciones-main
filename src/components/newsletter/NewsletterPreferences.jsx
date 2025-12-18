@@ -17,11 +17,11 @@ const NewsletterPreferences = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [preferences, setPreferences] = useState({
-    frequency: 'weekly',
+    frequency: 'daily',
     interests: {
       keywords: [],
       sectors: [],
-      sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana'],
+      sources: ['bancoMundial', 'comisionEuropea', 'nacionesUnidas', 'contratacionEstadoEspana', 'cascadeFunding'],
       budgetRange: { min: '', max: '' }
     }
   });
@@ -33,7 +33,8 @@ const NewsletterPreferences = () => {
     { value: 'bancoMundial', label: 'Banco Mundial', color: 'bg-blue-100 text-blue-800' },
     { value: 'comisionEuropea', label: 'Comisión Europea', color: 'bg-yellow-100 text-yellow-800' },
     { value: 'nacionesUnidas', label: 'Naciones Unidas', color: 'bg-green-100 text-green-800' },
-    { value: 'contratacionEstadoEspana', label: 'Contratación del Estado España', color: 'bg-red-100 text-red-800' }
+    { value: 'contratacionEstadoEspana', label: 'Contratación del Estado España', color: 'bg-red-100 text-red-800' },
+    { value: 'cascadeFunding', label: 'Cascade Funding', color: 'bg-lime-100 text-lime-800' }
   ];
 
   const frequencyOptions = [
@@ -69,8 +70,9 @@ const NewsletterPreferences = () => {
       if (data.success) {
         if (data.data.subscribed) {
           setSubscription(data.data.subscription);
+          // Forzar frecuencia diaria en UI (el backend ya la fuerza)
           setPreferences({
-            frequency: data.data.subscription.frequency,
+            frequency: 'daily',
             interests: data.data.subscription.interests
           });
           setMessage({ type: 'success', text: 'Suscripción encontrada' });
@@ -99,7 +101,7 @@ const NewsletterPreferences = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          frequency: preferences.frequency,
+            frequency: 'daily',
           interests: {
             ...preferences.interests,
             budgetRange: {
