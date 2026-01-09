@@ -126,8 +126,13 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
     if (!deadline) return null;
     const deadlineDate = new Date(deadline);
     const today = new Date();
+    
+    // Resetear las horas para comparar solo fechas
+    deadlineDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
     const diffTime = deadlineDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
 
