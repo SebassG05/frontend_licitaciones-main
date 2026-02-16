@@ -424,12 +424,6 @@ export default function BorradorPropuestasPage() {
                       <FileText className="w-5 h-5" /> Exportar Markdown
                     </button>
                     <button
-                      className="flex items-center gap-2 bg-[#232323] text-[#a1db87] font-bold px-4 py-2 rounded-xl shadow hover:bg-[#181818] transition-all cursor-pointer border border-[#a1db87]"
-                      onClick={() => handleShareLink(modal)}
-                    >
-                      <Share2 className="w-5 h-5" /> Compartir enlace
-                    </button>
-                    <button
                       className="flex items-center gap-2 bg-[#232323] text-blue-300 font-bold px-4 py-2 rounded-xl shadow hover:bg-[#181818] transition-all cursor-pointer border border-blue-300"
                       onClick={() => handleShareEmail(modal)}
                     >

@@ -243,9 +243,9 @@ const NewsletterPage = () => {
                     </div>
                   </div>
                   
-                  <button className="w-full mt-4 bg-[#a1db87] text-[#1a1a1a] text-sm py-2 rounded hover:bg-[#8bc96a] transition-colors font-medium">
+                  <a href="/licitaciones" className="block w-full mt-4 bg-[#a1db87] text-[#1a1a1a] text-sm py-2 rounded hover:bg-[#8bc96a] transition-colors font-medium cursor-pointer text-center">
                     Ver todas las licitaciones →
-                  </button>
+                  </a>
                 </div>
               </div>
             </motion.div>
@@ -253,7 +253,7 @@ const NewsletterPage = () => {
         </div>
       </div>
 
-      {/* Subscription Section */}
+      {/* Subcripción */}
       <div className="py-20 bg-[#2a2a2a]/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

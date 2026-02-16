@@ -108,7 +108,7 @@ const RegisterCompanyPopup = ({ isOpen, onClose }) => {
               </motion.button>
             </div>
 
-            {/* Info text */}
+            {/* Texto de información */}
             <p className="text-gray-500 text-xs text-center mt-4">
               El registro de tu empresa te permitirá participar completamente en nuestra comunidad
             </p>
