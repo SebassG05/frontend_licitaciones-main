@@ -28,9 +28,9 @@ const empresaProfileAPI = {
     });
     
     if (!response.ok) {
-      const errorData = await response.text();
+      const errorData = await response.json();
       console.error('Error saving profile:', response.status, errorData);
-      throw new Error(`Error ${response.status}: ${errorData || 'Error al guardar perfil'}`);
+      throw new Error(errorData.message || 'Error al guardar perfil');
     }
     
     return await response.json();
@@ -178,6 +178,8 @@ const EmpresaProfile = () => {
     } catch (err) {
       console.error('Error guardando perfil:', err);
       setError(err.message || 'Error al guardar el perfil');
+      // Scroll hacia arriba para mostrar el mensaje de error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setSaving(false);
     }
