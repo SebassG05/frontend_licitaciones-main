@@ -105,6 +105,27 @@ export const AuthProvider = ({ children }) => {
     };
   }, [user, userConfig]);
 
+  // Función para iniciar sesión con Google
+  const loginWithGoogle = async (idToken) => {
+    try {
+      setLoading(true);
+      const response = await authService.googleLogin(idToken);
+      try {
+        const profileModule = await import('../services/profile');
+        const profileData = await profileModule.getMyProfile();
+        setUser({ ...response.data.user, ...profileData });
+      } catch {
+        setUser(response.data.user);
+      }
+      return { success: true };
+    } catch (error) {
+      console.error('Error al iniciar sesión con Google:', error);
+      return { success: false, message: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Función para iniciar sesión
   const login = async (email, password) => {
     try {
@@ -166,6 +187,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!user,
     login,
+    loginWithGoogle,
     logout,
     userConfig,
     setUserConfig,

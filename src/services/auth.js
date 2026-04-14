@@ -169,3 +169,36 @@ export const resetPassword = async (token, newPassword) => {
     throw error;
   }
 };
+
+/**
+ * Login con Google (envía el ID token al backend para validación y autorización)
+ * @param {string} idToken - ID token retornado por Google Identity Services
+ * @returns {Promise} - Respuesta con token JWT y datos del usuario
+ */
+export const googleLogin = async (idToken) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/google`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: idToken }),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al iniciar sesión con Google');
+    }
+
+    if (data.data?.token) {
+      localStorage.setItem('token', data.data.token);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error en Google login:', error);
+    throw error;
+  }
+};
