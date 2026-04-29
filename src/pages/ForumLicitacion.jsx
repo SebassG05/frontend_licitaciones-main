@@ -570,6 +570,7 @@ const ForumLicitacion = () => {
                                licitacion.source === 'nacionesUnidas' ? '🌍 Naciones Unidas' :
                                licitacion.source === 'cascadeFunding' ? '🚀 Cascade Funding' :
                                licitacion.source === 'contratacionEstadoEspana' ? '🇪🇸 España' :
+                               licitacion.source === 'juntaAndalucia' ? 'Junta de Andalucia' :
                                licitacion.source}
                             </span>
                           )}
@@ -653,7 +654,7 @@ const ForumLicitacion = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/foro/todos')}
-            className="px-4 py-2 bg-[#2a2a2a] text-gray-300 border border-[#3a3a3a] rounded-xl hover:bg-[#333333] transition-all duration-200 flex items-center gap-2"
+            className="px-4 py-2 bg-[#2a2a2a] text-gray-300 border border-[#3a3a3a] rounded-xl hover:bg-[#333333] transition-all duration-200 flex items-center gap-2 cursor-pointer"
           >
             <Reply className="w-4 h-4" />
             Ver todos los posts
@@ -697,6 +698,7 @@ const ForumLicitacion = () => {
                         if (src === 'nacionesUnidas') return 'Naciones Unidas';
                         if (src === 'cascadeFunding') return 'Cascade Funding';
                         if (src === 'contratacionEstadoEspana') return 'España';
+                        if (src === 'juntaAndalucia') return 'Junta de Andalucia';
                         return src;
                       })()}
                     </span>
@@ -819,7 +821,7 @@ const ForumLicitacion = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate('/perfil-empresa')}
-                className="bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 flex items-center gap-2"
+                className="bg-gradient-to-r from-[#a1db87] to-[#7cc85f] text-[#1a1a1a] px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-[#a1db87]/25 font-semibold transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Crear perfil

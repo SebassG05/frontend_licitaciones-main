@@ -33,6 +33,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
       'comisionEuropea': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       'nacionesUnidas': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
       'contratacionEstadoEspana': 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+      'juntaAndalucia': 'bg-lime-500/10 text-lime-400 border-lime-500/20',
     };
     return colors[source] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
   };
@@ -43,6 +44,7 @@ const LicitacionCard = ({ licitacion, isUserAuthenticated, onShowPremiumPopup })
       'comisionEuropea': 'Comisión Europea',
       'nacionesUnidas': 'Naciones Unidas',
       'contratacionEstadoEspana': 'Contratación del Estado España',
+      'juntaAndalucia': 'Junta de Andalucia',
     };
     return labels[source] || source;
   };
