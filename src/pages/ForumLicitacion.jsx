@@ -570,6 +570,7 @@ const ForumLicitacion = () => {
                                licitacion.source === 'nacionesUnidas' ? '🌍 Naciones Unidas' :
                                licitacion.source === 'cascadeFunding' ? '🚀 Cascade Funding' :
                                licitacion.source === 'contratacionEstadoEspana' ? '🇪🇸 España' :
+                               licitacion.source === 'juntaAndalucia' ? 'Junta de Andalucia' :
                                licitacion.source}
                             </span>
                           )}
@@ -697,6 +698,7 @@ const ForumLicitacion = () => {
                         if (src === 'nacionesUnidas') return 'Naciones Unidas';
                         if (src === 'cascadeFunding') return 'Cascade Funding';
                         if (src === 'contratacionEstadoEspana') return 'España';
+                        if (src === 'juntaAndalucia') return 'Junta de Andalucia';
                         return src;
                       })()}
                     </span>
