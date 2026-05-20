@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { getLicitacionesStats } from '../../services/licitaciones';
 import { 
   TrendingUp, Building2, Clock, ArrowRight, Sparkles, 
-  Award, FileText, Euro
+  Award, FileText, Euro, Landmark
 } from 'lucide-react';
 import Container from '../ui/Container';
 
@@ -305,6 +305,38 @@ const HeroSection = () => {
                         {stats?.breakdown?.contratacionEstadoEspana ? `${stats.breakdown.contratacionEstadoEspana.toLocaleString()}+ licitaciones` : 'Cargando...'}
                       </span>
                       <ArrowRight className="w-4 h-4 text-orange-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.div>
+
+                  {/* Junta de Andalucía */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.45 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="group bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/20 rounded-xl p-4 sm:p-6 hover:border-green-400/40 transition-all duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                          <Landmark className="w-5 h-5 text-green-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm sm:text-base">Junta de Andalucía</h3>
+                          <p className="text-xs text-gray-400">Gobierno de Andalucía</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">Activa</span>
+                    </div>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed">
+                      Licitaciones y contratos públicos de la comunidad autónoma de Andalucía.
+                      Incluye consejerías, organismos autónomos y empresas públicas andaluzas.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-400 font-semibold text-sm">
+                        {stats?.breakdown?.juntaAndalucia ? `${stats.breakdown.juntaAndalucia.toLocaleString()}+ licitaciones` : 'Próximamente'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-green-400 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </motion.div>
                 </motion.div>
