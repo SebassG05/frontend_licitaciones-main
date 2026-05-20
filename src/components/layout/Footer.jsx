@@ -40,7 +40,7 @@ const QuickLink = memo(({ name, path, icon: Icon }) => {
     <li>
       <motion.button
         onClick={() => handleNavigation(path)}
-        className={`cursor-pointer w-full text-left flex items-center space-x-2 py-2 transition-colors ${
+        className={`cursor-pointer w-full md:text-left flex items-center max-md:justify-center space-x-2 py-2 transition-colors ${
           isActive ? 'text-[#a1db87]' : 'text-gray-400 hover:text-[#a1db87]'
         }`}
         whileHover={{ x: 4 }}
@@ -143,7 +143,7 @@ const Footer = () => {
 
       <Container className="pt-12 pb-6 relative z-10">
         {/* Grid principal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 max-md:text-center">
           
           {/* Columna 1: Logo y descripción */}
           <motion.div
@@ -162,14 +162,14 @@ const Footer = () => {
 
             {/* Valores */}
             <div className="space-y-3 mb-6">
-              <div className="flex items-start space-x-2">
+              <div className="flex items-start space-x-2 max-md:justify-center">
                 <Target className="w-4 h-4 text-[#a1db87] mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="text-xs font-semibold text-white">Transparencia</h4>
                   <p className="text-xs text-gray-500">Acceso abierto a información pública</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-2">
+              <div className="flex items-start space-x-2 max-md:justify-center">
                 <Lightbulb className="w-4 h-4 text-[#a1db87] mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="text-xs font-semibold text-white">Innovación</h4>
@@ -179,7 +179,7 @@ const Footer = () => {
             </div>
 
             {/* Redes sociales */}
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 max-md:justify-center">
               {socialLinks.map((link) => (
                 <SocialLink key={link.name} {...link} />
               ))}
@@ -231,20 +231,20 @@ const Footer = () => {
               Contacto
             </h3>
             <ul className="space-y-3">
-              <li className="flex items-start text-gray-400">
+              <li className="flex items-start text-gray-400 max-md:justify-center">
                 <MapPin size={14} className="mr-2 mt-1 text-[#a1db87] flex-shrink-0" />
                 <div className="text-xs">
                   <p>Av. de la República Argentina, 27</p>
                   <p>41011 Sevilla, España</p>
                 </div>
               </li>
-              <li className="flex items-center text-gray-400">
+              <li className="flex items-center text-gray-400 max-md:justify-center">
                 <Mail size={14} className="mr-2 text-[#a1db87] flex-shrink-0" />
                 <a href="mailto:info@evenor-tech.com" className="text-xs hover:text-[#a1db87] transition-colors">
                   info@evenor-tech.com
                 </a>
               </li>
-              <li className="flex items-center text-gray-400">
+              <li className="flex items-center text-gray-400 max-md:justify-center">
                 <Phone size={14} className="mr-2 text-[#a1db87] flex-shrink-0" />
                 <a href="tel:+34954151096" className="text-xs hover:text-[#a1db87] transition-colors">
                   +34 954 151 096
@@ -262,7 +262,7 @@ const Footer = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-8 pb-8 border-b border-[#2a2a2a]"
         >
-          <div className="max-w-md">
+          <div className="max-w-md max-md:mx-auto">
             <h3 className="text-sm font-bold text-white mb-2 uppercase tracking-wider">
               Newsletter
             </h3>
