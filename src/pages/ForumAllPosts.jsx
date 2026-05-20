@@ -3,6 +3,7 @@ import { getAllForumPosts, marcarFavorito, desmarcarFavorito, getFavoritos, resp
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PremiumPopup from '../components/ui/PremiumPopup';
+import RegisterCompanyPopup from '../components/ui/RegisterCompanyPopup';
 import { Users, Award, MessageSquare, Info, Calendar, Building2, Heart, Reply, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -46,6 +47,7 @@ const ForumAllPosts = () => {
   // Estado para el modal de error al eliminar post
   const [modalError, setModalError] = useState({ open: false, message: '' });
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
+  const [showRegisterCompanyPopup, setShowRegisterCompanyPopup] = useState(false);
 
   const { user, isAuthenticated } = useAuth();
 
@@ -75,12 +77,20 @@ const ForumAllPosts = () => {
   useEffect(() => {
     // Mostrar inmediatamente el popup premium si el usuario no está autenticado.
     // Usuarios autenticados pueden acceder (aunque no sean premium).
-    const shouldShow = !isAuthenticated;
-    setShowPremiumPopup(shouldShow);
+    const shouldShowPremium = !isAuthenticated;
+    setShowPremiumPopup(shouldShowPremium);
 
-    // Si debemos mostrar el popup, no intentar cargar los posts (bloqueamos la vista)
-    if (shouldShow) return;
+    // Si no está autenticado, bloquear la vista
+    if (shouldShowPremium) return;
 
+    // Verificar si el usuario tiene empresa registrada
+    const hasCompany = user && (user.empresa || user.empresaProfileId);
+    if (!hasCompany) {
+      setShowRegisterCompanyPopup(true);
+      return;
+    }
+
+    // Si llega aquí, el usuario está autenticado y tiene empresa, cargar posts
     const fetchPosts = async () => {
       setLoading(true);
       setError("");
@@ -170,6 +180,15 @@ const ForumAllPosts = () => {
     const bFav = favoritos.includes(b._id) ? 1 : 0;
     return (bFav - aFav) || (new Date(b.createdAt) - new Date(a.createdAt));
   });
+
+  if (showRegisterCompanyPopup) {
+    return (
+      <RegisterCompanyPopup
+        isOpen={true}
+        onClose={() => setShowRegisterCompanyPopup(false)}
+      />
+    );
+  }
 
   if (showPremiumPopup) {
     return (

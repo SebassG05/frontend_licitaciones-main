@@ -42,6 +42,7 @@ const LicitacionFilters = ({ onFiltersChange, sources = [] }) => {
     'nacionesUnidas': 'Naciones Unidas',
     'contratacionEstadoEspana': 'Contratación del Estado España',
     'cascadeFunding': 'Cascade Funding',
+    'juntaAndalucia': 'Junta de Andalucia',
   };
 
   const statusOptions = [
