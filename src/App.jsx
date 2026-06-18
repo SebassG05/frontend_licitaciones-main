@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import TermsOfUse from './components/ui/TermsOfUse';
 import PrivacyPolicy from './components/ui/PrivacyPolicy';
 import CookiesPolicy from './components/ui/CookiesPolicy';
+import AvisoLegal from './components/ui/AvisoLegal';
 import BorradorPropuestasPage from './pages/BorradorPropuestasPage';
 import BorradorWizard from './pages/BorradorWizard';
 import Layout from './components/layout/Layout';
@@ -88,6 +89,7 @@ function App() {
               <Route path="/terminos" element={<TermsOfUse />} />
               <Route path="/privacidad" element={<PrivacyPolicy />} />
               <Route path="/cookies" element={<CookiesPolicy />} />
+              <Route path="/aviso-legal" element={<AvisoLegal />} />
               {/* Ruta catch-all para 404 - debe ir al final */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { 
   MapPin, 
@@ -455,10 +455,53 @@ const Contact = () => {
                   </span>
                 </button>
 
-                {/* Nota de privacidad */}
-                <p className="text-xs text-gray-400 text-center">
-                  Al enviar este formulario, aceptas nuestra política de privacidad
-                </p>
+                {/* Información básica sobre Protección de Datos (sección 4.1.1) */}
+                <div className="overflow-x-auto rounded-xl border border-[#2a2a2a] text-sm">
+                  <table className="w-full">
+                    <tbody>
+                      <tr className="border-b border-[#2a2a2a]">
+                        <td className="bg-[#232323] text-[#a1db87] font-semibold px-3 py-2 whitespace-nowrap w-40">Responsable</td>
+                        <td className="bg-[#1a1a1a] text-gray-300 px-3 py-2">EVENOR TECH, S.L.U.</td>
+                      </tr>
+                      <tr className="border-b border-[#2a2a2a]">
+                        <td className="bg-[#232323] text-[#a1db87] font-semibold px-3 py-2">Finalidad</td>
+                        <td className="bg-[#1a1a1a] text-gray-300 px-3 py-2">Atender sus consultas y/o solicitudes.</td>
+                      </tr>
+                      <tr className="border-b border-[#2a2a2a]">
+                        <td className="bg-[#232323] text-[#a1db87] font-semibold px-3 py-2">Derechos</td>
+                        <td className="bg-[#1a1a1a] text-gray-300 px-3 py-2">
+                          Acceder, rectificar y suprimir los datos, así como otros derechos, como se explica en la información adicional.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="bg-[#232323] text-[#a1db87] font-semibold px-3 py-2">Inf. adicional</td>
+                        <td className="bg-[#1a1a1a] text-gray-300 px-3 py-2">
+                          Puede consultar la información adicional y detallada sobre Protección de Datos en nuestra{' '}
+                          <Link to="/privacidad" className="text-[#a1db87] underline hover:text-[#8bc96a] transition-colors">
+                            Política de Privacidad
+                          </Link>.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Checkbox obligatorio RGPD */}
+                <label className="flex items-start gap-2.5 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="privacyAccepted"
+                    required
+                    className="accent-[#a1db87] mt-0.5 flex-shrink-0 w-4 h-4"
+                  />
+                  <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+                    He leído y acepto la{' '}
+                    <Link to="/privacidad" className="text-[#a1db87] underline hover:text-[#8bc96a] transition-colors">
+                      información básica de protección de datos
+                    </Link>.
+                    {' '}<span className="text-red-400">*</span>
+                  </span>
+                </label>
               </form>
             </motion.div>
           </div>

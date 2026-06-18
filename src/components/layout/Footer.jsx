@@ -97,7 +97,8 @@ const Footer = () => {
       links: [
         { name: 'Privacidad', path: '/privacidad' },
         { name: 'Términos de uso', path: '/terminos' },
-        { name: 'Cookies', path: '/cookies' }
+        { name: 'Cookies', path: '/cookies' },
+        { name: 'Aviso Legal', path: '/aviso-legal' }
       ]
     }
   };
@@ -344,6 +345,9 @@ const Footer = () => {
         >
           <p className="mb-3 sm:mb-0">
             © {currentYear} Plataforma de Licitaciones. Todos los derechos reservados.
+          </p>
+          <p className="text-xs text-gray-600 mb-3 sm:mb-0">
+            Desarrollado por <span className="text-gray-500">Evenor-Tech</span>
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {footerSections.legal.links.map((link, index) => (
